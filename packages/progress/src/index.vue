@@ -35,8 +35,8 @@ const customColorMethod = (percentage: number) => {
 }
 
 onMounted(() => {
-  let t = Math.ceil(props.animationTime / props.percentage)
-  let timer = setInterval(() => {
+  const t = Math.ceil(props.animationTime / props.percentage)
+  const timer = setInterval(() => {
     percentageVal.value += 1
     if (percentageVal.value >= props.percentage || percentageVal.value >= 100) {
       percentageVal.value = props.percentage >= 100 ? 100 : props.percentage

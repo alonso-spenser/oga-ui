@@ -8,7 +8,7 @@ const appName = require('../package.json').name
 const appVersion = require('../package.json').version
 const entryDir = path.resolve(__dirname, "../packages");
 // const entryDir = path.resolve(__dirname, '../components')
-const outputDir = path.resolve(__dirname, "../og-ui");
+const outputDir = path.resolve(__dirname, "../oga-ui");
 
 const baseConfig = defineConfig({
     configFile: false,

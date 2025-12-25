@@ -1,5 +1,5 @@
 {
-  "name": "og-ui",
+  "name": "oga-ui",
   "version": "0.0.1",
   "author": "Joe <joe.bob.xie@gmail.com>",
   "private": true,
@@ -19,8 +19,8 @@
     "lint:eslint": "eslint . --fix --cache",
     "lint": "run-s lint:*",
     "format": "prettier --write --experimental-cli src/",
-    "build:components": "node build/index.js",
-    "lib": "npm run build:components && sh build/publish.sh"
+    "build:ui": "node build/index.js",
+    "lib": "npm run build:ui && sh build/publish.sh"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",

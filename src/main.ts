@@ -13,6 +13,7 @@ import { InstallCodeMirror } from "codemirror-editor-vue3";
  * 全局引入未打包组件
  */
 import ogaUI from "../packages";
+import "../packages/style/var.scss";
 
 import App from "./App.vue";
 import router from "./router";

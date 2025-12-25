@@ -46,6 +46,14 @@ $text-size-small: 12px;
     }
   }
 
+  .el-input-group__prepend {
+    padding: 0 15px!important;
+  }
+
+  .el-input-group__append {
+    padding: 0 15px!important;
+  }
+
   .el-select {
     width: 100%;
   }
@@ -78,14 +86,6 @@ $text-size-small: 12px;
       border-radius: 0;
     }
 
-    .el-input-group__prepend {
-      //padding-left: 8px;
-    }
-
-    .el-input-group__append {
-      padding-right: 0
-    }
-
     .el-date-editor--date {
       &.el-input--prefix {
         .el-input__inner {
@@ -97,7 +97,8 @@ $text-size-small: 12px;
 
   &-label {
     border-radius: 5px;
-    background-color: #fff;
+    text-shadow: 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff;
+    //background-color: #fff;
     padding-left: 2px;
     padding-right: 2px;
     position: absolute;
@@ -105,7 +106,7 @@ $text-size-small: 12px;
     color: #C0C4CC;
     left: 1rem;
     z-index: 2;
-    opacity: 1;
+    opacity: 1!important;
     font-size: 12 * $px;
     line-height: 12 * $px;
     transition: all 0.2s;
