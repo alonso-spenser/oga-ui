@@ -12,14 +12,10 @@ node_modules
 dist
 dist-ssr
 coverage
-build
 demo
-m-ui
-packages
+og-ui
 *.local
 
-/cypress/videos/
-/cypress/screenshots/
 
 # Editor directories and files
 .vscode/*
@@ -30,3 +26,4 @@ packages
 *.njsproj
 *.sln
 *.sw?
+package-lock.json

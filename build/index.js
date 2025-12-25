@@ -3,17 +3,17 @@ const fsExtra = require("fs-extra");
 const fs = require("fs");
 const { defineConfig, build } = require("vite");
 const vue = require("@vitejs/plugin-vue");
-const vueJsx = require("@vitejs/plugin-vue-jsx");
+// const vueJsx = require("@vitejs/plugin-vue-jsx");
 const appName = require('../package.json').name
 const appVersion = require('../package.json').version
 const entryDir = path.resolve(__dirname, "../packages");
 // const entryDir = path.resolve(__dirname, '../components')
-const outputDir = path.resolve(__dirname, "../oga-ui");
+const outputDir = path.resolve(__dirname, "../og-ui");
 
 const baseConfig = defineConfig({
     configFile: false,
     publicDir: false,
-    plugins: [vue(), vueJsx()],
+    plugins: [vue()],
 });
 
 const rollupOptions = {

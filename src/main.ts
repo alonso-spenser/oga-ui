@@ -1,32 +1,31 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
+import piniaPersistent from "pinia-plugin-persistedstate";
+
+import elementPlus from "element-plus";
+import "element-plus/dist/index.css";
+import "./assets/base.scss";
+import "./assets/element.scss";
+import i18n from "./plugins/i18n/base";
+import { InstallCodeMirror } from "codemirror-editor-vue3";
+
 /**
  * 全局引入未打包组件
  */
-import ogUI from "@/components";
-/**
- * 全局引入打包组件
- */
-// import ogUI from "../m-ui/index.mjs";
-// import "../m-ui/style.css";
-/**
- * 单一引入某一打包组件
- */
-// import mForm from "../m-ui/form/index.mjs";
-// import "../m-ui/form/style.css";
+import ogaUI from "../packages";
 
 import App from "./App.vue";
 import router from "./router";
 
-import ElementPlus from "element-plus";
-import "element-plus/dist/index.css";
-
-import "./assets/main.css";
-
 const app = createApp(App);
+const pinia = createPinia();
 
-app.use(createPinia())
-    .use(router)
-    .use(ElementPlus)
-    .use(ogUI)
-    .mount("#app");
+app.use(router);
+app.use(elementPlus);
+app.use(i18n);
+app.use(InstallCodeMirror);
+app.use(pinia);
+app.use(ogaUI);
+pinia.use(piniaPersistent);
+
+app.mount("#app");

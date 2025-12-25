@@ -1,6 +1,5 @@
 <template>
   <div class="demo-progress">
-    <!-- <el-progress :percentage="percentageVal" :color="customColors" /> -->
     <el-progress :percentage="percentageVal" v-bind="$attrs" :color="customColorMethod" />
   </div>
 </template>
@@ -9,17 +8,14 @@
 import { ref, onMounted } from 'vue'
 
 const props = defineProps({
-  // 进度条百分比
   percentage: {
     type: Number,
     default: 0
   },
-  // 动画时间
   animationTime: {
     type: Number,
     default: 3000
   },
-  // 是否开启动画
   isAnimation: {
     type: Boolean,
     default: false
@@ -27,14 +23,6 @@ const props = defineProps({
 })
 
 const percentageVal = ref<number>(0)
-
-// const customColors = [
-//   { color: '#f56c6c', percentage: 20 },
-//   { color: '#e6a23c', percentage: 40 },
-//   { color: '#5cb87a', percentage: 60 },
-//   { color: '#1989fa', percentage: 80 },
-//   { color: '#6f7ad3', percentage: 100 },
-// ]
 
 const customColorMethod = (percentage: number) => {
   if (percentage < 30) {

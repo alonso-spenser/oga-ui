@@ -1,8 +1,10 @@
 import type { App } from "vue";
 import OgProgress from "./progress/index";
+import OgInput from "./input/index";
 
 const components = [
-  OgProgress
+  OgProgress,
+  OgInput
 ];
 
 export default {

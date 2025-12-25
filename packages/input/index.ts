@@ -1,9 +1,9 @@
 import type { App } from "vue";
 // @ts-ignore
-import OgProgress from "./src/index.vue";
+import OgInput from "./src/index.vue";
 
 export default {
   install(app: App) {
-    app.component("OgProgress", OgProgress);
+    app.component("OgInput", OgInput);
   },
 };

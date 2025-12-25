@@ -1,26 +1,33 @@
-import { fileURLToPath, URL } from "node:url";
+import { fileURLToPath, URL } from 'node:url'
 
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import vueDevTools from 'vite-plugin-vue-devtools'
 
-// https://vitejs.dev/config/
+// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    vueJsx(),
-    // AutoImport({
-    //   imports: ["vue"],
-    //   dts: "src/auto-import.d.ts",
-    // }),
+    vueDevTools(),
   ],
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
+      '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
-  server: {
-    port: 8080,
+  css: {
+    preprocessorOptions: {
+      // scss: { api: 'modern-compiler' },
+    }
   },
-  base: "./",
-});
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8899/',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
+  base: "./"
+})

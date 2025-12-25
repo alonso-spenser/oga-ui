@@ -1,12 +1,17 @@
 <template>
-  <h1>
-    Vue3 + TypeScript + Vite4 + ElementPlus 二次封装组件
-  </h1>
+  <div class="start-page">
+    <div style="margin: 100px">
+      <el-input
+        v-model="input"
+        style="width: 240px"
+        placeholder="Please input"
+      />
+      <oga-input></oga-input>
+    </div>
+  </div>
 </template>
-
 <script setup lang="ts">
+import { ref } from "vue";
+import { ArrowRightBold } from "@element-plus/icons-vue";
+const input = ref("11");
 </script>
-
-<style lang="less" scoped>
-
-</style>
