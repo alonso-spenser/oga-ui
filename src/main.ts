@@ -9,11 +9,8 @@ import "./assets/element.scss";
 import i18n from "./plugins/i18n/base";
 import { InstallCodeMirror } from "codemirror-editor-vue3";
 
-/**
- * 全局引入未打包组件
- */
-import ogaUI from "../packages";
-import "../packages/style/var.scss";
+import ogaUi from "../packages";
+import "../packages/style/index.scss";
 
 import App from "./App.vue";
 import router from "./router";
@@ -26,7 +23,7 @@ app.use(elementPlus);
 app.use(i18n);
 app.use(InstallCodeMirror);
 app.use(pinia);
-app.use(ogaUI);
+app.use(ogaUi);
 pinia.use(piniaPersistent);
 
 app.mount("#app");

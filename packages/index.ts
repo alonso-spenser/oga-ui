@@ -1,6 +1,7 @@
 import type { App } from "vue";
-import OgaProgress from "./progress/index";
-import OgaInput from "./input/index";
+
+import OgaProgress from "./progress";
+import OgaInput from "./input";
 
 const components = [
   OgaProgress,

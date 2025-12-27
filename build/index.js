@@ -3,13 +3,13 @@ const fsExtra = require("fs-extra");
 const fs = require("fs");
 const { defineConfig, build } = require("vite");
 const vue = require("@vitejs/plugin-vue");
-// const vueJsx = require("@vitejs/plugin-vue-jsx");
-const appName = require('../package.json').name
-const appVersion = require('../package.json').version
+const appConfig = require('../package.json')
 const entryDir = path.resolve(__dirname, "../packages");
-// const entryDir = path.resolve(__dirname, '../components')
-const outputDir = path.resolve(__dirname, "../oga-ui");
+const outputDir = path.resolve(__dirname, "../dist");
 
+/**
+ * base config
+ */
 const baseConfig = defineConfig({
     configFile: false,
     publicDir: false,
@@ -25,7 +25,9 @@ const rollupOptions = {
     },
 };
 
-//全量构建
+/**
+ * Generate all components
+ */
 const buildAll = async () => {
     await build(
         defineConfig({
@@ -33,10 +35,10 @@ const buildAll = async () => {
             build: {
                 rollupOptions,
                 lib: {
-                    entry: path.resolve(entryDir, "index.ts"),
                     name: "index",
-                    fileName: "index",
-                    formats: ["es", "umd"],
+                    cssFileName: "index",
+                    entry: path.resolve(entryDir, "index.ts"),
+                    fileName: (format) => `index.${format}.ts`
                 },
                 outDir: outputDir,
             },
@@ -44,6 +46,10 @@ const buildAll = async () => {
     );
 };
 
+/**
+ * Generate a single component
+ * @param name component name
+ */
 const buildSingle = async (name) => {
     await build(
         defineConfig({
@@ -51,10 +57,10 @@ const buildSingle = async (name) => {
             build: {
                 rollupOptions,
                 lib: {
-                    entry: path.resolve(entryDir, name),
                     name: "index",
-                    fileName: "index",
-                    formats: ["es", "umd"],
+                    cssFileName: "index",
+                    entry: path.resolve(entryDir, name),
+                    fileName: (format) => `index.${format}.ts`
                 },
                 outDir: path.resolve(outputDir, name),
             },
@@ -62,42 +68,51 @@ const buildSingle = async (name) => {
     );
 };
 
-// 生成组件的 package.json 文件
+/**
+ * Generate package.json file
+ * @param name file name
+ */
 const createPackageJson = (name) => {
-    const fileStr = `{
-  "name": "${name === appName ? appName : name}",
-  "version": "${appVersion}",
-  "main": "index.umd.js",
-  "module": "index.es.js",
-  "style": "style.css"
+    const content = `{
+  "name": "${name === appConfig.name ? appConfig.name : name}",
+  "version": "${appConfig.version}",
+  "description": "${appConfig.description}",
+  "author": {
+    "name": "${appConfig.author.name}",
+    "email": "${appConfig.author.email}"
+  },
+  "license": "${appConfig.license}",
+  "main": "index.umd.ts",
+  "module": "index.es.ts",
+  "style": "index.css"
 }`;
 
-    const filePath = `${name === appName ? '' : name}${name === appName ? '' : '/'}package.json`
-    console.log('path', filePath)
+    const filePath = `${name === appConfig.name ? '' : name}${name === appConfig.name ? '' : '/'}package.json`
     fsExtra.outputFile(
         path.resolve(outputDir, filePath),
-        fileStr,
+        content,
         "utf-8"
     );
 };
 
-const buildLib = async () => {
+/**
+ * Generate
+ */
+const generate = async () => {
     await buildAll();
-    // 获取组件名称组成的数组
     const components = fs.readdirSync(entryDir).filter((name) => {
         const componentDir = path.resolve(entryDir, name);
         const isDir = fs.lstatSync(componentDir).isDirectory();
         return isDir && fs.readdirSync(componentDir).includes("index.ts");
     });
 
-    // 循环一个一个组件构建
     for (const name of components) {
-        // 构建单组件
         await buildSingle(name);
-        // 生成组件的 package.json 文件
         // createPackageJson(name);
     }
-    createPackageJson(appName);
+    createPackageJson(appConfig.name);
+
+    fs.copyFileSync('README.md', `${outputDir}/README.md`);
 };
 
-buildLib();
+generate();

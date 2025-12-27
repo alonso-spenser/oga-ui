@@ -121,10 +121,10 @@ $text-size-small: 12px;
   }
 }
 
-//.el-form-item:focus {
-//  .el-input-material-label {
-//    &.active {
-//      color: #F56C6C
-//    }
-//  }
-//}
+.el-form-item:focus {
+  .el-input-material-label {
+    &.active {
+      color: #F56C6C
+    }
+  }
+}

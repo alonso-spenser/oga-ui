@@ -31,14 +31,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, useAttrs, useSlots } from 'vue'
-import type { inputProps } from './types';
+import { ref, onMounted, useAttrs, useSlots, watch } from 'vue'
+import lib from "../../plugins/utility";
+
 
 let defaultValue = ''
 const activated = ref(false)
 const props = defineProps({
   modelValue: {
-    type: [String, Number],
+    type: String,
     default: ''
   },
   placeholder: {
@@ -74,13 +75,19 @@ attrs = {
   ...props
 }
 
-//初始化
-onMounted(() => {
-  defaultValue = props.modelValue;
+defaultValue = props.modelValue;
+activated.value = lib.isEmpty(defaultValue)
 
+onMounted(() => {
+  activated.value = lib.isEmpty(props.modelValue)
 });
+
+watch(() => props.modelValue, (newValue, oldValue) => {
+  activated.value = lib.isEmpty(newValue)
+});
+
 </script>
 
 <style lang="scss" scoped>
-@import url("../../style/var.scss");
+@import url("../../style/index.scss");
 </style>

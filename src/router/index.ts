@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Index from "../views/home/Index.vue";
-// @ts-ignore
 import lib from "../plugins/utility";
 import layout from "../views/layout/index.vue";
 

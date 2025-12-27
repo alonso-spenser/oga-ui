@@ -1,2 +1,2 @@
-cd ../og-ui
+cd ./dist
 npm publish
