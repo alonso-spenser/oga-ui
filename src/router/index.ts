@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Index from "../views/home/Index.vue";
 import lib from "../plugins/utility";
 import layout from "../views/layout/index.vue";
 
@@ -29,9 +28,9 @@ const router = createRouter({
       ],
     },
     {
-      path: "/code",
+      path: "/section",
       component: layout,
-      name: "code",
+      name: "section-index",
       meta: {
         web: true,
         // title: i18n.t('general.home'),
@@ -39,14 +38,24 @@ const router = createRouter({
       },
       children: [
         {
-          path: ":id",
-          name: "code-input",
+          path: "page-section",
+          name: "page-section",
           meta: {
             // web: true,
             // title: i18n.t('dashboard.title'),
             requireAuth: false,
           },
-          component: () => import("../views/code/Index.vue"),
+          component: () => import("../views/section/page-section/index.vue"),
+        },
+        {
+          path: "form",
+          name: "section-form",
+          meta: {
+            // web: true,
+            // title: i18n.t('dashboard.title'),
+            requireAuth: false,
+          },
+          component: () => import("../views/section/form/index.vue"),
         },
       ],
     },
@@ -77,6 +86,6 @@ const setTitle = (meta) => {
   // if (store.state.configModel && store.state.configModel.id !== '0') {
   //   titles.push(store.state.configModel.abbr)
   // }
-  document.title = titles.join("-");
+  document.title = titles.join("-" );
 };
 export default router;

@@ -1,0 +1,84 @@
+$px: 0.0625rem;
+body,
+html {
+  overflow: hidden;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  //background-color: #f2f2f2;
+  margin: 0;
+  color: #606266;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  font-family: "Helvetica Neue", Helvetica, monospace, "Times New Roman", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+
+.main-aside {
+  background: none !important;
+  padding-top: 1rem;
+  border: 0 !important;
+
+  .oga-icon {
+    font-size: 26px;
+  }
+
+  [class*="el-icon-"] {
+    font-size: 22px;
+  }
+
+  .el-menu {
+    background: none;
+  }
+
+  .el-sub-menu {
+    .el-sub-menu__title {
+      position: relative;
+
+      .el-sub-menu__icon-arrow {
+        display: none
+      }
+
+      &:before {
+        position: absolute;
+        left: 5px;
+        top: calc(50% - 3px);
+        display: inline-block;
+        width: 0;
+        height: 0;
+        content: "";
+        border-top: 6px solid;
+        border-right: 6px solid transparent;
+        border-bottom: 0;
+        border-left: 6px solid transparent;
+        transform: rotateZ(-90deg);
+        transition: all 0.3s;
+      }
+    }
+
+    .el-menu-item {
+      height: 40px;
+      line-height: 40px;
+    }
+
+    &.is-opened {
+      .el-sub-menu__title {
+        &:before {
+          transform: rotateZ(0);
+        }
+      }
+    }
+  }
+
+  .el-sub-menu__title,
+  .el-menu-item {
+    height: 32px;
+    line-height: 32px;
+  }
+}

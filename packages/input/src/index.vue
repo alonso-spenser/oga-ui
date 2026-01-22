@@ -85,7 +85,6 @@ onMounted(() => {
 watch(() => props.modelValue, (newValue, oldValue) => {
   activated.value = lib.isEmpty(newValue)
 });
-
 </script>
 
 <style lang="scss" scoped>

@@ -97,8 +97,8 @@ $text-size-small: 12px;
 
   &-label {
     border-radius: 5px;
-    text-shadow: 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff;
-    //background-color: #fff;
+    //text-shadow: 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff;
+    background-color: #fff;
     padding-left: 2px;
     padding-right: 2px;
     position: absolute;
@@ -126,5 +126,48 @@ $text-size-small: 12px;
     &.active {
       color: #F56C6C
     }
+  }
+}
+
+.oga-form {
+  //.el-form-item {
+  //  &:not(:last-child) {
+  //    margin-bottom: 20 * $px
+  //  }
+  //
+  //  &.gutter-less {
+  //    &:not(:last-child) {
+  //      margin-bottom: 10 * $px
+  //    }
+  //  }
+  //
+  //  &:last-child {
+  //    margin-bottom: 0;
+  //  }
+  //}
+  &.gutter-less {
+    .el-form-item {
+      &:not(:last-child) {
+        margin-bottom: 10 * $px
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &.borderless {
+    .el-form-item {
+      margin-bottom: 0;
+    }
+  }
+
+  .el-form-item__content {
+    display: block;
+    line-height: normal;
+  }
+
+  .el-input-material + .el-form-item__error {
+    margin-top: -4 * $px;
   }
 }
