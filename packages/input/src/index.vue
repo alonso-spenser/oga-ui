@@ -5,11 +5,12 @@
     <label
         v-if="!borderless"
         class="el-input-material-label"
-        :class="shrink || activated ? 'active' : ''">{{ placeholder }}</label>
+        :class="shrink || activated ? 'active' : ''">{{ label }}</label>
+
     <el-input
         v-bind="attrs"
         v-model="defaultValue"
-        :placeholder="shrink ? description || '' : placeholder"
+        :placeholder="shrink ? placeholder || '' : label"
     >
       <template #append v-if="useSlots().append">
         <slot name="append"></slot>
@@ -50,7 +51,7 @@ const props = defineProps({
     type: String,
     default: ''
   },
-  description: {
+  label: {
     type: String,
     default: ''
   },
@@ -84,6 +85,9 @@ onMounted(() => {
 
 watch(() => props.modelValue, (newValue, oldValue) => {
   activated.value = lib.isEmpty(newValue)
+  if (newValue !== oldValue) {
+    defaultValue = props.modelValue;
+  }
 });
 </script>
 

@@ -10,13 +10,13 @@
     <div class="oga-unsaved-button">
       <el-button
           type="info"
-          size="small"
+          :round="round"
           @click="cancelEvent"
           :disabled="loading">{{ cancelText }}
       </el-button>
       <el-button
           type="primary"
-          size="small"
+          :round="round"
           @click="confirmedEvent"
           :loading="loading">{{ saveText }}
       </el-button>
@@ -63,7 +63,13 @@ const props = defineProps({
     default: () => {
       return false
     }
-  }
+  },
+  round: {
+    type: Boolean,
+    default: () => {
+      return false
+    }
+  },
 })
 let attrs = useAttrs()
 attrs = {

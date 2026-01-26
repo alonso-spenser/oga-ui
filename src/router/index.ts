@@ -38,14 +38,14 @@ const router = createRouter({
       },
       children: [
         {
-          path: "page-section",
-          name: "page-section",
+          path: "section",
+          name: "section",
           meta: {
             // web: true,
             // title: i18n.t('dashboard.title'),
             requireAuth: false,
           },
-          component: () => import("../views/section/page-section/index.vue"),
+          component: () => import("@/views/section/section/index.vue"),
         },
         {
           path: "form",

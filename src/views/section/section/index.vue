@@ -8,20 +8,27 @@
   <oga-page
       :offset="300"
       :percentage="100"
+      :padding="true"
   >
-    <oga-page-section
+    <oga-section
         :heading="heading"
         :description="content"
     >
       <div>
         As Mick Jagger famously sang, you can’t always get what you want. That applies to travel too — no matter how meticulously planned a trip, you can’t avoid bad weather, natural disasters, worker strikes and other external factors.
       </div>
+      <div>
+        As Mick Jagger famously sang, you can’t always get what you want. That applies to travel too — no matter how meticulously planned a trip, you can’t avoid bad weather, natural disasters, worker strikes and other external factors.
+      </div>
+      <div>
+        As Mick Jagger famously sang, you can’t always get what you want. That applies to travel too — no matter how meticulously planned a trip, you can’t avoid bad weather, natural disasters, worker strikes and other external factors.
+      </div>
       <template #header>
         <el-button>Mick Jagger</el-button>
       </template>
-    </oga-page-section>
+    </oga-section>
 
-    <oga-page-section
+    <oga-section
         :heading="heading"
         :description="content"
     >
@@ -31,7 +38,7 @@
       <template #header>
         AI-assisted
       </template>
-    </oga-page-section>
+    </oga-section>
   </oga-page>
 </template>
 

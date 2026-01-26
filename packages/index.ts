@@ -1,16 +1,14 @@
 import type { App } from "vue";
 
-import OgaProgress from "./progress";
 import OgaInput from "./input";
-import PageSection from './page-section'
+import PageSection from './section'
 import OgaLayout from "./layout";
 import OgaPage from "./page";
 import OgaForm from "./form";
 import OgaFormItem from "./form-item";
 import OgaUnsaved from "./unsaved";
-
+import "./style/index.scss";
 const components = [
-  OgaProgress,
   OgaInput,
   PageSection,
   OgaLayout,

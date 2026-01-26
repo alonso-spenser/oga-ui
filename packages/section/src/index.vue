@@ -1,6 +1,6 @@
 <template>
   <fieldset
-      class="oga-page-section"
+      class="oga-section"
       :style="borderRadius > 0 ? `border-radius: ${borderRadius}px` : ''"
       :class="description ? 'has-description' : ''"
   >
@@ -9,16 +9,16 @@
     </legend>
     <div
         v-if="$slots.header"
-        class="oga-page-section-action">
+        class="oga-section-action">
       <slot name="header"></slot>
     </div>
     <p
         v-if="description"
-        class="oga-page-section-description">
+        class="oga-section-description">
       {{ description }}
     </p>
     <div
-        class="oga-page-section-content"
+        class="oga-section-content"
         v-if="$slots.default">
       <slot></slot>
     </div>
@@ -45,7 +45,7 @@ const props = defineProps({
 <style lang="scss">
 @use "../../style/index.scss" as var;
 
-.oga-page-section {
+.oga-section {
   position: relative;
   padding: 1.25rem;
   border-radius: 7px;
@@ -60,15 +60,21 @@ const props = defineProps({
   }
 
   &.has-description {
-    padding-top: 5px;
+    padding-top: 6px;
+
+    //.oga-section-action {
+    //  top: -3px;
+    //  border: 1px solid blue;
+    //}
   }
 
   &-action {
     right: 1.25rem;
-    top: calc(-50% + 1.25rem);
-    transform: translateY(calc(-50% + 1.25rem));
+    top: -0.625rem;
+    transform: translateY(-50%);
     position: absolute;
     background: #fff;
+    //border: 1px solid red;
 
     .el-button--mini {
       &.el-button--text {
@@ -85,7 +91,7 @@ const props = defineProps({
     margin: 0;
     font-size: 1rem;
 
-    & + .oga-page-section-description {
+    & + .oga-section-description {
       margin-top: 0;
     }
   }

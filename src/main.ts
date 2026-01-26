@@ -6,7 +6,7 @@ import elementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import "./assets/base.scss";
 import "./assets/element.scss";
-import i18n from "./plugins/i18n/base";
+// import i18n from "./plugins/i18n/base";
 import { InstallCodeMirror } from "codemirror-editor-vue3";
 import './assets/iconfont/iconfont.js'
 
@@ -27,7 +27,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 app.use(router);
 app.use(elementPlus);
-app.use(i18n);
+// app.use(i18n);
 app.use(InstallCodeMirror);
 app.use(pinia);
 app.use(ogaUi);

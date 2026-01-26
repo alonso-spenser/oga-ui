@@ -11,19 +11,19 @@
     >
       <el-form-item prop="pass">
         <oga-input
-            v-model="ruleForm.pass" t
+            v-model="ruleForm.pass"
             type="password"
             size="small"
-            placeholder="Password"
-            description="Please enter your password"
+            label="Password"
+            placeholder="Please enter your password"
             autocomplete="off" />
       </el-form-item>
       <el-form-item prop="checkPass">
         <oga-input
-            v-model="ruleForm.checkPass" t
+            v-model="ruleForm.checkPass"
             type="password"
-            placeholder="Confirm"
-            description="Please enter your confirm password"
+            label="Confirm"
+            placeholder="Please enter your confirm password"
            ></oga-input>
       </el-form-item>
 
@@ -31,9 +31,9 @@
         <oga-input
             clearable
             v-model="ruleForm.age"
-            placeholder="Age"
+            label="Age"
             size="large"
-            description="Please enter your Age"
+            placeholder="Please enter your Age"
            ></oga-input>
       </el-form-item>
 
@@ -48,6 +48,7 @@
         :unsaved.sync="unsaved"
         :loading="loading"
         offset="300px"
+        round
         @cancel="closeDialog"
         @confirmed="formValidation"
     ></oga-unsaved>
@@ -115,6 +116,7 @@ const rules = reactive<FormRules<typeof ruleForm>>({
 })
 
 const submitForm = (formEl: FormInstance | undefined) => {
+  ruleForm.pass = 'idfdl312#$'
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {

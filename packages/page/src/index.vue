@@ -12,7 +12,7 @@
         class="oga-page oga-google-style"
         :style="cssVars"
         :class="props.percentage > 0 ? `percent-${percentage}` : ''">
-      <section class="oga-page-content">
+      <section class="oga-page-content" :class="padding ? 'has-padding' : ''">
         <slot></slot>
       </section>
     </section>
@@ -20,7 +20,7 @@
         v-else
         ref="refLayoutPage"
         class="oga-page">
-      <section class="oga-page-content">
+      <section class="oga-page-content" :class="padding ? 'has-padding' : ''">
         <slot name="default"></slot>
       </section>
     </section>
@@ -56,6 +56,12 @@ const props = defineProps({
     type: Boolean,
     default: () => {
       return false
+    }
+  },
+  padding: {
+    type: Boolean,
+    default: () => {
+      return true
     }
   },
   loadingText: {
@@ -124,7 +130,9 @@ cssVars.value = {
       flex:1;
       overflow-x: hidden;
       overflow-y: auto;
-      padding: 1.875rem;
+      &.has-padding {
+        padding: 1.875rem;
+      }
     }
   }
 }
