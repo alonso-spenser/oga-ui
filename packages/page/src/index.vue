@@ -1,33 +1,22 @@
 <template>
-  <section
+  <main
       class="oga-layout-main"
       :style="cssVars"
   >
-    <div class="oga-page-header" v-if="$slots.header">
+    <div class="oga-page-header" v-if="$slots.header" :class="padding ? 'has-padding' : ''">
       <slot name="header"></slot>
     </div>
     <section
-        v-if="googleStyle"
-        ref="refLayoutPage"
-        class="oga-page oga-google-style"
-        :style="cssVars"
-        :class="props.percentage > 0 ? `percent-${percentage}` : ''">
-      <section class="oga-page-content" :class="padding ? 'has-padding' : ''">
-        <slot></slot>
-      </section>
-    </section>
-    <section
-        v-else
         ref="refLayoutPage"
         class="oga-page">
       <section class="oga-page-content" :class="padding ? 'has-padding' : ''">
         <slot name="default"></slot>
       </section>
     </section>
-    <div class="oga-page-footer" v-if="$slots.footer">
+    <div class="oga-page-footer" v-if="$slots.footer" :class="padding ? 'has-padding' : ''">
       <slot name="footer"></slot>
     </div>
-  </section>
+  </main>
 </template>
 
 <script lang="ts" setup>
@@ -37,7 +26,7 @@ const props = defineProps({
   offset: {
     type: Number,
     default: () => {
-      return 220
+      return 240
     }
   },
   contentWidth: {
@@ -119,11 +108,31 @@ cssVars.value = {
     flex-direction: column;
 
     &-header {
-      padding-bottom: 1rem;
+      padding-top: 1.5rem;
+      padding-bottom: .875rem;
+
+      &.has-padding {
+        padding-left: 1.875rem;
+        padding-right: 1.875rem;
+      }
+
+      & + .oga-page {
+        .oga-page-content {
+          &.has-padding {
+            padding-top: 0;
+          }
+        }
+      }
     }
 
     &-footer {
-      padding-top: 1rem;
+      padding-bottom: .75rem;
+      padding-top: .75rem;
+
+      &.has-padding {
+        padding-left: 1.875rem;
+        padding-right: 1.875rem;
+      }
     }
 
     &-content {
@@ -132,6 +141,40 @@ cssVars.value = {
       overflow-y: auto;
       &.has-padding {
         padding: 1.875rem;
+      }
+    }
+  }
+
+  &-filter {
+    display: flex;
+    justify-items: center;
+
+    .time-select {
+      width: 150px;
+    }
+
+    .text-count {
+      line-height: 40px;
+      text-indent: 15px;
+    }
+    &-item {
+      .label {
+        word-break: keep-all;
+        line-height: 40px;
+        margin-right: 8px;
+        font-size: 14px;
+      }
+
+      .search-input {
+        width: 280px;
+      }
+
+      & + & {
+        margin-left: 10px;
+      }
+
+      .el-material-button {
+        margin-top: 0.375rem;
       }
     }
   }

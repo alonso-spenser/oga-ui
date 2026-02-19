@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import lib from "../plugins/utility";
+import {isNotEmpty} from "../plugins/utility";
 import layout from "../views/layout/index.vue";
 
 const router = createRouter({
@@ -23,7 +23,7 @@ const router = createRouter({
             // title: i18n.t('dashboard.title'),
             requireAuth: false,
           },
-          component: () => import("../views/home/Index.vue"),
+          component: () => import("../views/home/index.vue"),
         },
       ],
     },
@@ -57,6 +57,26 @@ const router = createRouter({
           },
           component: () => import("../views/section/form/index.vue"),
         },
+        {
+          path: "editor",
+          name: "section-editor",
+          meta: {
+            // web: true,
+            // title: i18n.t('dashboard.title'),
+            requireAuth: false,
+          },
+          component: () => import("../views/section/editor/index.vue"),
+        },
+        {
+          path: "table",
+          name: "section-table",
+          meta: {
+            // web: true,
+            // title: i18n.t('dashboard.title'),
+            requireAuth: false,
+          },
+          component: () => import("../views/section/table/index.vue"),
+        },
       ],
     },
   ],
@@ -73,7 +93,7 @@ router.beforeEach((to, from, next) => {
 const setTitle = (meta) => {
   const titles: any[] = [];
   // console.log(meta)
-  if (lib.isNotEmpty(meta.title)) {
+  if (isNotEmpty(meta.title)) {
     titles.push(meta.title);
   }
   if (

@@ -86,9 +86,12 @@ const setCss = () => {
   if (/^[0-9]*[1-9][0-9]$/.test(offset)) {
     offset = offset + 'px'
   }
-  if (offset !== '200px') {
-    css.push(`width: calc(100% - ${offset})`)
-  }
+  // if (offset !== '200px') {
+  //   css.push(`width: calc(100% - ${offset})`)
+  // }
+  // css.push(`calc(100% - var(--offset) * 1px)`)
+
+  //
   if (props.height !== 60) {
     css.push(`height: ${props.height}px`)
   }
@@ -117,7 +120,7 @@ const confirmedEvent = () => {
 .oga-unsaved {
   position: fixed;
   height: 59px;
-  width: calc(100% - 200px);
+  width: calc(100% - var(--offset) * 1px);
   right: 0;
   top: 0;
   background-color: #fdf6ec;

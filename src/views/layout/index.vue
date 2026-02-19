@@ -1,16 +1,14 @@
 <template>
   <oga-layout
-      copyright="OGA LTD."
       :aside-top="0"
       :aside-bottom="0"
-      :aside-width="300"
+      :aside-width="240"
       aside-css="my-aside"
+      @aside="asideClick"
       :is-router-view="true"
+      copyright="OGA LTD."
   >
     <template #header>
-      <div class="oga-header-logo">
-        <img src="@/assets/svg/logo.svg" class="logo" alt="" />
-      </div>
       <div class="oga-header-left">
         <div
             aria-label="Breadcrumb"
@@ -68,6 +66,18 @@
     </template>
     <template #aside>
       <menu-list></menu-list>
+      <div style="height: 3000px"></div>
+    </template>
+    <template #asideHeader>
+      <router-link to="/">
+        <div class="oga-layout-aside-logo">
+          <img src="@/assets/svg/logo.svg" alt="" />
+        </div>
+      </router-link>
+    </template>
+    <template #asideFooter>
+      <oga-icon name="setting"></oga-icon>
+      Settings
     </template>
     <slot></slot>
   </oga-layout>
@@ -75,8 +85,12 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 import menuList from './aside.vue'
+import lib from "@/plugins/utility.ts";
+import OgaIcon from "../../../packages/iconfont/src/iconFont.vue";
 
-
+const asideClick = () => {
+  console.log('asideClick:')
+}
 </script>
 
 <style scoped lang="scss"></style>

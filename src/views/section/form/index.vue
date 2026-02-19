@@ -1,6 +1,6 @@
 <template>
   <oga-page
-      :offset="300"
+      :offset="240"
       :percentage="100"
   >
     <el-form
@@ -31,11 +31,29 @@
         <oga-input
             clearable
             v-model="ruleForm.age"
-            label="Age"
             size="large"
+            label="Age"
+            round
             placeholder="Please enter your Age"
            ></oga-input>
       </el-form-item>
+
+      <el-form-item prop="tags">
+        <oga-input-tag
+            label="Tag"
+            size="large"
+            round
+            placeholder="Please enter your tag"
+            v-model="ruleForm.tags" clearable>
+          <template #prefix>
+            <el-icon><ElementPlus /></el-icon>
+          </template>
+          <template #suffix>
+            <el-icon><Search /></el-icon>
+          </template>
+        </oga-input-tag>
+      </el-form-item>
+
 
       <el-form-item>
         <el-button type="primary" @click="submitForm(ruleFormRef)">
@@ -43,7 +61,10 @@
         </el-button>
         <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
       </el-form-item>
+
     </el-form>
+
+    <div style="height: 1000px"></div>
     <oga-unsaved
         :unsaved.sync="unsaved"
         :loading="loading"
@@ -56,12 +77,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-
+import {reactive, ref, watch} from 'vue'
+import { ElementPlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 
 const loading = false
-const unsaved = true
+let unsaved = ref(false)
 
 const ruleFormRef = ref<FormInstance>()
 
@@ -107,19 +128,20 @@ const ruleForm = reactive({
   pass: '',
   checkPass: '',
   age: '',
+  tags: []
 })
 
 const rules = reactive<FormRules<typeof ruleForm>>({
   pass: [{ validator: validatePass, trigger: 'blur' }],
   checkPass: [{ validator: validatePass2, trigger: 'blur' }],
-  age: [{ validator: checkAge, trigger: 'blur' }],
+  // age: [{ validator: checkAge, trigger: 'blur' }],
 })
 
 const submitForm = (formEl: FormInstance | undefined) => {
-  ruleForm.pass = 'idfdl312#$'
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
+      console.log(ruleForm)
       console.log('submit!')
     } else {
       console.log('error submit!')
@@ -133,12 +155,18 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 
 const closeDialog = () => {
-  console.log('close')
+  unsaved.value = false
 }
 
 const formValidation = () => {
-  console.log('formValidation')
+
 }
+
+watch(ruleForm, (newVal, oldVal) => {
+      unsaved.value = true
+    },
+    { deep: true }
+)
 </script>
 
 <style scoped lang="scss">

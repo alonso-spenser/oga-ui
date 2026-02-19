@@ -3,11 +3,16 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import inject from '@rollup/plugin-inject'
 
 export default defineConfig({
   plugins: [
     vue(),
     vueDevTools(),
+    inject({
+      'window.Quill': ['@vueup/vue-quill', 'Quill'],
+      Quill: ['@vueup/vue-quill', 'Quill']
+    })
   ],
   resolve: {
     alias: {

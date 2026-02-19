@@ -5,44 +5,40 @@
     <label
         v-if="!borderless"
         class="el-input-material-label"
-        :class="shrink || activated ? 'active' : ''"
-    >{{ label }}</label>
-    <el-input
+        :class="shrink || activated ? 'active' : ''">{{ label }}</label>
+
+    <el-input-tag
         v-bind="attrs"
         v-model="defaultValue"
         :class="round ? 'is-round' : ''"
         :placeholder="shrink ? placeholder || '' : label"
     >
-      <template #append v-if="useSlots().append">
-        <slot name="append"></slot>
-      </template>
-      <template #prepend v-if="useSlots().prepend">
-        <slot name="prepend"></slot>
+      <template #tag v-if="useSlots().tag">
+        <slot name="tag"></slot>
       </template>
       <template #default v-if="useSlots().default">
         <slot name="default"></slot>
       </template>
-      <template #suffix v-if="useSlots().suffix">
-        <slot name="suffix"></slot>
+      <template #prefix v-if="useSlots().prefix">
+        <slot name="prefix"></slot>
       </template>
       <template #suffix v-if="useSlots().suffix">
         <slot name="suffix"></slot>
       </template>
-    </el-input>
+    </el-input-tag>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted, useAttrs, useSlots, watch } from 'vue'
-import {isEmpty} from "../../plugins/utility";
+import {isArrayNotEmpty} from "../../plugins/utility";
 
-
-let defaultValue = ref('')
+let defaultValue = ref([])
 const activated = ref(false)
 const props = defineProps({
   modelValue: {
-    type: String,
-    default: ''
+    type: Array,
+    default: () => []
   },
   placeholder: {
     type: String,
@@ -82,14 +78,14 @@ attrs = {
 }
 
 defaultValue.value = props.modelValue;
-activated.value = isEmpty(defaultValue.value)
+activated.value = isArrayNotEmpty(defaultValue.value)
 
 onMounted(() => {
-  activated.value = isEmpty(props.modelValue)
+  activated.value = !props.modelValue
 });
 
 watch(() => props.modelValue, (newValue, oldValue) => {
-  activated.value = isEmpty(newValue)
+  activated.value = isArrayNotEmpty(newValue)
   if (newValue !== oldValue) {
     defaultValue.value = props.modelValue;
   }

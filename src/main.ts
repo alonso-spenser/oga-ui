@@ -31,7 +31,7 @@ app.use(elementPlus);
 app.use(InstallCodeMirror);
 app.use(pinia);
 app.use(ogaUi);
-// app.use(IconPlugin)
 pinia.use(piniaPersistent);
+
 
 app.mount("#app");

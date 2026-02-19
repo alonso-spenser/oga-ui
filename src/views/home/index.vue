@@ -1,12 +1,10 @@
 <template>
   <oga-page
-      :offset="300"
+      :offset="240"
       :percentage="100"
   >
     <template #header>
-      <div  style="background: #67C23A">
-        slot="header"
-      </div>
+      slot="header"
     </template>
     HOME INDEX
     <oga-input
@@ -26,9 +24,7 @@
     </oga-input>
     <div style="background: #f2f2f2;height: 3000px"></div>
     <template #footer>
-      <div  style="background: #3a75c2">
-        slot="footer"
-      </div>
+      slot="footer"
     </template>
   </oga-page>
 </template>
@@ -41,3 +37,14 @@ const changeLocale = () => {
   // console.log(input.value);
 };
 </script>
+<style lang="scss">
+.oga-page-header {
+  background-color: red;
+}
+.oga-page-footer {
+  background-color: blue;
+}
+.oga-page-content {
+  //background-color: #c2e7b0;
+}
+</style>

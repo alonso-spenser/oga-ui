@@ -6,7 +6,7 @@
 
 <template>
   <oga-page
-      :offset="300"
+      :offset="240"
       :percentage="100"
       :padding="true"
   >

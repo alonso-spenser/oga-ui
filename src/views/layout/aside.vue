@@ -2,7 +2,7 @@
   <div>
     <el-menu
         :default-active="activeMenu"
-        class="main-aside"
+        class="oga-layout-aside-menu"
         text-color="#666"
         @select="openMenu"
         :router="false"
@@ -20,7 +20,7 @@
           <template #title>
             <oga-icon
                 :name="route.icon"
-                v-if="lib.isNotEmpty(route.icon)">
+                v-if="isNotEmpty(route.icon)">
             </oga-icon>
             {{ route.title }}
           </template>
@@ -33,7 +33,7 @@
           <template #title>
             <oga-icon
                 :name="route.icon"
-                v-if="lib.isNotEmpty(route.icon)">
+                v-if="isNotEmpty(route.icon)">
             </oga-icon>
             {{ route.title }}
           </template>
@@ -46,7 +46,7 @@
               <template #title>
                 <oga-icon
                     :name="sub.icon"
-                    v-if="lib.isNotEmpty(sub.icon)">
+                    v-if="isNotEmpty(sub.icon)">
                 </oga-icon>
                 {{ sub.title }}
               </template>
@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
 import i18n from "@/plugins/i18n/base";
-import lib from "@/plugins/utility"
+import {isNotEmpty} from "@/plugins/utility"
 import OgaIcon from "../../../packages/iconfont/src/iconFont.vue";
 let menuList: any[] = []
 const route = useRoute();
