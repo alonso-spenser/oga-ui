@@ -8,7 +8,7 @@ import "./assets/base.scss";
 import "./assets/element.scss";
 // import i18n from "./plugins/i18n/base";
 import { InstallCodeMirror } from "codemirror-editor-vue3";
-import './assets/iconfont/iconfont.js'
+import "./assets/iconfont/iconfont.js";
 
 import ogaUi from "../packages";
 import "../packages/style/index.scss";
@@ -19,10 +19,10 @@ import router from "./router";
 const app = createApp(App);
 const pinia = createPinia();
 
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-    app.component(key, component)
+  app.component(key, component);
 }
 
 app.use(router);
@@ -32,6 +32,5 @@ app.use(InstallCodeMirror);
 app.use(pinia);
 app.use(ogaUi);
 pinia.use(piniaPersistent);
-
 
 app.mount("#app");

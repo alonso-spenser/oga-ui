@@ -5,65 +5,59 @@
     <label
         class="oga-material-label"
     >{{ label }}</label>
-
-    <el-input-tag
+    <el-mention
         v-bind="attrs"
         v-model="model"
         :class="round ? 'is-round' : ''"
         :placeholder="placeholder"
     >
-      <template #tag v-if="useSlots().tag">
-        <slot name="tag"></slot>
-      </template>
-      <template #default v-if="useSlots().default">
-        <slot name="default"></slot>
-      </template>
-      <template #prefix v-if="useSlots().prefix">
-        <slot name="prefix"></slot>
-      </template>
-      <template #suffix v-if="useSlots().suffix">
-        <slot name="suffix"></slot>
-      </template>
-    </el-input-tag>
+    </el-mention>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {useAttrs, useSlots, defineModel} from 'vue'
+import {useAttrs, defineModel} from 'vue'
 defineOptions({
   inheritAttrs: false
 })
 const props = defineProps({
   modelValue: {
-    type: Array,
-    default: () => []
+    type: String,
+    default: ''
   },
   placeholder: {
     type: String,
+    attr: false,
     default: ''
   },
   size: {
     type: String,
+    attr: false,
     default: ''
   },
   label: {
     type: String,
+    attr: false,
     default: ''
   },
   borderless: {
     type: Boolean,
+    attr: false,
     default: false
   },
   shrink: {
     type: Boolean,
+    attr: false,
     default: true
   },
   errorTips: {
     type: Boolean,
+    attr: false,
     default: true
   },
   round: {
     type: Boolean,
+    attr: false,
     default: false
   }
 })
@@ -71,7 +65,7 @@ const props = defineProps({
 /**
  * Use Attrs
  */
-const attrs =  {
+const attrs = {
   ...useAttrs()
 }
 

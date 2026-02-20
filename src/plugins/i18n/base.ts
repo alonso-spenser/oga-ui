@@ -1,5 +1,5 @@
 import { createI18n } from "vue-i18n";
-import {getLanguage} from "../utility";
+import { getLanguage } from "../utility";
 import enLang from "./en";
 import enErrorCode from "./en/errorCode";
 import enEnumerate from "./en/enumerate";

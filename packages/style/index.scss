@@ -18,6 +18,8 @@ $colorDanger: #F56C6C;
 $colorInfo: #909399;
 $colorBlue: #1a0dab;
 
+$colorFocus: #409eff;
+
 $text-size-main-heading: 20px;
 $text-size-heading: 18px;
 $text-size-small-heading: 16px;
@@ -350,10 +352,26 @@ $text-size-small: 12px;
   padding-left: 2.1962824219rem !important
 }
 
-.el-input-material {
+.oga-material {
   position: relative;
   padding: 0.375rem 0;
   clear: both;
+
+  // 焦点状态的时候，标签文字颜色
+  &:has(.is-focus, .is-focused) {
+    .oga-material-label {
+      color: $colorFocus
+    }
+  }
+  &.no-tips {
+    .el-form-item__error {
+      opacity: 0;
+    }
+
+    & + .el-form-item__error {
+      opacity: 0;
+    }
+  }
 
   .el-input {
     &__inner {
@@ -378,6 +396,33 @@ $text-size-small: 12px;
     }
   }
 
+  //SELECT
+  .is-round {
+    .el-select__wrapper {
+      border-radius: var(--el-border-radius-round);
+    }
+  }
+
+  //Input Number
+  .el-input-number {
+    &.is-round {
+      .el-input__wrapper {
+        border-radius: var(--el-border-radius-round);
+      }
+
+      .el-input-number__decrease {
+        border-top-left-radius: var(--el-border-radius-round);
+        border-bottom-left-radius: var(--el-border-radius-round);
+      }
+
+      .el-input-number__increase {
+        border-top-right-radius: var(--el-border-radius-round);
+        border-bottom-right-radius: var(--el-border-radius-round);
+      }
+    }
+  }
+
+  // input tag
   .el-input-tag {
     &.is-round {
       border-radius: var(--el-border-radius-round);
@@ -385,11 +430,11 @@ $text-size-small: 12px;
   }
 
   .el-input-group__prepend {
-    padding: 0 15px!important;
+    padding: 0 15px !important;
   }
 
   .el-input-group__append {
-    padding: 0 15px!important;
+    padding: 0 15px !important;
   }
 
   .el-select {
@@ -444,7 +489,7 @@ $text-size-small: 12px;
     color: #C0C4CC;
     left: 1rem;
     z-index: 2;
-    opacity: 1!important;
+    opacity: 1 !important;
     font-size: 12 * $px;
     line-height: 12 * $px;
     transition: all 0.2s;
@@ -459,30 +504,14 @@ $text-size-small: 12px;
   }
 }
 
-.el-form-item:focus {
-  .el-input-material-label {
-    &.active {
-      color: #F56C6C
+.oga-form {
+  .el-form-item {
+    &.is-error {
+      .oga-material-label {
+        color: $colorDanger
+      }
     }
   }
-}
-
-.oga-form {
-  //.el-form-item {
-  //  &:not(:last-child) {
-  //    margin-bottom: 20 * $px
-  //  }
-  //
-  //  &.gutter-less {
-  //    &:not(:last-child) {
-  //      margin-bottom: 10 * $px
-  //    }
-  //  }
-  //
-  //  &:last-child {
-  //    margin-bottom: 0;
-  //  }
-  //}
   &.gutter-less {
     .el-form-item {
       &:not(:last-child) {
@@ -505,7 +534,7 @@ $text-size-small: 12px;
     line-height: normal;
   }
 
-  .el-input-material + .el-form-item__error {
+  .oga-material + .el-form-item__error {
     margin-top: -4 * $px;
   }
 }

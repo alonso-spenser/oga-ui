@@ -8,7 +8,7 @@
     />
     <editor
         class="oga-editor-container"
-        v-model="defaultValue"
+        v-model="model"
         :defaultConfig="editorConfig"
         :mode="mode"
         @onCreated="handleCreated"
@@ -16,7 +16,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {watch, defineEmits, onMounted, nextTick, onBeforeUnmount, ref, shallowRef} from "vue";
+import {nextTick, onBeforeUnmount, ref, shallowRef} from "vue";
 import '@wangeditor/editor/dist/css/style.css'
 import i18n from "../../i18n/base";
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
@@ -26,17 +26,15 @@ i18nChangeLanguage(i18n.global.locale)
 
 let cssVars = ref({})
 
-const emit = defineEmits(['update:modelValue']);
-
 /**
  * editor ref
  */
 const editorRef = shallowRef()
 
 /**
- * editor default value
+ * default value
  */
-const defaultValue = ref('')
+const model = defineModel()
 
 /**
  * editor props
@@ -248,19 +246,6 @@ onBeforeUnmount(() => {
   if (editor == null) return
   editor.destroy()
 })
-
-/**
- * Update model value
- */
-watch(defaultValue, (value) => {
-      emit('update:modelValue', value)
-    },
-    {
-      deep: true
-    }
-)
-
-defaultValue.value = props.modelValue;
 getCssVars()
 </script>
 

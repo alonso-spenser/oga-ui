@@ -1,27 +1,32 @@
 <template>
   <oga-layout
-      :aside-top="0"
-      :aside-bottom="0"
-      :aside-width="240"
-      aside-css="my-aside"
-      @aside="asideClick"
-      :is-router-view="true"
-      copyright="OGA LTD."
+    :aside-top="0"
+    :aside-bottom="0"
+    :aside-width="240"
+    aside-css="my-aside"
+    @aside="asideClick"
+    :is-router-view="true"
+    copyright="OGA LTD."
   >
     <template #header>
       <div class="oga-header-left">
         <div
-            aria-label="Breadcrumb"
-            role="navigation"
-            class="el-breadcrumb breadcrumb-wrap"
+          aria-label="Breadcrumb"
+          role="navigation"
+          class="el-breadcrumb breadcrumb-wrap"
         >
-  <span class="el-breadcrumb__item" aria-current="page"
-  ><span role="link" class="el-breadcrumb__inner">Logistics tracking </span
-  ><span role="presentation" class="el-breadcrumb__separator">/</span></span
-  >
           <span class="el-breadcrumb__item" aria-current="page"
-          ><span role="link" class="el-breadcrumb__inner">20208382</span
-          ><span role="presentation" class="el-breadcrumb__separator">/</span></span
+            ><span role="link" class="el-breadcrumb__inner"
+              >Logistics tracking </span
+            ><span role="presentation" class="el-breadcrumb__separator"
+              >/</span
+            ></span
+          >
+          <span class="el-breadcrumb__item" aria-current="page"
+            ><span role="link" class="el-breadcrumb__inner">20208382</span
+            ><span role="presentation" class="el-breadcrumb__separator"
+              >/</span
+            ></span
           >
         </div>
       </div>
@@ -30,30 +35,30 @@
           <!---->
           <div class="el-dropdown">
             <div
-                class="user-avatar el-dropdown-selfdefine"
-                aria-haspopup="list"
-                aria-controls="dropdown-menu-7985"
-                role="button"
-                tabindex="0"
+              class="user-avatar el-dropdown-selfdefine"
+              aria-haspopup="list"
+              aria-controls="dropdown-menu-7985"
+              role="button"
+              tabindex="0"
             >
-      <span
-          class="el-avatar el-avatar--circle"
-          style="height: 32px; width: 32px; line-height: 32px"
-      ><img
-          src="https://s.tvagrp.com/file/1859964415561203713.webp"
-          style="object-fit: cover"
-      /></span>
+              <span
+                class="el-avatar el-avatar--circle"
+                style="height: 32px; width: 32px; line-height: 32px"
+                ><img
+                  src="https://s.tvagrp.com/file/1859964415561203713.webp"
+                  style="object-fit: cover"
+              /></span>
               Joe Xie
             </div>
             <ul
-                class="el-dropdown-menu el-popper global-header-action"
-                id="dropdown-menu-7985"
-                style="display: none"
+              class="el-dropdown-menu el-popper global-header-action"
+              id="dropdown-menu-7985"
+              style="display: none"
             >
               <!----><!----><!---->
               <li
-                  tabindex="-1"
-                  class="el-dropdown-menu__item el-dropdown-menu__item--divided"
+                tabindex="-1"
+                class="el-dropdown-menu__item el-dropdown-menu__item--divided"
               >
                 <!---->
                 Signed out
@@ -61,7 +66,6 @@
             </ul>
           </div>
         </div>
-
       </div>
     </template>
     <template #aside>
@@ -84,13 +88,13 @@
 </template>
 <script setup lang="ts">
 import { ref, reactive } from "vue";
-import menuList from './aside.vue'
+import menuList from "./aside.vue";
 import lib from "@/plugins/utility.ts";
 import OgaIcon from "../../../packages/iconfont/src/iconFont.vue";
 
 const asideClick = () => {
-  console.log('asideClick:')
-}
+  console.log("asideClick:");
+};
 </script>
 
 <style scoped lang="scss"></style>

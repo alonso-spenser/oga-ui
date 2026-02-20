@@ -1,8 +1,9 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4982718 */
-  src: url('iconfont.woff2?t=1768680973411') format('woff2'),
-       url('iconfont.woff?t=1768680973411') format('woff'),
-       url('iconfont.ttf?t=1768680973411') format('truetype');
+  src:
+    url("iconfont.woff2?t=1768680973411") format("woff2"),
+    url("iconfont.woff?t=1768680973411") format("woff"),
+    url("iconfont.ttf?t=1768680973411") format("truetype");
 }
 
 .iconfont {
@@ -460,4 +461,3 @@
 .icon-eye-close:before {
   content: "\ebce";
 }
-

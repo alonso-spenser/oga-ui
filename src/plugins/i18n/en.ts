@@ -9,62 +9,62 @@ export default {
     "pom-xml": "pom.xml",
   },
   dashboard: {
-    title: "Dashboard"
+    title: "Dashboard",
   },
   connect: {
-    title: 'DB Connection',
+    title: "DB Connection",
     tableHeader: {
-      dbName: 'DB Name',
-      host: 'Host',
-      password: 'Password',
-      port: 'Port',
-      tableName: 'Table Name',
-      userName: 'User Name'
+      dbName: "DB Name",
+      host: "Host",
+      password: "Password",
+      port: "Port",
+      tableName: "Table Name",
+      userName: "User Name",
     },
     entity: {
       host: {
-        label: 'Host',
-        tips: '',
-        placeholder: 'Please enter Host',
-        required: 'Please enter Host',
-        custom: ''
+        label: "Host",
+        tips: "",
+        placeholder: "Please enter Host",
+        required: "Please enter Host",
+        custom: "",
       },
       dbName: {
-        label: 'DB Name',
-        tips: '',
-        placeholder: 'DB Name',
-        required: 'Please enter DB Name',
-        custom: ''
+        label: "DB Name",
+        tips: "",
+        placeholder: "DB Name",
+        required: "Please enter DB Name",
+        custom: "",
       },
       password: {
-        label: 'Password',
-        tips: '',
-        placeholder: 'Password',
-        required: 'Please enter Password',
-        custom: ''
+        label: "Password",
+        tips: "",
+        placeholder: "Password",
+        required: "Please enter Password",
+        custom: "",
       },
       port: {
-        label: 'Port',
-        tips: '',
-        placeholder: 'Port',
-        required: 'Please enter Port',
-        custom: ''
+        label: "Port",
+        tips: "",
+        placeholder: "Port",
+        required: "Please enter Port",
+        custom: "",
       },
       tableName: {
-        label: 'Table Name',
-        tips: '',
-        placeholder: 'Table Name',
-        required: 'Please enter Table Name',
-        custom: ''
+        label: "Table Name",
+        tips: "",
+        placeholder: "Table Name",
+        required: "Please enter Table Name",
+        custom: "",
       },
       userName: {
-        label: 'User Name',
-        tips: '',
-        placeholder: 'User Name',
-        required: 'Please enter User Name',
-        custom: ''
-      }
-    }
+        label: "User Name",
+        tips: "",
+        placeholder: "User Name",
+        required: "Please enter User Name",
+        custom: "",
+      },
+    },
   },
   pageAborted: {
     heading: "抱歉，您访问的页面出错了",

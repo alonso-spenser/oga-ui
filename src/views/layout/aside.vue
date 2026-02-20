@@ -1,52 +1,42 @@
 <template>
   <div>
     <el-menu
-        :default-active="activeMenu"
-        class="oga-layout-aside-menu"
-        text-color="#666"
-        @select="openMenu"
-        :router="false"
-        unique-opened
-        :collapse="false"
-        active-text-color="#409EFF"
+      :default-active="activeMenu"
+      class="oga-layout-aside-menu"
+      text-color="#666"
+      @select="openMenu"
+      :router="false"
+      unique-opened
+      :collapse="false"
+      active-text-color="#409EFF"
     >
       <template v-for="(route, index) in menuList">
         <el-menu-item
-            v-if="route.submenu.length === 0"
-            :key="route.url"
-            :index="route.url || index.toString()"
-            :class="route.style || ''"
+          v-if="route.submenu.length === 0"
+          :key="route.url"
+          :index="route.url || index.toString()"
+          :class="route.style || ''"
         >
           <template #title>
-            <oga-icon
-                :name="route.icon"
-                v-if="isNotEmpty(route.icon)">
+            <oga-icon :name="route.icon" v-if="isNotEmpty(route.icon)">
             </oga-icon>
             {{ route.title }}
           </template>
         </el-menu-item>
         <el-sub-menu
-            :key="route.url"
-            v-if="route.submenu.length > 0"
-            :index="route.url || index.toString()"
+          :key="route.url"
+          v-if="route.submenu.length > 0"
+          :index="route.url || index.toString()"
         >
           <template #title>
-            <oga-icon
-                :name="route.icon"
-                v-if="isNotEmpty(route.icon)">
+            <oga-icon :name="route.icon" v-if="isNotEmpty(route.icon)">
             </oga-icon>
             {{ route.title }}
           </template>
-          <template v-for="sub in route.submenu"  :key="sub.url">
-            <el-menu-item
-
-                :index="sub.url"
-                :class="sub.style || ''"
-            >
+          <template v-for="sub in route.submenu" :key="sub.url">
+            <el-menu-item :index="sub.url" :class="sub.style || ''">
               <template #title>
-                <oga-icon
-                    :name="sub.icon"
-                    v-if="isNotEmpty(sub.icon)">
+                <oga-icon :name="sub.icon" v-if="isNotEmpty(sub.icon)">
                 </oga-icon>
                 {{ sub.title }}
               </template>
@@ -60,36 +50,36 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
 import i18n from "@/plugins/i18n/base";
-import {isNotEmpty} from "@/plugins/utility"
+import { isNotEmpty } from "@/plugins/utility";
 import OgaIcon from "../../../packages/iconfont/src/iconFont.vue";
-let menuList: any[] = []
+let menuList: any[] = [];
 const route = useRoute();
 const router = useRouter();
 
-const replaceParams = (params: { [x: string]: any; }, url: string)  => {
+const replaceParams = (params: { [x: string]: any }, url: string) => {
   for (let key in params) {
-    url = url.replace(`:${key}:`, params[key])
+    url = url.replace(`:${key}:`, params[key]);
   }
-  return url
-}
+  return url;
+};
 
 const getMenuList = () => {
-  let list = JSON.parse(JSON.stringify(i18n.global.tm('menuList')))
-  let { params } = route
+  let list = JSON.parse(JSON.stringify(i18n.global.tm("menuList")));
+  let { params } = route;
   params = {
-    ...params
-  }
+    ...params,
+  };
   list.forEach((o) => {
     if (o.url) {
-      o.url = replaceParams(params, o.url)
+      o.url = replaceParams(params, o.url);
     }
     o.submenu.forEach((sub) => {
       if (sub.url) {
-        sub.url = replaceParams(params, sub.url)
+        sub.url = replaceParams(params, sub.url);
       }
-    })
-  })
-  let s = []
+    });
+  });
+  let s = [];
   /**
    *  处理导航栏展示，隐藏
    * @type {*[]}
@@ -102,30 +92,32 @@ const getMenuList = () => {
   //     s.push(o)
   //   }
   // })
-  menuList = list
-}
+  menuList = list;
+};
 
-const openMenu = (url: string)  => {
+const openMenu = (url: string) => {
   if (route.path === url) {
-    return false
+    return false;
   }
   router.push({
-    path: url
-  })
-}
+    path: url,
+  });
+};
 
 /**
  * 路由标记
  */
-const activeMenu =  () => {
-  const { meta, path, params } = route
-  let url = meta.parent ? (typeof (meta.parent) === 'object' ? meta.parent.url : meta.parent) : path
-  return replaceParams(params, url)
-}
+const activeMenu = () => {
+  const { meta, path, params } = route;
+  let url = meta.parent
+    ? typeof meta.parent === "object"
+      ? meta.parent.url
+      : meta.parent
+    : path;
+  return replaceParams(params, url);
+};
 
-getMenuList()
+getMenuList();
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

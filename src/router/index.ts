@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import {isNotEmpty} from "../plugins/utility";
+import { isNotEmpty } from "../plugins/utility";
 import layout from "../views/layout/index.vue";
 
 const router = createRouter({
@@ -106,6 +106,6 @@ const setTitle = (meta) => {
   // if (store.state.configModel && store.state.configModel.id !== '0') {
   //   titles.push(store.state.configModel.abbr)
   // }
-  document.title = titles.join("-" );
+  document.title = titles.join("-");
 };
 export default router;

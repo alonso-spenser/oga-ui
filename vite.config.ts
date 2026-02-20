@@ -7,7 +7,11 @@ import inject from '@rollup/plugin-inject'
 
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      script: {
+        defineModel: true
+      }
+    }),
     vueDevTools(),
     inject({
       'window.Quill': ['@vueup/vue-quill', 'Quill'],

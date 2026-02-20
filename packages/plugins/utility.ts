@@ -40,6 +40,13 @@ export const isNotEmpty = (value: string | null | undefined): boolean => {
 }
 
 /**
+ * Must have value
+ */
+export const haveValue = (value: any): boolean => {
+  return value != null
+}
+
+/**
  * Clear html tag
  * @param html HTML
  * @param tagName Tag name

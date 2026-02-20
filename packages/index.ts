@@ -10,6 +10,10 @@ import OgaFormItem from "./form-item";
 import OgaUnsaved from "./unsaved";
 import OgaEditor from "./editor";
 import OgaTable from "./table";
+import OgaInputNumber from "./input/number";
+import OgaMention from "./input/mention";
+import OgaSelect from "./input/select";
+
 import "./style/index.scss";
 const components = [
   OgaInput,
@@ -22,6 +26,9 @@ const components = [
   OgaInputTag,
   OgaEditor,
   OgaTable,
+  OgaInputNumber,
+  OgaMention,
+  OgaSelect,
 ];
 
 export default {

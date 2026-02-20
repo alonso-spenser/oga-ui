@@ -1,17 +1,15 @@
 <template>
   <div
-      class="el-input-material"
-      :class="`${borderless ? 'borderless' : ''}${errorTips ?'' : ' no-tips'}`">
+      class="oga-material"
+      :class="`${errorTips ?'' : ' no-tips'}`">
     <label
-        v-if="!borderless"
-        class="el-input-material-label"
-        :class="shrink || activated ? 'active' : ''"
+        class="oga-material-label"
     >{{ label }}</label>
     <el-input
         v-bind="attrs"
-        v-model="defaultValue"
+        v-model="model"
         :class="round ? 'is-round' : ''"
-        :placeholder="shrink ? placeholder || '' : label"
+        :placeholder="placeholder"
     >
       <template #append v-if="useSlots().append">
         <slot name="append"></slot>
@@ -33,36 +31,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, useAttrs, useSlots, watch } from 'vue'
-import {isEmpty} from "../../plugins/utility";
+import { defineModel, useAttrs, useSlots } from 'vue'
+defineOptions({
+  inheritAttrs: false
+})
 
-
-let defaultValue = ref('')
-const activated = ref(false)
 const props = defineProps({
-  modelValue: {
-    type: String,
-    default: ''
-  },
   placeholder: {
-    type: String,
-    default: ''
-  },
-  size: {
     type: String,
     default: ''
   },
   label: {
     type: String,
     default: ''
-  },
-  borderless: {
-    type: Boolean,
-    default: false
-  },
-  shrink: {
-    type: Boolean,
-    default: true
   },
   errorTips: {
     type: Boolean,
@@ -74,26 +55,17 @@ const props = defineProps({
   }
 })
 
-let attrs = useAttrs()
-
-attrs = {
-  ...attrs,
-  ...props
+/**
+ * Use Attrs
+ */
+const attrs = {
+  ...useAttrs()
 }
 
-defaultValue.value = props.modelValue;
-activated.value = isEmpty(defaultValue.value)
-
-onMounted(() => {
-  activated.value = isEmpty(props.modelValue)
-});
-
-watch(() => props.modelValue, (newValue, oldValue) => {
-  activated.value = isEmpty(newValue)
-  if (newValue !== oldValue) {
-    defaultValue.value = props.modelValue;
-  }
-});
+/**
+ * default value
+ */
+const model = defineModel()
 </script>
 
 <style lang="scss" scoped>

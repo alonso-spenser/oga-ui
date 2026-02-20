@@ -49,13 +49,13 @@ attrs = {
       border-color: #f56c6c;
     }
 
-    .el-input-material-label {
+    .oga-material-label {
       color: #f56c6c;
     }
   }
 
   &:focus {
-    .el-input-material-label {
+    .oga-material-label {
       color: #409eff;
     }
   }
