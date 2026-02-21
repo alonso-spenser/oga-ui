@@ -8,7 +8,7 @@ import "./assets/base.scss";
 import "./assets/element.scss";
 // import i18n from "./plugins/i18n/base";
 import { InstallCodeMirror } from "codemirror-editor-vue3";
-import "./assets/iconfont/iconfont.js";
+// import "./assets/iconfont/iconfont.js";
 
 import ogaUi from "../packages";
 import "../packages/style/index.scss";

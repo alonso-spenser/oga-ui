@@ -9,7 +9,7 @@
       <el-form-item prop="mt">
         <oga-mention
           v-model="ruleForm.mt"
-          label="Quantity"
+          label="Mention(@)"
           round
           :options="options"
           size="large"
@@ -18,24 +18,9 @@
         ></oga-mention>
       </el-form-item>
       <el-form-item prop="mt">
-        {{ selectValue }}
-        <!--        <el-select-->
-        <!--            v-model="selectValue"-->
-        <!--            value-key="id"-->
-        <!--            placeholder="Select"-->
-        <!--            style="width: 240px"-->
-        <!--        >-->
-        <!--          <el-option-->
-        <!--              v-for="item in selectOptions"-->
-        <!--              :key="item.id"-->
-        <!--              :label="item.label"-->
-        <!--              :value="item"-->
-        <!--          />-->
-        <!--        </el-select>-->
-
         <oga-select
-          v-model="selectValue"
-          label="Quantity"
+          v-model="ruleForm.selectValue"
+          label="Select"
           value-key="id"
           round
           size="large"
@@ -49,10 +34,27 @@
           ></el-option>
         </oga-select>
       </el-form-item>
+      <el-form-item prop="mt">
+        <oga-select
+            v-model="ruleForm.v2"
+            label="Select V2"
+            value-key="id"
+            round
+            size="large"
+            placeholder="Please enter your qty"
+        >
+          <el-option
+              v-for="item in selectOptions"
+              :key="item.id"
+              :label="item.label"
+              :value="item"
+          ></el-option>
+        </oga-select>
+      </el-form-item>
       <el-form-item prop="qty">
         <oga-input-number
           v-model="ruleForm.qty"
-          label="Quantity"
+          label="Input Number"
           :min="1"
           :max="10"
           round
@@ -61,12 +63,76 @@
           autocomplete="off"
         />
       </el-form-item>
+      <el-form-item prop="tm">
+        <oga-time-picker
+            v-model="ruleForm.tm"
+            label="Time Picker"
+            round
+            size="large"
+            placeholder="Please enter your qty"
+            autocomplete="off"
+        />
+      </el-form-item>
+      <el-form-item prop="ts">
+        <oga-time-select
+            v-model="ruleForm.ts"
+            label="Time Select"
+            round
+            size="large"
+            start="08:30"
+            step="00:15"
+            end="18:30"
+            placeholder="Please enter your qty"
+            autocomplete="off"
+        />
+      </el-form-item>
+      <el-form-item prop="dt">
+        <oga-date-picker
+            v-model="ruleForm.dt"
+            label="Data Picker"
+            round
+            size="large"
+            type="daterange"
+            range-separator="To"
+            start-placeholder="Start date"
+            end-placeholder="End date"
+            :disabled-date="disabledDate"
+            :shortcuts="dataShortcuts"
+            placeholder="Please enter your qty"
+            autocomplete="off"
+        />
+      </el-form-item>
+      <el-form-item prop="ts">
+        <oga-tree-select
+            v-model="ruleForm.treeSelect"
+            label="Tree Select"
+            round
+            :data="treeSelectData"
+            :render-after-expand="false"
+            multiple
+            size="large"
+            placeholder="Please enter your qty"
+            autocomplete="off"
+        />
+      </el-form-item>
+      <el-form-item prop="cs">
+        <oga-cascader
+            v-model="ruleForm.cs"
+            label="Cascader"
+            round
+            :options="cascaderOptions"
+            :props="cascaderProps"
+            size="large"
+            placeholder="Please enter your qty"
+            autocomplete="off"
+        />
+      </el-form-item>
       <el-form-item prop="pass">
         <oga-input
           v-model="ruleForm.pass"
           type="password"
           size="small"
-          label="Password"
+          label="Input Password"
           placeholder="Please enter your password"
           autocomplete="off"
         />
@@ -75,7 +141,7 @@
         <oga-input
           v-model="ruleForm.checkPass"
           type="password"
-          label="Confirm"
+          label="Input"
           :error-tips="false"
           placeholder="Please enter your confirm password"
         ></oga-input>
@@ -86,7 +152,7 @@
           clearable
           v-model="ruleForm.age"
           size="large"
-          label="Age"
+          label="Input"
           round
           placeholder="Please enter your Age"
         ></oga-input>
@@ -125,7 +191,7 @@
       offset="300px"
       round
       @cancel="closeDialog"
-      @confirmed="formValidation"
+      @confirmed="submitForm(ruleFormRef)"
     ></oga-unsaved>
   </oga-page>
 </template>
@@ -134,6 +200,7 @@
 import { reactive, ref, watch } from "vue";
 import { ElementPlus, Search } from "@element-plus/icons-vue";
 import type { FormInstance, FormRules } from "element-plus";
+import number from "../../../../packages/input/number.ts";
 
 const loading = false;
 let unsaved = ref(false);
@@ -163,7 +230,6 @@ type SelectOption = {
   label: string;
   desc: string;
 };
-const selectValue = ref<SelectOption>();
 const selectOptions = ref([
   { id: 1, label: "Option A", desc: "Option A - 230506" },
   { id: 2, label: "Option B", desc: "Option B - 230506" },
@@ -171,6 +237,348 @@ const selectOptions = ref([
   { id: 4, label: "Option A", desc: "Option A - 230507" },
 ]);
 
+const cascaderProps = {
+  expandTrigger: 'hover' as const,
+}
+const cascaderOptions = [
+  {
+    value: 'guide',
+    label: 'Guide',
+    children: [
+      {
+        value: 'disciplines',
+        label: 'Disciplines',
+        children: [
+          {
+            value: 'consistency',
+            label: 'Consistency',
+          },
+          {
+            value: 'feedback',
+            label: 'Feedback',
+          },
+          {
+            value: 'efficiency',
+            label: 'Efficiency',
+          },
+          {
+            value: 'controllability',
+            label: 'Controllability',
+          },
+        ],
+      },
+      {
+        value: 'navigation',
+        label: 'Navigation',
+        children: [
+          {
+            value: 'side nav',
+            label: 'Side Navigation',
+          },
+          {
+            value: 'top nav',
+            label: 'Top Navigation',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    value: 'component',
+    label: 'Component',
+    children: [
+      {
+        value: 'basic',
+        label: 'Basic',
+        children: [
+          {
+            value: 'layout',
+            label: 'Layout',
+          },
+          {
+            value: 'color',
+            label: 'Color',
+          },
+          {
+            value: 'typography',
+            label: 'Typography',
+          },
+          {
+            value: 'icon',
+            label: 'Icon',
+          },
+          {
+            value: 'button',
+            label: 'Button',
+          },
+        ],
+      },
+      {
+        value: 'form',
+        label: 'Form',
+        children: [
+          {
+            value: 'radio',
+            label: 'Radio',
+          },
+          {
+            value: 'checkbox',
+            label: 'Checkbox',
+          },
+          {
+            value: 'input',
+            label: 'Input',
+          },
+          {
+            value: 'input-number',
+            label: 'InputNumber',
+          },
+          {
+            value: 'select',
+            label: 'Select',
+          },
+          {
+            value: 'cascader',
+            label: 'Cascader',
+          },
+          {
+            value: 'switch',
+            label: 'Switch',
+          },
+          {
+            value: 'slider',
+            label: 'Slider',
+          },
+          {
+            value: 'time-picker',
+            label: 'TimePicker',
+          },
+          {
+            value: 'date-picker',
+            label: 'DatePicker',
+          },
+          {
+            value: 'datetime-picker',
+            label: 'DateTimePicker',
+          },
+          {
+            value: 'upload',
+            label: 'Upload',
+          },
+          {
+            value: 'rate',
+            label: 'Rate',
+          },
+          {
+            value: 'form',
+            label: 'Form',
+          },
+        ],
+      },
+      {
+        value: 'data',
+        label: 'Data',
+        children: [
+          {
+            value: 'table',
+            label: 'Table',
+          },
+          {
+            value: 'tag',
+            label: 'Tag',
+          },
+          {
+            value: 'progress',
+            label: 'Progress',
+          },
+          {
+            value: 'tree',
+            label: 'Tree',
+          },
+          {
+            value: 'pagination',
+            label: 'Pagination',
+          },
+          {
+            value: 'badge',
+            label: 'Badge',
+          },
+        ],
+      },
+      {
+        value: 'notice',
+        label: 'Notice',
+        children: [
+          {
+            value: 'alert',
+            label: 'Alert',
+          },
+          {
+            value: 'loading',
+            label: 'Loading',
+          },
+          {
+            value: 'message',
+            label: 'Message',
+          },
+          {
+            value: 'message-box',
+            label: 'MessageBox',
+          },
+          {
+            value: 'notification',
+            label: 'Notification',
+          },
+        ],
+      },
+      {
+        value: 'navigation',
+        label: 'Navigation',
+        children: [
+          {
+            value: 'menu',
+            label: 'Menu',
+          },
+          {
+            value: 'tabs',
+            label: 'Tabs',
+          },
+          {
+            value: 'breadcrumb',
+            label: 'Breadcrumb',
+          },
+          {
+            value: 'dropdown',
+            label: 'Dropdown',
+          },
+          {
+            value: 'steps',
+            label: 'Steps',
+          },
+        ],
+      },
+      {
+        value: 'others',
+        label: 'Others',
+        children: [
+          {
+            value: 'dialog',
+            label: 'Dialog',
+          },
+          {
+            value: 'tooltip',
+            label: 'Tooltip',
+          },
+          {
+            value: 'popover',
+            label: 'Popover',
+          },
+          {
+            value: 'card',
+            label: 'Card',
+          },
+          {
+            value: 'carousel',
+            label: 'Carousel',
+          },
+          {
+            value: 'collapse',
+            label: 'Collapse',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    value: 'resource',
+    label: 'Resource',
+    children: [
+      {
+        value: 'axure',
+        label: 'Axure Components',
+      },
+      {
+        value: 'sketch',
+        label: 'Sketch Templates',
+      },
+      {
+        value: 'docs',
+        label: 'Design Documentation',
+      },
+    ],
+  },
+]
+
+const treeSelectData = [
+  {
+    value: '1',
+    label: 'Level one 1',
+    children: [
+      {
+        value: '1-1',
+        label: 'Level two 1-1',
+        children: [
+          {
+            value: '1-1-1',
+            label: 'Level three 1-1-1',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    value: '2',
+    label: 'Level one 2',
+    children: [
+      {
+        value: '2-1',
+        label: 'Level two 2-1',
+        children: [
+          {
+            value: '2-1-1',
+            label: 'Level three 2-1-1',
+          },
+        ],
+      },
+      {
+        value: '2-2',
+        label: 'Level two 2-2',
+        children: [
+          {
+            value: '2-2-1',
+            label: 'Level three 2-2-1',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    value: '3',
+    label: 'Level one 3',
+    children: [
+      {
+        value: '3-1',
+        label: 'Level two 3-1',
+        children: [
+          {
+            value: '3-1-1',
+            label: 'Level three 3-1-1',
+          },
+        ],
+      },
+      {
+        value: '3-2',
+        label: 'Level two 3-2',
+        children: [
+          {
+            value: '3-2-1',
+            label: 'Level three 3-2-1',
+          },
+        ],
+      },
+    ],
+  },
+]
 const checkAge = (rule: any, value: any, callback: any) => {
   if (!value) {
     return callback(new Error("Please input the age"));
@@ -216,8 +624,41 @@ const ruleForm = reactive({
   tags: ["111", "222"],
   qty: 0,
   mt: "",
-  selectValue: {},
+  selectValue: null,
+  v2: null,
+  tm: null,
+  ts: null,
+  treeSelect: null,
+  cs: null,
+  dt: null,
 });
+
+const dataShortcuts = [
+  {
+    text: 'Today',
+    value: new Date(),
+  },
+  {
+    text: 'Yesterday',
+    value: () => {
+      const date = new Date()
+      date.setTime(date.getTime() - 3600 * 1000 * 24)
+      return date
+    },
+  },
+  {
+    text: 'A week ago',
+    value: () => {
+      const date = new Date()
+      date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+      return date
+    },
+  },
+]
+
+const disabledDate = (time: Date) => {
+  return time.getTime() > Date.now()
+}
 
 const rules = reactive<FormRules<typeof ruleForm>>({
   pass: [{ validator: validatePass, trigger: "blur" }],
@@ -229,8 +670,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      console.log(ruleForm);
-      console.log("submit!");
+      console.log(JSON.stringify(ruleForm));
     } else {
       console.log("error submit!");
     }

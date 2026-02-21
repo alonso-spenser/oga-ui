@@ -13,6 +13,13 @@ import OgaTable from "./table";
 import OgaInputNumber from "./input/number";
 import OgaMention from "./input/mention";
 import OgaSelect from "./input/select";
+import OgaSelectV2 from "./input/select-v2";
+import OgaTimePicker from "./input/time-picker";
+import OgaTimeSelect from "./input/time-select";
+import OgaTreeSelect from "./input/tree-select";
+import OgaCascader from "./input/cascader";
+import OgaDatePicker from "./input/date-picker";
+import OgaIcon from "./iconfont/index";
 
 import "./style/index.scss";
 const components = [
@@ -29,6 +36,13 @@ const components = [
   OgaInputNumber,
   OgaMention,
   OgaSelect,
+  OgaSelectV2,
+  OgaTimePicker,
+  OgaTimeSelect,
+  OgaTreeSelect,
+  OgaCascader,
+  OgaDatePicker,
+  OgaIcon,
 ];
 
 export default {

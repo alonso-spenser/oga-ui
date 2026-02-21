@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from "vue";
-
+import "../iconfont.js";
 export default defineComponent({
   name: "ogaIcon",
   props: {

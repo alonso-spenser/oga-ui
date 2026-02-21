@@ -396,9 +396,18 @@ $text-size-small: 12px;
     }
   }
 
+  .el-range-editor {
+    &.is-round {
+      border-radius: var(--el-border-radius-round);
+    }
+  }
+
   //SELECT
   .is-round {
     .el-select__wrapper {
+      border-radius: var(--el-border-radius-round);
+    }
+    .el-input__wrapper {
       border-radius: var(--el-border-radius-round);
     }
   }
