@@ -16,6 +16,7 @@
 
 ```bash
 npm i oga-ui
+npm i @wangeditor/editor-for-vue@next
 ```
 
 ## How to use
@@ -47,6 +48,8 @@ PageSection
 PageLayout
 RichTextEditor
 IconFont
+Avatar
+ImageUpload(Multiple upload)
 ```
 
 

@@ -20,8 +20,10 @@ import OgaTreeSelect from "./input/tree-select";
 import OgaCascader from "./input/cascader";
 import OgaDatePicker from "./input/date-picker";
 import OgaIcon from "./iconfont/index";
-
+import OgaAvatar from "./avatar/index";
+import OgaImageUpload from "./image-upload/index";
 import "./style/index.scss";
+
 const components = [
   OgaInput,
   PageSection,
@@ -43,6 +45,8 @@ const components = [
   OgaCascader,
   OgaDatePicker,
   OgaIcon,
+  OgaAvatar,
+  OgaImageUpload,
 ];
 
 export default {

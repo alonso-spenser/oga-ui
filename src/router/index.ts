@@ -77,6 +77,36 @@ const router = createRouter({
           },
           component: () => import("../views/section/table/index.vue"),
         },
+        {
+          path: "icon",
+          name: "section-icon",
+          meta: {
+            // web: true,
+            // title: i18n.t('dashboard.title'),
+            requireAuth: false,
+          },
+          component: () => import("../views/section/icon/index.vue"),
+        },
+        {
+          path: "avatar",
+          name: "section-avatar",
+          meta: {
+            // web: true,
+            // title: i18n.t('dashboard.title'),
+            requireAuth: false,
+          },
+          component: () => import("../views/section/avatar/index.vue"),
+        },
+        {
+          path: "image-upload",
+          name: "section-image-upload",
+          meta: {
+            // web: true,
+            // title: i18n.t('dashboard.title'),
+            requireAuth: false,
+          },
+          component: () => import("../views/section/image-upload/index.vue"),
+        },
       ],
     },
   ],

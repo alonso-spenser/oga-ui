@@ -1,5 +1,5 @@
 <template>
-  <oga-page :offset="240" :percentage="100">
+  <oga-page :offset="240" :percentage="100" v-loading="true">
     <el-form
       ref="ruleFormRef"
       :model="ruleForm"
@@ -200,9 +200,9 @@
 import { reactive, ref, watch } from "vue";
 import { ElementPlus, Search } from "@element-plus/icons-vue";
 import type { FormInstance, FormRules } from "element-plus";
-import number from "../../../../packages/input/number.ts";
 
 const loading = false;
+
 let unsaved = ref(false);
 
 const ruleFormRef = ref<FormInstance>();

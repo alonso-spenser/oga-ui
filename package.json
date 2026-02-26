@@ -1,6 +1,6 @@
 {
   "name": "oga-ui",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "private": false,
   "license": "MIT",
   "description": "A Component Library for Vue3",
@@ -41,6 +41,7 @@
     "sass-loader": "^16.0.6",
     "vue": "^3.5.25",
     "vue-clipboard3": "^2.0.0",
+    "vue-draggable-plus": "^0.6.1",
     "vue-i18n": "^11.2.2",
     "vue-router": "^4.6.3"
   },

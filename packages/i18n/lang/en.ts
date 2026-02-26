@@ -15,7 +15,7 @@ export default {
     placeholder: 'Choose file',
     maxSize: 'Maximum size of attachments {size} MB',
     limit: 'Maximum size of attachments cannot exceed',
-    drag: 'Drag file here, or',
+    drag: 'Drop the file here or <em>click to upload</em>',
     fileName: 'Attachment name',
     pass: 'Password',
     setPass: 'Set download password >',

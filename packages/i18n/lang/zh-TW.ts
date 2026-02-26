@@ -14,7 +14,7 @@ export default {
     placeholder: 'Choose file',
     maxSize: '附件最大 {size} MB',
     limit: '附件最大不能超過',
-    drag: 'Drag file here, 或',
+    drag: '將檔案拖曳到這裡或 <em>點擊上傳</em>',
     fileName: '附件名稱',
     pass: '密碼',
     setPass: '設定下載密碼 >',

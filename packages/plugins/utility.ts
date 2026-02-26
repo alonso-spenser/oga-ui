@@ -73,3 +73,47 @@ export const isPositiveInteger = (value: unknown): boolean => {
 
   return false
 }
+
+/**
+ * Get file extension
+ * @param fileName string
+ * @returns string
+ */
+export const getSuffix = (fileName: string): string => {
+  const index = fileName.lastIndexOf('.')
+  return index === -1 ? '' : fileName.substring(index + 1).toLowerCase()
+}
+
+/**
+ * File type map
+ * 1 = image
+ * 2 = video
+ * 3 = document
+ * 4 = archive
+ */
+const FILE_TYPE_MAP: Record<number, Set<string>> = {
+  1: new Set([
+    'bmp','jpg','jpeg','png','tif','gif','pcx','tga','exif','fpx',
+    'svg','psd','cdr','pcd','dxf','ufo','eps','ai','raw','wmf','webp','sketch'
+  ]),
+  2: new Set(['vob','mpg','avi','mp4','mkv','mov']),
+  3: new Set(['pdf','doc','docx']),
+  4: new Set(['zip','7z','rar'])
+}
+
+/**
+ * Detect file type
+ * @param fileName string
+ * @returns number
+ */
+export const getFileType = (fileName: string): number => {
+  const suffix = getSuffix(fileName)
+
+  for (const [type, suffixSet] of Object.entries(FILE_TYPE_MAP)) {
+    if (suffixSet.has(suffix)) {
+      return Number(type)
+    }
+  }
+
+  return 0
+}
