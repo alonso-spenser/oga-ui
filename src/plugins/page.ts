@@ -1,25 +1,60 @@
 import { ref } from "vue";
+
 /**
- * Search Conditions
+ * Empty state configuration
  */
-export const searchParameterState = ref({
-  /**
-   * Clear visible
-   */
-  clearVisible: false,
-  /**
-   * Keyword
-   */
-  keyword: "",
-  /**
-   * Sort
-   */
-  orderBy: "createTime-DESC",
-});
+export interface EmptyState {
+  content: string;
+  buttonLabel: string;
+  onClick?: () => void;
+}
+
 /**
  * Table Parameters
  */
-export const tableParameter: TableParameterState = {
+export interface PaginationParameterState<T = any> {
+  multiSelect: boolean;
+  index: boolean;
+  loading: boolean;
+  initTable: boolean;
+  stripe: boolean;
+  pageIndex: number;
+  pageSize: number;
+  pageSizes: number[];
+  pageLayout: string;
+  recordCount: number;
+  firstLoading: boolean;
+  visible: boolean;
+  columnList: any[];
+  border: boolean;
+  card: boolean;
+  /**
+   * Data list
+   */
+  dataset: T[];
+  /**
+   * Action List
+   */
+  actionList: Record<string, any>;
+  /**
+   * Data is empty
+   */
+  empty: EmptyState;
+  /**
+   * Row Highlight Class
+   * @param row Data
+   * @param index Index
+   */
+  rowsClassName?: (row: T, index: number) => string;
+  paginationSection: boolean;
+}
+
+/**
+ * Create Default Pagination Parameter
+ */
+export const createPaginationParameter = <
+  T = any,
+>(): PaginationParameterState<T> => ({
   multiSelect: true,
   index: false,
   loading: true,
@@ -35,45 +70,12 @@ export const tableParameter: TableParameterState = {
   visible: true,
   columnList: [],
   actionList: {},
-  border: false,
-  card: false,
+  border: true,
+  card: true,
   empty: {
     content: "",
     buttonLabel: "",
-    // @ts-ignore
-    onClick: null,
   },
-  // @ts-ignore
-  rowsClassName: Function,
+  rowsClassName: undefined,
   paginationSection: true,
-};
-
-/**
- * Table Parameters
- */
-export interface TableParameterState {
-  multiSelect: boolean;
-  index: boolean;
-  loading: boolean;
-  initTable: boolean;
-  stripe: boolean;
-  pageIndex: number;
-  pageSize: number;
-  pageSizes: Array<number>;
-  pageLayout: string;
-  recordCount: number;
-  dataset: Array<any>;
-  firstLoading: boolean;
-  visible: boolean;
-  columnList: Array<any>;
-  actionList: object;
-  border: boolean;
-  card: boolean;
-  empty: {
-    content: string;
-    buttonLabel: string;
-    onClick: Function;
-  };
-  rowsClassName: Function;
-  paginationSection: boolean;
-}
+});

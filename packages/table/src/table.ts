@@ -1,7 +1,9 @@
 /**
- * Table Parameters
+ * Create Default Pagination Parameter
  */
-export const tableParameter: TableParameterState= {
+export const createPaginationParameter = <
+    T = any,
+>(): PaginationParameterState<T> => ({
     multiSelect: true,
     index: false,
     loading: true,
@@ -10,52 +12,69 @@ export const tableParameter: TableParameterState= {
     pageIndex: 1,
     pageSize: 10,
     pageSizes: [5, 10, 20, 30, 40, 50, 100],
-    pageLayout: 'total, sizes, prev, pager, next, jumper',
+    pageLayout: "total, sizes, prev, pager, next, jumper",
     recordCount: 0,
     dataset: [],
     firstLoading: false,
     visible: true,
     columnList: [],
     actionList: {},
-    border: false,
-    card: false,
+    border: true,
+    card: true,
     empty: {
         content: "",
         buttonLabel: "",
-        // @ts-ignore
-        onClick:  null,
     },
-    // @ts-ignore
-    rowsClassName: Function,
+    rowsClassName: undefined,
     paginationSection: true,
+});
+
+
+/**
+ * Empty state configuration
+ */
+export interface EmptyState {
+    content: string;
+    buttonLabel: string;
+    onClick?: () => void;
 }
 
 /**
  * Table Parameters
  */
-export interface TableParameterState {
-    multiSelect: boolean,
-    index: boolean,
-    loading: boolean,
-    initTable: boolean,
-    stripe: boolean,
-    pageIndex: number,
-    pageSize: number,
-    pageSizes: Array<number>,
-    pageLayout: string,
-    recordCount: number,
-    dataset: Array<any>,
-    firstLoading: boolean,
-    visible: boolean,
-    columnList: Array<any>,
-    actionList: object,
-    border: boolean,
-    card: boolean,
-    empty: {
-        content: string,
-        buttonLabel: string,
-        onClick: Function
-    },
-    rowsClassName: Function,
-    paginationSection: boolean,
+export interface PaginationParameterState<T = any> {
+    multiSelect: boolean;
+    index: boolean;
+    loading: boolean;
+    initTable: boolean;
+    stripe: boolean;
+    pageIndex: number;
+    pageSize: number;
+    pageSizes: number[];
+    pageLayout: string;
+    recordCount: number;
+    firstLoading: boolean;
+    visible: boolean;
+    columnList: any[];
+    border: boolean;
+    card: boolean;
+    /**
+     * Data list
+     */
+    dataset: T[];
+    /**
+     * Action List
+     */
+    actionList: Record<string, any>;
+    /**
+     * Data is empty
+     */
+    empty: EmptyState;
+    /**
+     * Row Highlight Class
+     * @param row Data
+     * @param index Index
+     */
+    rowsClassName?: (row: T, index: number) => string;
+    paginationSection: boolean;
 }

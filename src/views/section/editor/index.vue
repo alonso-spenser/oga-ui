@@ -16,7 +16,7 @@
       :radius="15"
       :action="action"
     ></oga-editor>
-    {{desc}}
+    {{ desc }}
   </oga-page>
 </template>
 

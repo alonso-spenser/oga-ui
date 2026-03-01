@@ -6,7 +6,7 @@
       :size="200"
       :radius="15"
     ></oga-avatar>
-    {{content}}
+    {{ content }}
   </oga-page>
 </template>
 

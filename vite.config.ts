@@ -4,6 +4,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import inject from '@rollup/plugin-inject'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 
 export default defineConfig({
   plugins: [
@@ -12,6 +13,7 @@ export default defineConfig({
         defineModel: true
       }
     }),
+    vueJsx(),
     vueDevTools(),
     inject({
       'window.Quill': ['@vueup/vue-quill', 'Quill'],

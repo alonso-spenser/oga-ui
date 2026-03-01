@@ -1,7 +1,5 @@
 <template>
-  <div
-      class="oga-table"
-  >
+  <div class="oga-table">
     <template
         v-if="model.dataset.length === 0 && model.empty && model.empty.content && model.firstLoading"
     >
@@ -55,7 +53,43 @@
                 <span v-html="renderHeader(column.label)"></span>
               </template>
               <template #default="scope">
-                {{ scope.row[column.prop] }}
+                <template v-if="column.switch">
+                  <el-switch
+                      v-model="scope.row[column.prop]"
+                      :active-value="column.switchActive"
+                      :inactive-value="column.switchInactive"
+                      active-color="#ff0000"
+                      :active-text="column.activeText"
+                      :inactive-text="column.inactiveText"
+                      :inline-prompt="column.inlinePrompt"
+                      @click.native="columnEvent($event, scope.row, column.onClick)"
+                  >
+                  </el-switch>
+                </template>
+                <template v-else-if="column.image">
+                  <el-image :style="getBorderRadius(column.radius)" :src="scope.row[column.prop]" fit="cover">
+                    <template #error>
+                      <img :src="placeholder"
+                           class="el-image__inner"
+                           style="object-fit: fill;" />
+                    </template>
+                  </el-image>
+                </template>
+                <template v-else-if="column.dataType === 'date'">
+                  {{ timestampToDate(scope.row[column.prop]) }}
+                </template>
+                <template v-else-if="column.dataType === 'datetime'">
+                  {{ timestampToDatetime(scope.row[column.prop], column.dataFormat) }}
+                </template>
+                <template v-else-if="column.dataType === 'dateFull'">
+                  {{ timestampToDatetime(scope.row[column.prop]) }}
+                </template>
+                <template v-else-if="column.render">
+                  <component :is="column.render(scope)"></component>
+                </template>
+                <template v-else>
+                  {{ scope.row[column.prop] }}
+                </template>
               </template>
             </el-table-column>
           </template>
@@ -140,13 +174,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ArrowDown } from '@element-plus/icons-vue'
-import {useAttrs, defineEmits, ref, h} from "vue";
+import { ArrowDown, Picture as IconPicture } from '@element-plus/icons-vue'
+import { defineEmits, ref } from "vue";
 import i18n from "../../i18n/base";
-import {isNotEmpty, isEmpty, isFunction, filterHTML} from "../../plugins/utility";
+import {isNotEmpty, isEmpty, isFunction, filterHTML, timestampToDate, timestampToDatetime} from "../../plugins/utility";
 import placeholder from './img/placeholder.jpg'
 import OgaIcon from "../../iconfont/src/iconFont.vue";
-import {type TableParameterState, tableParameter} from  "./table.ts"
+import {type PaginationParameterState, createPaginationParameter} from  "./table"
 
 interface ButtonGroupState {
   icon: string,
@@ -179,8 +213,7 @@ interface ColumnState {
 }
 
 let selectedItems = ref<Array<any>>([])
-
-const model = defineModel<TableParameterState>()
+const model = defineModel<PaginationParameterState<any>>()
 const ogaTable = ref(null);
 const bulkOperation = ref(null);
 const emit = defineEmits(['update:modelValue', 'paging'])
@@ -218,6 +251,14 @@ const headerCellClassName = ({ row, column }) => {
 const renderHeader = (label: string) => {
   let s = label.split('-')
   return s.join("<br/>")
+}
+
+/**
+ * Get border radius style
+ * @param radius
+ */
+const getBorderRadius = (radius: number): string => {
+  return radius > 0 ? `border-radius: ${radius}px;` : ''
 }
 
 
@@ -282,56 +323,6 @@ const defaultImage = (img: string | null | undefined) => {
 }
 
 /**
- * Date format
- * @param dt Date
- * @param format format
- */
-const dateFormat = (dt: Date, format: string): string => {
-  const map: Record<string, number> = {
-    'M+': dt.getMonth() + 1,
-    'd+': dt.getDate(),
-    'h+': dt.getHours(),
-    'm+': dt.getMinutes(),
-    's+': dt.getSeconds(),
-    'q+': Math.floor((dt.getMonth() + 3) / 3),
-    'S': dt.getMilliseconds()
-  }
-
-  format = format.replace(/(y+)/g, (match) =>
-      String(dt.getFullYear()).slice(4 - match.length)
-  )
-
-  Object.keys(map).forEach((k) => {
-    format = format.replace(new RegExp(`(${k})`, 'g'), (match) => {
-      const val = String(map[k])
-      return match.length === 1 ? val : val.padStart(match.length, '0')
-    })
-  })
-
-  return format
-}
-
-/**
- * Timestamp to date
- * @param span Timestamp
- * @param format Date format
- */
-const timestampToDate = (span: string | number | Date, format: any) => {
-  let date = new Date(span)
-  return dateFormat(date, format || 'yyyy-MM-dd')
-}
-
-/**
- * Timestamp to datetime
- * @param span Timestamp
- * @param format Date format
- */
-const timestampToDatetime = (span: string | number | Date, format: any) => {
-  let date = new Date(span)
-  return dateFormat(date, format || 'yyyy-MM-dd hh:mm:ss')
-}
-
-/**
  * 列的状态
  * @param column
  * @param row
@@ -373,7 +364,7 @@ const batchOperation = (command: string) => {
   if (model.value.actionList[command] && selectedItems.value.length > 0) {
     const action = model.value.actionList[command].onClick
     if (action && typeof (action) === 'function') {
-      action.call(this, command === 'update' ? selectedItems.value[0] : selectedItems)
+      action.call(this, command === 'update' ? selectedItems.value[0] : selectedItems.value)
     }
   }
 }
@@ -418,5 +409,4 @@ const pageSizeChange = (size: number) => {
 
 <style scoped lang="scss">
 @use "../../style/index.scss" as var;
-
 </style>

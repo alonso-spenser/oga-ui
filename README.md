@@ -16,6 +16,7 @@
 
 ```bash
 npm i oga-ui
+npm i @wangeditor/editor
 npm i @wangeditor/editor-for-vue@next
 ```
 
@@ -173,6 +174,7 @@ const icons = [
     "email",
     "notice",
     "eye",
-    "eye-close"
+    "eye-close",
+    "search"
 ]
 ```

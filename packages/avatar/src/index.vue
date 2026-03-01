@@ -109,7 +109,7 @@ const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
     width: 100%;
     height: 100%;
     position: absolute;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
     transition: all 0.3s ease 0s;
   }

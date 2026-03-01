@@ -2,7 +2,7 @@
   <div
       class="oga-unsaved"
       :style="cssText"
-      v-show="unsaved"
+      v-show="model"
   >
     <div class="oga-unsaved-label">
       {{ tips }}
@@ -12,21 +12,34 @@
           type="info"
           :round="round"
           @click="cancelEvent"
-          :disabled="loading">{{ cancelText }}
+          :disabled="loading">{{ i18n.global.t('unsaved.cancel') }}
       </el-button>
       <el-button
           type="primary"
           :round="round"
           @click="confirmedEvent"
-          :loading="loading">{{ saveText }}
+          :loading="loading">{{ i18n.global.t('unsaved.save') }}
       </el-button>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import {useAttrs, defineEmits, onMounted} from "vue";
+import {useAttrs, defineEmits, onMounted, ref} from "vue";
 import i18n from "../../i18n/base";
 
+/**
+ * default value
+ */
+const model = defineModel()
+
+/**
+ * Emits
+ */
+const emit = defineEmits(['cancel', 'confirmed']);
+
+/**
+ * Props
+ */
 const props = defineProps({
   tips: {
     type: String,
@@ -34,16 +47,10 @@ const props = defineProps({
       return i18n.global.t('unsaved.tips')
     }
   },
-  unsaved: {
-    type: Boolean,
-    default: () => {
-      return false
-    }
-  },
   offset: {
-    type: String,
+    type: [String, Number],
     default: () => {
-      return '200'
+      return 200
     }
   },
   height: {
@@ -71,56 +78,59 @@ const props = defineProps({
     }
   },
 })
-let attrs = useAttrs()
-attrs = {
-  ...attrs,
-  ...props
-}
-let cancelText= '', saveText= '',  cssText= ''
 
+/**
+ * CSS
+ */
+const cssText= ref({})
+
+/**
+ * Set CSS
+ */
 const setCss = () => {
-  cancelText = i18n.global.t('unsaved.cancel')
-  saveText = i18n.global.t('unsaved.save')
-  let css = []
   let offset = props.offset
-  if (/^[0-9]*[1-9][0-9]$/.test(offset)) {
+  if (typeof offset === 'number' && offset > 0 && offset !== 200) {
     offset = offset + 'px'
   }
-  // if (offset !== '200px') {
-  //   css.push(`width: calc(100% - ${offset})`)
-  // }
-  // css.push(`calc(100% - var(--offset) * 1px)`)
+  if (offset !== '200px') {
+    cssText.value.width = `calc(100% - ${offset})`;
+  }
 
-  //
   if (props.height !== 60) {
-    css.push(`height: ${props.height}px`)
+    cssText.value.height = `${props.height}px`;
   }
   if (props.top && props.top !== 60 && props.top > -1) {
-    css.push(`top: ${props.top}px`)
+    cssText.value.top = `${props.top}px`
   }
-  cssText = css.join(';')
 }
 
-setCss()
-
-const emit = defineEmits(['cancel', 'update:unsaved', 'confirmed']);
-
+/**
+ * Cancel Event
+ */
 const cancelEvent = () => {
+  model.value = false;
   emit('cancel')
-  emit('update:unsaved', false)
 }
+
+/**
+ * Confirm Event
+ */
 const confirmedEvent = () => {
   emit('confirmed')
 }
+
+/**
+ * Set CSS
+ */
+setCss()
 </script>
 
 <style scoped lang="scss">
 @use "../../style/index.scss" as var;
-
 .oga-unsaved {
   position: fixed;
   height: 59px;
-  width: calc(100% - var(--offset) * 1px);
+  width: calc(100% - 200px);
   right: 0;
   top: 0;
   background-color: #fdf6ec;

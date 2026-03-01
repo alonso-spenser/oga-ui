@@ -117,3 +117,46 @@ export const getFileType = (fileName: string): number => {
 
   return 0
 }
+
+/**
+ * Date format
+ * @param date Date
+ * @param format Format
+ */
+export const formatDate = (
+    date: Date,
+    format = "yyyy-MM-dd hh:mm:ss",
+): string => {
+  const map: Record<string, number> = {
+    y: date.getFullYear(),
+    M: date.getMonth() + 1,
+    d: date.getDate(),
+    h: date.getHours(),
+    m: date.getMinutes(),
+    s: date.getSeconds(),
+    S: date.getMilliseconds(),
+  };
+
+  return format.replace(/y+|M+|d+|h+|m+|s+|S/g, (token) => {
+    const key = token[0];
+    // @ts-ignore
+    const value = String(map[key]);
+    return token.length === 1 ? value : value.padStart(token.length, "0");
+  });
+};
+
+/**
+ * Timestamp to date
+ * @param ts Timestamp
+ * @param format Format
+ */
+export const timestampToDate = (ts: number, format?: string) =>
+    formatDate(new Date(ts), format || "yyyy-MM-dd");
+
+/**
+ * Timestamp to datetime
+ * @param ts Timestamp
+ * @param format Format
+ */
+export const timestampToDatetime = (ts: number, format?: string) =>
+    formatDate(new Date(ts), format || "yyyy-MM-dd hh:mm:ss");

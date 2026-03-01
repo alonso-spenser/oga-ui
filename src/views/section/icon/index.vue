@@ -4,7 +4,7 @@
       <div class="icon-package">
         <div class="icon-list" v-for="icon in icons" :key="icon">
           <oga-icon :name="icon"></oga-icon>
-          <p>{{icon}}</p>
+          <p>{{ icon }}</p>
         </div>
       </div>
     </oga-section>
@@ -125,8 +125,9 @@ const icons = [
   "email",
   "notice",
   "eye",
-  "eye-close"
-]
+  "eye-close",
+  "search",
+];
 </script>
 <style scoped lang="scss">
 .icon-package {
