@@ -37,11 +37,11 @@ const props = defineProps({
     default: ""
   },
   size: {
-    type: number,
+    type: Number,
     default: 178
   },
   radius: {
-    type: number,
+    type: Number,
     default: 6
   },
   /**
@@ -94,7 +94,7 @@ const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
       border-color: var(--el-color-primary);
 
       img {
-        opacity: 0;
+        opacity: .06;
       }
       .el-icon {
         opacity: 1;

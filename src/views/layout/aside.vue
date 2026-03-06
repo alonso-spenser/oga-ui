@@ -57,14 +57,14 @@ const route = useRoute();
 const router = useRouter();
 
 const replaceParams = (params: { [x: string]: any }, url: string) => {
-  for (let key in params) {
+  for (const key in params) {
     url = url.replace(`:${key}:`, params[key]);
   }
   return url;
 };
 
 const getMenuList = () => {
-  let list = JSON.parse(JSON.stringify(i18n.global.tm("menuList")));
+  const list = JSON.parse(JSON.stringify(i18n.global.tm("menuList")));
   let { params } = route;
   params = {
     ...params,
@@ -79,7 +79,7 @@ const getMenuList = () => {
       }
     });
   });
-  let s = [];
+  const s = [];
   /**
    *  处理导航栏展示，隐藏
    * @type {*[]}
@@ -109,7 +109,7 @@ const openMenu = (url: string) => {
  */
 const activeMenu = () => {
   const { meta, path, params } = route;
-  let url = meta.parent
+  const url = meta.parent
     ? typeof meta.parent === "object"
       ? meta.parent.url
       : meta.parent

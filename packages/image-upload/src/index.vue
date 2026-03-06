@@ -95,12 +95,20 @@ import {isEmpty,isNotEmpty, getSuffix, getFileType} from "../../plugins/utility"
 import i18n from "../../i18n/base";
 
 /**
+ * Image State
+ */
+interface ImageState {
+  title: string;
+  url: string;
+}
+
+/**
  * default value
  */
-const model = defineModel()
+const model = defineModel<ImageState>()
 
 const displayAlt = ref(false)
-let altEntity = ref({})
+const altEntity = ref({})
 
 /**
  * editor props
@@ -119,11 +127,11 @@ const props = defineProps({
     default: ""
   },
   max: {
-    type: number,
-    default: 10
+    type: Number,
+    default: 12
   },
   radius: {
-    type: number,
+    type: Number,
     default: 6
   },
   /**
@@ -183,10 +191,8 @@ const uploadSuccess: UploadProps['onSuccess'] = (result, file: any) => {
     url: result.data.url,
     refType: props.resourceType,
     refId: props.refId,
-    needPass: 1,
     fileType: getFileType(file.name),
     suffix: getSuffix(file.name),
-    description: ''
   })
 }
 
@@ -209,7 +215,7 @@ const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
  */
 const altDialog = (data, index) => {
   displayAlt.value = true
-  altEntity = data
+  altEntity.value = data
 }
 
 /**
@@ -217,7 +223,7 @@ const altDialog = (data, index) => {
  */
 const editAlt = () => {
   displayAlt.value = false
-  altEntity.title = altEntity.title.replace(/(^\s*)|(\s*$)/g, '')
+  altEntity.value.title = altEntity.value.title.replace(/(^\s*)|(\s*$)/g, '')
 }
 
 /**
@@ -232,7 +238,8 @@ const removeAt = (index: number) => {
         confirmButtonText: i18n.global.t('fileUpload.confirm'),
         cancelButtonText: i18n.global.t('fileUpload.cancel'),
         type: 'warning',
-      }
+        modalClass: 'file-grid-overlay'
+      },
   )
       .then(() => {
         model.value.splice(index, 1)
@@ -270,10 +277,13 @@ const removeAt = (index: number) => {
   }
 }
 
+.file-grid-overlay {
+  z-index: 99999!important;
+}
 
 .file-grid {
   display: inline-grid;
-  grid-template-columns: 20% 20% 20% 20%  20%;
+  grid-template-columns: 20% 20% 20% 20% 20%;
   width: 100%;
 
   &-item {

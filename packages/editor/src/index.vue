@@ -24,7 +24,7 @@ import {isPositiveInteger} from "../../plugins/utility";
 import { i18nChangeLanguage, type IEditorConfig, DomEditor } from '@wangeditor/editor'
 i18nChangeLanguage(i18n.global.locale)
 
-let cssVars = ref({})
+const cssVars = ref({})
 
 /**
  * editor ref

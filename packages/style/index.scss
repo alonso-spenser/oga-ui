@@ -446,6 +446,11 @@ $text-size-small: 12px;
     padding: 0 15px !important;
   }
 
+  .el-date-editor {
+    .el-input__wrapper {
+      width: 100%;
+    }
+  }
   .el-select {
     width: 100%;
   }
@@ -562,6 +567,11 @@ $text-size-small: 12px;
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  &-image {
+    border: 1px solid red;
+    display: flex;
+  }
 
   &-content {
     flex: 1;

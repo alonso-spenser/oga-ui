@@ -53,6 +53,38 @@ Avatar
 ImageUpload(Multiple upload)
 ```
 
+## Update
+### Table
+```html
+ColumnList
+album: true
+
+ImageState {
+    title: string;
+    url: string;
+}
+
+Filed value: List<ImageState>
+
+<el-image
+    :src="url"
+    :preview-src-list="srcList"
+/>
+
+numberFormat: 'breve',
+532
+1.2K
+12.5K
+12.2M
+2.5B
+885.3T
+
+numberFormat: 'thousand',
+000,000,000
+
+className: 'stop',
+Stop row click event
+```
 
 ## IconFont
 #### How to use

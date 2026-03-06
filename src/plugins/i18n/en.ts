@@ -89,4 +89,240 @@ export default {
       "zh-CN": "简体中文",
     },
   },
+
+  organize: {
+    employee: {
+      title: 'Organize Employee',
+      add: 'Add Organize Employee',
+      edit: 'Edit Organize Employee',
+      addTitle: 'Add Organize Employee',
+      updateTitle: 'Edit Organize Employee',
+      empty: {
+        content: 'The added Organize Employee will be listed here. You can manage all Organize Employee here, such as batch deletion, modification, etc.',
+        buttonLabel: 'Add Organize Employee'
+      },
+      tableHeader: {
+
+        account: 'Account',
+        address: 'Address',
+        areaCode: 'Area Code',
+        avatar: 'Avatar',
+        chest: 'Chest',
+        cup: 'Cup',
+        dateOfBirth: 'Date Of Birth',
+        email: 'Email',
+        expirationDate: 'Expiration Date',
+        firstName: 'First Name',
+        height: 'Height',
+        hip: 'Hip',
+        lastName: 'Last Name',
+        middleName: 'Middle Name',
+        mobile: 'Mobile',
+        nationality: 'Nationality',
+        nationalityId: 'Nationality Id',
+        onboardingTime: 'Onboarding Time',
+        organizeId: 'Organize ID',
+        password: 'Password',
+        position: 'Position',
+        referId: 'Refer ID',
+        referName: 'Refer Name',
+        resign: 'Resign',
+        salt: 'Salt',
+        sex: 'Sex',
+        skinColor: 'Skin Color',
+        state: 'State',
+        tiktokAccount: 'TikTok Account',
+        tiktokName: 'TikTok Name',
+        timeOfLeaving: 'Time Of Leaving',
+        timeZoneId: 'Time Zone Id',
+        userRole: 'User Role',
+        waist: 'Waist',
+        weight: 'Weight',
+        whatsApp: 'WhatsApp'
+      },
+      entity: {
+
+        account: {
+          label: 'Account',
+          placeholder: 'Please enter Account',
+          required: ''
+        },
+        address: {
+          label: 'Address',
+          placeholder: 'Please enter Address',
+          required: ''
+        },
+        areaCode: {
+          label: 'Area Code',
+          placeholder: 'Please enter Area Code',
+          required: ''
+        },
+        avatar: {
+          label: 'Avatar',
+          placeholder: 'Please enter Avatar',
+          required: ''
+        },
+        chest: {
+          label: 'Chest',
+          placeholder: 'Please enter Chest',
+          required: ''
+        },
+        cup: {
+          label: 'Cup',
+          placeholder: 'Please enter Cup',
+          required: ''
+        },
+        dateOfBirth: {
+          label: 'Date Of Birth',
+          placeholder: 'Please enter Date Of Birth',
+          required: ''
+        },
+        email: {
+          label: 'Email',
+          placeholder: 'Please enter Email',
+          required: ''
+        },
+        expirationDate: {
+          label: 'Expiration Date',
+          placeholder: 'Please enter Expiration Date',
+          required: ''
+        },
+        firstName: {
+          label: 'First Name',
+          placeholder: 'Please enter First Name',
+          required: ''
+        },
+        height: {
+          label: 'Height',
+          placeholder: 'Please enter Height',
+          required: ''
+        },
+        hip: {
+          label: 'Hip',
+          placeholder: 'Please enter Hip',
+          required: ''
+        },
+        lastName: {
+          label: 'Last Name',
+          placeholder: 'Please enter Last Name',
+          required: ''
+        },
+        middleName: {
+          label: 'Middle Name',
+          placeholder: 'Please enter Middle Name',
+          required: ''
+        },
+        mobile: {
+          label: 'Mobile',
+          placeholder: 'Please enter Mobile',
+          required: ''
+        },
+        nationality: {
+          label: 'Nationality',
+          placeholder: 'Please enter Nationality',
+          required: ''
+        },
+        nationalityId: {
+          label: 'Nationality Id',
+          placeholder: 'Please enter Nationality Id',
+          required: ''
+        },
+        onboardingTime: {
+          label: 'Onboarding Time',
+          placeholder: 'Please enter Onboarding Time',
+          required: ''
+        },
+        organizeId: {
+          label: 'Organize ID',
+          placeholder: 'Please enter Organize ID',
+          required: ''
+        },
+        password: {
+          label: 'Password',
+          placeholder: 'Please enter Password',
+          required: ''
+        },
+        position: {
+          label: 'Position',
+          placeholder: 'Please enter Position',
+          required: ''
+        },
+        referId: {
+          label: 'Refer ID',
+          placeholder: 'Please enter Refer ID',
+          required: ''
+        },
+        referName: {
+          label: 'Refer Name',
+          placeholder: 'Please enter Refer Name',
+          required: ''
+        },
+        resign: {
+          label: 'Resign',
+          placeholder: 'Please enter Resign',
+          required: ''
+        },
+        salt: {
+          label: 'Salt',
+          placeholder: 'Please enter Salt',
+          required: ''
+        },
+        sex: {
+          label: 'Sex',
+          placeholder: 'Please enter Sex',
+          required: ''
+        },
+        skinColor: {
+          label: 'Skin Color',
+          placeholder: 'Please enter Skin Color',
+          required: ''
+        },
+        state: {
+          label: 'State',
+          placeholder: 'Please enter State',
+          required: ''
+        },
+        tiktokAccount: {
+          label: 'TikTok Account',
+          placeholder: 'Please enter TikTok Account',
+          required: ''
+        },
+        tiktokName: {
+          label: 'TikTok Name',
+          placeholder: 'Please enter TikTok Name',
+          required: ''
+        },
+        timeOfLeaving: {
+          label: 'Time Of Leaving',
+          placeholder: 'Please enter Time Of Leaving',
+          required: ''
+        },
+        timeZoneId: {
+          label: 'Time Zone Id',
+          placeholder: 'Please enter Time Zone Id',
+          required: ''
+        },
+        userRole: {
+          label: 'User Role',
+          placeholder: 'Please enter User Role',
+          required: ''
+        },
+        waist: {
+          label: 'Waist',
+          placeholder: 'Please enter Waist',
+          required: ''
+        },
+        weight: {
+          label: 'Weight',
+          placeholder: 'Please enter Weight',
+          required: ''
+        },
+        whatsApp: {
+          label: 'WhatsApp',
+          placeholder: 'Please enter WhatsApp',
+          required: ''
+        }
+      }
+    }
+  }
 };

@@ -29,93 +29,183 @@
         <div class="oga-filter-item"></div>
       </div>
     </template>
-    <oga-table v-model="paginationModel" @paging="getData"> </oga-table>
+    <oga-table
+        v-model="pageResult"
+        v-bind="paginationState"
+        @paging="getData">
+    </oga-table>
   </oga-page>
 </template>
 
 <script setup lang="tsx">
-import { ref } from "vue";
+import {ref, watch} from "vue";
 import {
-  type PaginationParameterState,
-  createPaginationParameter,
-} from "@/plugins/page";
-import { ElButton, ElTooltip } from "element-plus";
+  usePageState,
+} from "@/plugins/page-state";
+import { ElButton } from "element-plus";
 import i18n from "@/plugins/i18n/base";
+import {OrganizeEmployeeModel, useOrganizeEmployeeStore} from "@/stores/page/organize-employee-store";
+import {fetchOrganizeEmployeePaging} from "@/plugins/organize"
+
+const { state, pageState, pageQueryState, pageResult, paginationState } = usePageState<OrganizeEmployeeModel>();
+const organizeEmployeeStore = useOrganizeEmployeeStore()
+
+console.log(organizeEmployeeStore.pageQueryState, organizeEmployeeStore.normalQueryState)
 
 /**
- * Pagination Config
+ * Load data from cache
  */
-const paginationConfig = {
+pageState.loadCache(organizeEmployeeStore.pageQueryState, organizeEmployeeStore.normalQueryState)
+
+/**
+ * Update Pagination
+ */
+pageState.updatePaginationState({
   actionList: {
-    rowClick: (row: any, column: any) => {
+    rowClick: (row: OrganizeEmployeeModel, column: any) => {
       columnEvents(row, column);
     },
     delete: {
       icon: "",
-      label: "删除",
-      onClick: (rows: Array<any>) => {
-        console.log("delete rows:", rows.length);
-        // this.deleteDict(rows)
+      label: i18n.global.t('action.delete.button'),
+      onClick: (rows: Array<OrganizeEmployeeModel>) => {
+        // console.log("delete rows:");
+        // deleteEmployee(rows)
       },
-    },
-    disable: {
-      label: "article.paging.actions.disable",
-      onClick: (rows) => {},
-    },
-    enable: {
-      label: "article.paging.actions.enable",
-      onClick: (rows) => {},
-    },
-    sticky: {
-      divided: true,
-      label: "article.paging.actions.sticky",
-      onClick: (rows) => {},
-    },
-    cancelSticky: {
-      label: "article.paging.actions.cancelSticky",
-      onClick: (rows) => {},
-    },
-    addCollection: {
-      divided: true,
-      label: "article.paging.actions.addCollection",
-      onClick: (rows) => {},
-    },
-    addTag: {
-      label: "article.paging.actions.addTag",
-      onClick: (rows) => {},
-    },
-    clone: {
-      divided: true,
-      label: "goods.paging.actions.clone.button",
-      onClick: (rows) => {},
     },
   },
   columnList: [
     {
-      prop: "key",
-      label: i18n.global.t("base.dict.tableHeader.key"),
-      fixed: "left",
+      prop: 'account',
+      width: 150,
+      fixed: true,
+      label: i18n.global.t('organize.employee.tableHeader.account')
+    },
+    {
+      prop: 'address',
+      label: i18n.global.t('organize.employee.tableHeader.address')
+    },
+    {
+      prop: 'areaCode',
+      label: i18n.global.t('organize.employee.tableHeader.areaCode')
+    },
+    {
+      prop: 'avatar',
       width: 100,
+      radius: 9,
+      image: true,
+      label: i18n.global.t('organize.employee.tableHeader.avatar')
     },
     {
-      prop: "parentId",
-      label: i18n.global.t("base.dict.tableHeader.parentId"),
-      width: 200,
-      render: ({ row }) => (
-          <div>
-            <div style="color:red">111</div>
-            <ElButton size="small" type="primary" onClick={() => handleEdit(row)}>
-              Edit
-            </ElButton>
-            <ElButton size="small" type="danger" onClick={() => handleDelete(row)}>
-              Delete
-            </ElButton>
-          </div>
-      ),
+      prop: 'imageList',
+      width: 100,
+      radius: 9,
+      album: true,
+      stop: true,
+      className: 'stop',
+      label: i18n.global.t('organize.employee.tableHeader.avatar')
     },
     {
-      prop: "state",
-      label: "Switch",
+      prop: 'chest',
+      width: 100,
+      numberFormat: 'breve',
+      label: i18n.global.t('organize.employee.tableHeader.chest')
+    },
+    {
+      prop: 'cup',
+      numberFormat: 'thousand',
+      label: i18n.global.t('organize.employee.tableHeader.cup')
+    },
+    {
+      prop: 'dateOfBirth',
+      width: 120,
+      dataType: "date",
+      label: i18n.global.t('organize.employee.tableHeader.dateOfBirth')
+    },
+    {
+      prop: 'email',
+      label: i18n.global.t('organize.employee.tableHeader.email')
+    },
+    {
+      prop: 'expirationDate',
+      width: 120,
+      dataType: "date",
+      label: i18n.global.t('organize.employee.tableHeader.expirationDate')
+    },
+    {
+      prop: 'firstName',
+      label: i18n.global.t('organize.employee.tableHeader.firstName')
+    },
+    {
+      prop: 'height',
+      label: i18n.global.t('organize.employee.tableHeader.height')
+    },
+    {
+      prop: 'hip',
+      label: i18n.global.t('organize.employee.tableHeader.hip')
+    },
+    {
+      prop: 'lastName',
+      label: i18n.global.t('organize.employee.tableHeader.lastName')
+    },
+    {
+      prop: 'middleName',
+      label: i18n.global.t('organize.employee.tableHeader.middleName')
+    },
+    {
+      prop: 'mobile',
+      label: i18n.global.t('organize.employee.tableHeader.mobile')
+    },
+    {
+      prop: 'nationality',
+      label: i18n.global.t('organize.employee.tableHeader.nationality')
+    },
+    {
+      prop: 'nationalityId',
+      label: i18n.global.t('organize.employee.tableHeader.nationalityId')
+    },
+    {
+      prop: 'onboardingTime',
+      label: i18n.global.t('organize.employee.tableHeader.onboardingTime')
+    },
+    {
+      prop: 'organizeId',
+      label: i18n.global.t('organize.employee.tableHeader.organizeId')
+    },
+    {
+      prop: 'password',
+      label: i18n.global.t('organize.employee.tableHeader.password')
+    },
+    {
+      prop: 'position',
+      label: i18n.global.t('organize.employee.tableHeader.position')
+    },
+    {
+      prop: 'referId',
+      label: i18n.global.t('organize.employee.tableHeader.referId')
+    },
+    {
+      prop: 'referName',
+      label: i18n.global.t('organize.employee.tableHeader.referName')
+    },
+    {
+      prop: 'resign',
+      label: i18n.global.t('organize.employee.tableHeader.resign')
+    },
+    {
+      prop: 'salt',
+      label: i18n.global.t('organize.employee.tableHeader.salt')
+    },
+    {
+      prop: 'sex',
+      label: i18n.global.t('organize.employee.tableHeader.sex')
+    },
+    {
+      prop: 'skinColor',
+      label: i18n.global.t('organize.employee.tableHeader.skinColor')
+    },
+    {
+      prop: 'state',
       width: 150,
       switch: true,
       switchActive: 0,
@@ -123,116 +213,98 @@ const paginationConfig = {
       inlinePrompt: true,
       activeText: "活动进行中",
       inactiveText: "活动结束",
-      onClick: (row) => {
-        // this.goodsSticky([row.id], row.sticky, true)
-      },
+      label: i18n.global.t('organize.employee.tableHeader.state')
     },
     {
-      prop: "img",
-      label: "Image",
-      width: 100,
-      radius: 9,
-      image: true,
+      prop: 'tiktokAccount',
+      label: i18n.global.t('organize.employee.tableHeader.tiktokAccount')
     },
     {
-      prop: "start",
-      label: i18n.global.t("base.dict.tableHeader.sortIndex"),
-      width: 120,
-      dataType: "date",
+      prop: 'tiktokName',
+      label: i18n.global.t('organize.employee.tableHeader.tiktokName')
     },
     {
-      prop: "start",
-      label: i18n.global.t("base.dict.tableHeader.sortIndex"),
-      width: 200,
-      dataType: "datetime",
-      dataFormat: "yyyy年MM月dd日 hh:mm",
+      prop: 'timeOfLeaving',
+      label: i18n.global.t('organize.employee.tableHeader.timeOfLeaving')
     },
     {
-      prop: "start",
-      label: i18n.global.t("base.dict.tableHeader.sortIndex"),
-      width: 200,
-      dataType: "dateFull",
+      prop: 'timeZoneId',
+      label: i18n.global.t('organize.employee.tableHeader.timeZoneId')
     },
     {
-      prop: "sortIndex",
-      label: i18n.global.t("base.dict.tableHeader.sortIndex"),
-      width: 100,
+      prop: 'userRole',
+      label: i18n.global.t('organize.employee.tableHeader.userRole')
     },
     {
-      prop: "value",
-      label: i18n.global.t("base.dict.tableHeader.value"),
+      prop: 'waist',
+      label: i18n.global.t('organize.employee.tableHeader.waist')
+    },
+    {
+      prop: 'weight',
+      label: i18n.global.t('organize.employee.tableHeader.weight')
+    },
+    {
+      prop: 'whatsApp',
+      label: i18n.global.t('organize.employee.tableHeader.whatsApp')
+    },
+    {
+      button: true,
+      label: '',
+      width: 150,
+      group: [
+        {
+          icon: 'delete',
+          circle: true,
+          round: true,
+          label: '',
+          disabled: false,
+          onClick: (row) => {
+            console.log(row);
+          }
+        },
+      ]
     },
   ],
   /**
    * Data is empty
    */
   empty: {
-    content: i18n.global.t("base.dict.empty.content"),
-    buttonLabel: i18n.global.t("base.dict.empty.buttonLabel"),
+    content: i18n.global.t('organize.employee.empty.content'),
+    buttonLabel: i18n.global.t('organize.employee.empty.buttonLabel'),
     onClick: () => {
-      addDict();
+      //addEmployeeDrawer()
     },
   },
   /**
    * Row Highlight Class
    * @param row Row data
    */
-  rowsClassName: (row: any) => {
+  rowsClassName: (row: OrganizeEmployeeModel) => {
     // return row.state === 0? 'row-text-enable': ''
     return "";
   },
-};
+})
 
-/**
- * Pagination Model
- */
-const paginationModel = ref<PaginationParameterState<any>>({
-  ...createPaginationParameter<any>(),
-  columnList: paginationConfig.columnList,
-  actionList: paginationConfig.actionList,
-  empty: paginationConfig.empty,
-  pageSize: 20,
-  index: false,
-  border: true,
-  card: true,
-});
 
 const addDict = () => {
   console.log("addDict");
 };
 
 const columnEvents = (row: any, column: any) => {
-  console.log("columnEvents", row, column);
+  console.log('columnKey',  column.className);
 };
-const getData = () => {
-  if (!paginationModel.value) return;
-  paginationModel.value.recordCount = 300;
-  paginationModel.value.dataset = [];
-  for (let i = 1; i <= paginationModel.value.pageSize; i++) {
-    let c =
-      i * paginationModel.value.pageIndex * paginationModel.value.pageSize;
-    let item = {
-      id: i.toString(),
-      key: c,
-      state: i % 2,
-      parentId: "parentId" + c,
-      sortIndex: c,
-      img:
-        i % 3 === 0
-          ? "https://s.tvagrp.com/file/2013184463368097793.webp"
-          : "https://s.tvagrp.com/file/2013548252240285697.webp",
-      start: 1731621717165 + i,
-      value:
-        "value base.dict.empty.content base.dict.empty.content base.dict.empty.content  base.dict.empty.content base.dict.empty.content base.dict.empty.content " +
-        c,
-    };
-    paginationModel.value.dataset.push(item);
-  }
 
-  paginationModel.value.loading = false;
-  paginationModel.value.firstLoading = false;
-  console.log("getData", paginationModel.value.loading);
-};
+
+/**
+ * Get data
+ */
+const getData = async () => {
+  await pageState.handleResponse<OrganizeEmployeeModel>(fetchOrganizeEmployeePaging({
+    ...pageQueryState,
+    current: pageResult.value.current,
+    size: pageResult.value.size
+  }));
+}
 
 const handleEdit = (row) => {
   console.log('Editing:', row.name);

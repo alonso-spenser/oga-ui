@@ -27,11 +27,11 @@ export default defineComponent({
   },
   setup(props) {
     const name = computed(() => {
-      let hash = props.type === "svg" ? "#" : "";
+      const hash = props.type === "svg" ? "#" : "";
       return `${hash}${props.prefix}-${props.name}`;
     });
     const useSvg = computed(() => {
-      let type = props.type;
+      const type = props.type;
       return type === "svg";
     });
     return {

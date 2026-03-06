@@ -10,12 +10,18 @@
   ],
   "compilerOptions": {
     "jsx": "preserve",
-    "jsxImportSource": "vue"
+    "jsxImportSource": "vue",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/stores/page/account": ["./src/stores/page/account.ts"]
+    }
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "src"
   ]
 }

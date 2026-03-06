@@ -160,3 +160,30 @@ export const timestampToDate = (ts: number, format?: string) =>
  */
 export const timestampToDatetime = (ts: number, format?: string) =>
     formatDate(new Date(ts), format || "yyyy-MM-dd hh:mm:ss");
+
+/**
+ * Format number
+ * @param num
+ */
+export const formatNumber = (num: number) => {
+  const units = ["", "K", "M", "B", "T"]
+  let i = 0
+
+  while (num >= 1000 && i < units.length - 1) {
+    num /= 1000
+    i++
+  }
+  return num.toFixed(1).replace(/\.0$/, "") + units[i]
+}
+
+/**
+ * Format number
+ * @param num
+ */
+export const formatNumberLocation = (num: number) => {
+  try {
+    return num.toLocaleString('en-US')
+  } catch (e){
+    return num
+  }
+}

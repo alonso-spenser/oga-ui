@@ -1,7 +1,7 @@
 import type { App } from "vue";
 
-import OgaInput from "./input/index.ts";
-import OgaInputTag from "./input/tag.ts";
+import OgaInput from "./input/index";
+import OgaInputTag from "./input/tag";
 import PageSection from './section'
 import OgaLayout from "./layout";
 import OgaPage from "./page";

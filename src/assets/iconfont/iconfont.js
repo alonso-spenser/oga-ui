@@ -34,7 +34,7 @@
             (v.style.width = 0),
             (v.style.height = 0),
             (v.style.overflow = "hidden"),
-            (v = v),
+            // (v = v),
             (h = document.body).firstChild
               ? s(v, h.firstChild)
               : h.appendChild(v)));

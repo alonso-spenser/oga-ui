@@ -1,15 +1,15 @@
 <template>
   <div class="oga-table">
     <template
-        v-if="model.dataset.length === 0 && model.empty && model.empty.content && model.firstLoading"
+        v-if="model.records.length === 0 && empty && empty.content && model.firstLoading"
     >
       <el-empty :description="i18n.global.t('notData')">
-        {{ model.empty.content }}
+        {{ empty.content }}
         <el-button
             type="text"
             @click="emptyEvent"
         >
-          {{ model.empty.buttonLabel }}
+          {{ empty.buttonLabel }}
         </el-button>
       </el-empty>
     </template>
@@ -17,10 +17,10 @@
       <div class="oga-table-content">
         <el-table
             ref="ogaTable"
+            :data="model.records"
+            :stripe="stripe"
+            :border="border"
             v-loading="model.loading"
-            :data="model.dataset"
-            :stripe="model.stripe"
-            :border="model.border"
             :row-class-name="tableRowClassName"
             :header-cell-class-name="headerCellClassName"
             @selection-change="multiSelectEvent"
@@ -28,17 +28,17 @@
             :row-style="rowClass"
         >
           <el-table-column
-              v-if="model.multiSelect"
+              v-if="multiSelect"
               type="selection"
               width="55">
           </el-table-column>
           <el-table-column
-              v-if="model.index"
+              v-if="index"
               label="NO."
               type="index"
               width="50"
               align="center"></el-table-column>
-          <template v-for="(column, index) in model.columnList">
+          <template v-for="(column, index) in columnList">
             <el-table-column
                 :prop="column.prop"
                 :align="column.align || 'left'"
@@ -48,6 +48,7 @@
                 :label="column.label"
                 :class-name="column.className || ''"
                 :sortable="column.sortable"
+                :column-key="column.prop"
                 :fixed="column.fixed">
               <template #header="scope">
                 <span v-html="renderHeader(column.label)"></span>
@@ -67,7 +68,28 @@
                   </el-switch>
                 </template>
                 <template v-else-if="column.image">
-                  <el-image :style="getBorderRadius(column.radius)" :src="scope.row[column.prop]" fit="cover">
+                  <el-image
+                      :preview-teleported="true"
+                      :hide-on-click-modal="true"
+                      show-progress
+                      :preview-src-list="isNotEmpty(scope.row[column.prop]) ? [scope.row[column.prop]] : []"
+                      :style="getBorderRadius(column.radius)" :src="scope.row[column.prop]"
+                      fit="cover">
+                    <template #error>
+                      <img :src="placeholder"
+                           class="el-image__inner"
+                           style="object-fit: fill;" />
+                    </template>
+                  </el-image>
+                </template>
+                <template v-else-if="column.album">
+                  <el-image
+                      :preview-teleported="true"
+                      :hide-on-click-modal="true"
+                      show-progress
+                      :preview-src-list="getImageList(scope.row[column.prop])"
+                      :style="getBorderRadius(column.radius)"
+                      :src="getFirstImage(scope.row[column.prop])" fit="cover">
                     <template #error>
                       <img :src="placeholder"
                            class="el-image__inner"
@@ -84,8 +106,34 @@
                 <template v-else-if="column.dataType === 'dateFull'">
                   {{ timestampToDatetime(scope.row[column.prop]) }}
                 </template>
+                <template v-else-if="column.button">
+                    <el-button
+                        v-for="(btn, i) in column.group"
+                        :key="i"
+                        :type="btn.type"
+                        :disabled="btn.disabled"
+                        :plain="btn.plain"
+                        :circle="btn.circle"
+                        :round="btn.round"
+                        :class="btn.className || ''"
+                        @click.stop="btn.onClick(scope.row, scope.$index)"
+                    >
+                      <template #default>
+                        <oga-icon :name="btn.icon" v-if="btn.icon"></oga-icon>
+                        <template v-if="btn.label">
+                          {{ btn.label }}
+                        </template>
+                      </template>
+                    </el-button>
+                </template>
                 <template v-else-if="column.render">
-                  <component :is="column.render(scope)"></component>
+                  <component :is="column.render(scope.row)"></component>
+                </template>
+                <template v-else-if="column.numberFormat ==='thousand'">
+                  {{formatNumberLocation(scope.row[column.prop])}}
+                </template>
+                <template v-else-if="column.numberFormat ==='breve'">
+                  {{formatNumber(scope.row[column.prop])}}
                 </template>
                 <template v-else>
                   {{ scope.row[column.prop] }}
@@ -114,7 +162,7 @@
               </div>
             </div>
             <template #dropdown>
-              <template v-for="(o, key) in model.actionList">
+              <template v-for="(o, key) in actionList">
                 <template v-if="!o.invisible && typeof (o) !== 'function'">
                   <el-dropdown-item
                       v-if="key === 'update'"
@@ -160,77 +208,83 @@
       </div>
       <el-pagination
           :background="false"
-          :current-page="model.pageIndex"
-          :page-size="model.pageSize"
-          :layout="model.pageLayout"
-          :page-sizes="model.pageSizes"
-          :total="model.recordCount"
+          :current-page="model.current"
+          :page-size="model.size"
+          :layout="pageLayout"
+          :page-sizes="pageSizes"
+          :total="model.total"
           @current-change="pageChange"
           @size-change="pageSizeChange"
-          v-if="model.paginationSection && model.recordCount > model.pageSize"
+          v-if="paginationSection && model.total > model.size"
       >
       </el-pagination>
     </template>
   </div>
 </template>
 <script setup lang="ts">
-import { ArrowDown, Picture as IconPicture } from '@element-plus/icons-vue'
+import { ArrowDown } from '@element-plus/icons-vue'
+import type { TableColumnCtx } from "element-plus";
 import { defineEmits, ref } from "vue";
 import i18n from "../../i18n/base";
-import {isNotEmpty, isEmpty, isFunction, filterHTML, timestampToDate, timestampToDatetime} from "../../plugins/utility";
+import {
+  isNotEmpty,
+  isFunction,
+  timestampToDate,
+  timestampToDatetime,
+  formatNumber,
+  formatNumberLocation
+} from "../../plugins/utility";
 import placeholder from './img/placeholder.jpg'
 import OgaIcon from "../../iconfont/src/iconFont.vue";
-import {type PaginationParameterState, createPaginationParameter} from  "./table"
+import {
+  type PaginationParameterState,
+  type ColumnState,
+    type ImageState,
+  PaginationState
+} from "./table"
 
-interface ButtonGroupState {
-  icon: string,
-  circle: boolean,
-  name: string,
-  disabled: boolean,
-  onClick: Function | null
-}
-interface ColumnState {
-  prop: string;
-  label: string;
-  align: string;
-  width: string | number;
-  sortable: boolean;
-  fixed: boolean;
-  render: Function;
-  image: boolean;
-  switch: boolean;
-  button: boolean;
-  svg: string;
-  switchActive: number;
-  switchInactive: number;
-  onClick: Function | null;
-  dataType: string;
-  dataFormat: string;
-  headerAlign: string;
-  labelClassName:string;
-  className: string;
-  group: Array<ButtonGroupState>;
-}
 
-let selectedItems = ref<Array<any>>([])
-const model = defineModel<PaginationParameterState<any>>()
+/**
+ * Props
+ */
+const props =  defineProps<PaginationParameterState>()
+
+/**
+ * Model
+ */
+const model = defineModel<PaginationState>()
+
+/**
+ * Selected items in the table.
+ */
+const selectedItems = ref<Array<any>>([])
+
+/**
+ * Table instance
+ */
 const ogaTable = ref(null);
+
+/**
+ * Bulk operation instance
+ */
 const bulkOperation = ref(null);
-const emit = defineEmits(['update:modelValue', 'paging'])
+
+/**
+ * Emit event
+ */
+const emit = defineEmits(['paging'])
 
 /**
  * Row class name
  * @param row Row data
- * @param rowIndex Row index
  * @returns {string}
  */
 const tableRowClassName = ({ row: object, rowIndex: number }) => {
-  // if (model.value.rowsClassName && typeof (model.value.rowsClassName) === 'function') {
-  //   return model.value.rowsClassName.call(this, row, rowIndex)
+  // if (props.rowsClassName && typeof (props.rowsClassName) === 'function') {
+  //   return props.rowsClassName.call(this, row, rowIndex)
   // }
   return ''
 }
-
 
 /**
  * Cell class name
@@ -249,7 +303,7 @@ const headerCellClassName = ({ row, column }) => {
  * Render header
  */
 const renderHeader = (label: string) => {
-  let s = label.split('-')
+  const s = label.split('-')
   return s.join("<br/>")
 }
 
@@ -268,7 +322,7 @@ const getBorderRadius = (radius: number): string => {
  */
 const multiSelectEvent = (rows: Array<any>) => {
   if (ogaTable.value !== null && bulkOperation.value !== null) {
-    let el = ogaTable.value.$refs.headerWrapper
+    const el = ogaTable.value.$refs.headerWrapper
     bulkOperation.value.style.height = (el.offsetHeight - 1) + 'px'
     selectedItems.value = rows
   }
@@ -280,29 +334,28 @@ const multiSelectEvent = (rows: Array<any>) => {
  * @param column Click column
  * @param event Click event
  */
-const rowClick = (row: any, column: any, event: { cancelBubble: boolean; }) => {
+const rowClick = (row: any, column: TableColumnCtx, event: { cancelBubble: boolean; }) => {
   event.cancelBubble = true
-  if (model.value === undefined) {
+  if (props === undefined || column.className === 'stop') {
     return
   }
-  if (model.value.actionList && model.value.actionList["update"]) {
-    const action = model.value.actionList.update.onClick
+  if (props.actionList && props.actionList["update"]) {
+    const action = props.actionList.update.onClick
     if (isFunction(action)) {
       action.call(this, row, column)
     }
   }
-  if (model.value.actionList.rowClick && isFunction(model.value.actionList.rowClick)) {
-    model.value.actionList.rowClick.call(this, row, column)
+  if (props.actionList.rowClick && isFunction(props.actionList.rowClick)) {
+    props.actionList.rowClick.call(this, row, column)
   }
 }
 
 /**
  * Highlight background in row selection
  * @param row Row data
- * @param rowIndex Row index
  * @returns {{"background-color": string}}
  */
-const rowClass = ({ row, rowIndex }) => {
+const rowClass = ({ row }) => {
   let exist = false
   selectedItems.value.forEach((o) => {
     if (o === row) {
@@ -315,11 +368,21 @@ const rowClass = ({ row, rowIndex }) => {
     }
   }
 }
+
 /**
- * Default image
+ * 图片组
+ * @param data
  */
-const defaultImage = (img: string | null | undefined) => {
-  return isEmpty(img) ? placeholder : img
+const getImageList = (data: Array<ImageState>) => {
+  return data.map(item => item.url)
+}
+
+/**
+ * 图片组
+ * @param data
+ */
+const getFirstImage = (data: Array<ImageState>) => {
+  return data.length > 0 ? data[0].url : ''
 }
 
 /**
@@ -332,16 +395,6 @@ const rowVisible = (row, column) => {
     return true
   }
   return row[column.visible] === column.visibleValue
-}
-
-/**
- * SVG
- */
-const getSvg =(value:string) => {
-  if (isEmpty(value)) {
-    return placeholder
-  }
-  return filterHTML(value, 'svg', 'width|height|class|fill')
 }
 
 /**
@@ -361,8 +414,8 @@ const columnEvent = (event, row: object, func: Function) => {
  * Butch operation event
  */
 const batchOperation = (command: string) => {
-  if (model.value.actionList[command] && selectedItems.value.length > 0) {
-    const action = model.value.actionList[command].onClick
+  if (props.actionList[command] && selectedItems.value.length > 0) {
+    const action = props.actionList[command].onClick
     if (action && typeof (action) === 'function') {
       action.call(this, command === 'update' ? selectedItems.value[0] : selectedItems.value)
     }
@@ -373,9 +426,9 @@ const batchOperation = (command: string) => {
  * empty content event
  */
 const emptyEvent = () => {
-  if(model.value !== undefined) {
-    if (model.value.empty && model.value.empty.onClick && typeof (model.value.empty.onClick) === 'function') {
-      model.value.empty.onClick.call(this)
+  if(props !== undefined) {
+    if (props.empty && props.empty.onClick && typeof (props.empty.onClick) === 'function') {
+      props.empty.onClick.call(this)
     }
   }
 }
@@ -385,9 +438,8 @@ const emptyEvent = () => {
  * @param index page index
  */
 const pageChange = (index: number) => {
-  if(model.value !== undefined) {
-    model.value.pageIndex = index
-    emit('update:modelValue', model)
+  if(props !== undefined) {
+    model.value.current = index;
     emit('paging', false)
   }
 }
@@ -397,14 +449,11 @@ const pageChange = (index: number) => {
  * @param size Page size
  */
 const pageSizeChange = (size: number) => {
-  if(model.value !== undefined) {
-    model.value.pageSize = size
-    model.value.pageIndex = 1
-    emit('update:modelValue', model)
-    emit('paging', ref(size))
+  if(props !== undefined) {
+    model.value.size = size;
+    emit('paging', false)
   }
 }
-
 </script>
 
 <style scoped lang="scss">

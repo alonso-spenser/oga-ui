@@ -21,7 +21,7 @@
 
 <script lang="ts" setup>
 import { ref, useSlots } from 'vue'
-let cssVars = ref({})
+const cssVars = ref({})
 const props = defineProps({
   offset: {
     type: Number,

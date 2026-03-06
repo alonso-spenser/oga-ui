@@ -43,12 +43,12 @@ import { ref, useSlots, defineEmits } from 'vue'
 import {isEmpty} from "../../plugins/utility";
 
 const year = ref(new Date().getFullYear())
-let cssVars = ref({})
-let maskColor = ref('')
-let foldImage = ref('')
-let foldSize = ref('')
-let paddingLeft = ref('')
-let asideWidth = ref({})
+const cssVars = ref({})
+const maskColor = ref('')
+const foldImage = ref('')
+const foldSize = ref('')
+const paddingLeft = ref('')
+const asideWidth = ref({})
 
 const slots = useSlots()
 const foldState = ref(false)
@@ -121,7 +121,7 @@ const props = defineProps({
   }
 })
 
-let css = {}
+const css = {}
 if (props.asideTop > 0) {
   css['top'] = `${props.asideTop}px`
 }

@@ -203,7 +203,7 @@ import type { FormInstance, FormRules } from "element-plus";
 
 const loading = ref(false);
 
-let unsaved = ref(false);
+const unsaved = ref(false);
 
 const ruleFormRef = ref<FormInstance>();
 const options = ref([

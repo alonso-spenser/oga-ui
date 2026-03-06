@@ -13,6 +13,6 @@
 <script setup>
 import { onMounted, reactive, ref } from "vue";
 const action = "http://127.0.0.1:9000/api/upload";
-let content = ref("http://127.0.0.1:9000/file/2026792081640407041.webp");
+const content = ref("http://127.0.0.1:9000/file/2026792081640407041.webp");
 onMounted(() => {});
 </script>

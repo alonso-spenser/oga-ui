@@ -3,8 +3,12 @@
     <oga-image-upload
       v-model="fileList"
       :action="action"
-      :radius="6"
+      :radius="15"
+      :max="12"
     ></oga-image-upload>
+    <el-button @click="fileList = []">
+      Clear
+    </el-button>
   </oga-page>
 </template>
 

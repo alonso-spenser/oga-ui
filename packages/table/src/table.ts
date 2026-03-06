@@ -1,36 +1,4 @@
 /**
- * Create Default Pagination Parameter
- */
-export const createPaginationParameter = <
-    T = any,
->(): PaginationParameterState<T> => ({
-    multiSelect: true,
-    index: false,
-    loading: true,
-    initTable: true,
-    stripe: false,
-    pageIndex: 1,
-    pageSize: 10,
-    pageSizes: [5, 10, 20, 30, 40, 50, 100],
-    pageLayout: "total, sizes, prev, pager, next, jumper",
-    recordCount: 0,
-    dataset: [],
-    firstLoading: false,
-    visible: true,
-    columnList: [],
-    actionList: {},
-    border: true,
-    card: true,
-    empty: {
-        content: "",
-        buttonLabel: "",
-    },
-    rowsClassName: undefined,
-    paginationSection: true,
-});
-
-
-/**
  * Empty state configuration
  */
 export interface EmptyState {
@@ -45,23 +13,17 @@ export interface EmptyState {
 export interface PaginationParameterState<T = any> {
     multiSelect: boolean;
     index: boolean;
-    loading: boolean;
     initTable: boolean;
     stripe: boolean;
-    pageIndex: number;
-    pageSize: number;
     pageSizes: number[];
     pageLayout: string;
     recordCount: number;
-    firstLoading: boolean;
+    // loading: boolean;
+    // firstLoading: boolean;
     visible: boolean;
-    columnList: any[];
+    columnList: ColumnState[];
     border: boolean;
     card: boolean;
-    /**
-     * Data list
-     */
-    dataset: T[];
     /**
      * Action List
      */
@@ -77,4 +39,75 @@ export interface PaginationParameterState<T = any> {
      */
     rowsClassName?: (row: T, index: number) => string;
     paginationSection: boolean;
+}
+
+/**
+ * Pagination State
+ */
+export interface PaginationState {
+    loading: boolean;
+    firstLoading: boolean;
+    records: [];
+    total: number;
+    size: number;
+    current: number;
+    pages: number;
+}
+
+/**
+ * Button Group State
+ */
+export interface ButtonGroupState {
+    icon: string;
+    circle: boolean;
+    name: string;
+    size: string;
+    disabled: boolean;
+    round: boolean;
+    plain: boolean;
+    type: string;
+    label: string;
+    className: string;
+    onClick: Function | null
+}
+
+/**
+ * Image State
+ */
+export interface ImageState {
+    title: string;
+    url: string;
+}
+/**
+ * Column State
+ */
+export interface ColumnState {
+    prop: string;
+    label: string;
+    align: string;
+    width: string | number;
+    sortable: boolean;
+    stop: true,
+    fixed: boolean;
+    render: Function;
+    image: boolean;
+    album: boolean;
+    switch: boolean;
+    button: boolean;
+    svg: string;
+    size: number;
+    switchActive: number;
+    switchInactive: number;
+    activeText: string;
+    inactiveText: string;
+    radius: number;
+    numberFormat: string;
+    inlinePrompt: boolean;
+    onClick: Function | null;
+    dataType: string;
+    dataFormat: string;
+    headerAlign: string;
+    labelClassName:string;
+    className: string;
+    group: Array<ButtonGroupState>;
 }
