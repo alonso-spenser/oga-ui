@@ -14,14 +14,14 @@ import {
   createPageResult,
   createPaginationState,
   createPageQueryState,
-} from "@/stores/type/page-type"
+} from "@/stores/type/page-type";
 
 /**
  * Manages page state, API handling, pagination,
  * and global error / success message control.
  */
 export class PageStateManager<T = any> {
-  public state = ref<PageState>(createPageState())
+  public state = ref<PageState>(createPageState());
   /**
    * Holds pagination result if API returns paged data.
    */
@@ -31,9 +31,7 @@ export class PageStateManager<T = any> {
   public normalQueryState: Record<string, any> = {};
   private readonly AUTH_ERROR_CODE = 13010000;
 
-  constructor() {
-
-  }
+  constructor() {}
 
   /**
    * Start loading
@@ -104,27 +102,27 @@ export class PageStateManager<T = any> {
       data.records.forEach((value) => {
         value.imageList = [
           {
-            "url": "http://127.0.0.1:9000/file/2029980403095351297.webp",
-            "title": "ChatGPT Image Jan 24, 2026, 02_02_08 PM"
+            url: "http://127.0.0.1:9000/file/2029980403095351297.webp",
+            title: "ChatGPT Image Jan 24, 2026, 02_02_08 PM",
           },
           {
-            "url": "http://127.0.0.1:9000/file/2029980403095351298.webp",
-            "title": "ChatGPT Image Jan 24, 2026, 02_11_08 PM"
+            url: "http://127.0.0.1:9000/file/2029980403095351298.webp",
+            title: "ChatGPT Image Jan 24, 2026, 02_11_08 PM",
           },
           {
-            "url": "http://127.0.0.1:9000/file/2029980941727870977.webp",
-            "title": "ChatGPT Image Mar 6, 2026, 05_12_07 PM"
+            url: "http://127.0.0.1:9000/file/2029980941727870977.webp",
+            title: "ChatGPT Image Mar 6, 2026, 05_12_07 PM",
           },
           {
-            "url": "http://127.0.0.1:9000/file/2029983641026736129.webp",
-            "title": "IMG_4909"
+            url: "http://127.0.0.1:9000/file/2029983641026736129.webp",
+            title: "IMG_4909",
           },
           {
-            "title": "jo",
-            "url": "http://127.0.0.1:9000/file/2029983671804538881.webp"
-          }
-        ]
-      })
+            title: "jo",
+            url: "http://127.0.0.1:9000/file/2029983671804538881.webp",
+          },
+        ];
+      });
       return data;
     } catch (error) {
       this.handleNetworkError(error);
@@ -187,9 +185,7 @@ export class PageStateManager<T = any> {
    * @param query URL parameters
    */
   redirect(path: string, query?: Record<string, any>) {
-    router
-        .push({ path, query })
-        .catch((error) => console.error(error));
+    router.push({ path, query }).catch((error) => console.error(error));
   }
 
   /**
@@ -220,27 +216,27 @@ export class PageStateManager<T = any> {
    * Update pagination parameters.
    * @param data
    */
-  updatePaginationState (data: PaginationState<T>) {
+  updatePaginationState(data: PaginationState<T>) {
     Object.assign(this.paginationState, data);
   }
 
   /**
    * Load data from cache
    */
-  loadCache = (pq?: PageQueryState, nq?: Record<string, any> ) => {
+  loadCache = (pq?: PageQueryState, nq?: Record<string, any>) => {
     if (pq) {
       Object.assign(this.pageQueryState, pq);
     }
     if (nq) {
       Object.assign(this.normalQueryState, nq);
     }
-  }
+  };
 
   /**
    * reset page
    */
   public reset(): void {
-    this.pageResult.value = createPageResult<T>()
+    this.pageResult.value = createPageResult<T>();
     this.state.value = createPageState();
     this.paginationState = createPaginationState<T>();
     this.pageQueryState = createPageQueryState();

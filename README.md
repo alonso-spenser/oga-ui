@@ -56,8 +56,17 @@ ImageUpload(Multiple upload)
 ## Update
 ### Table
 ```html
-ColumnList
-album: true
+Column Type
+
+export enum ColumnType {
+    Switch = "switch",
+    Button = "button",
+    Date = "date",
+    Datetime = "datetime",
+    Image = "image",
+    Album = "album",
+    Number = "number",
+}
 
 ImageState {
     title: string;
@@ -71,19 +80,43 @@ Filed value: List<ImageState>
     :preview-src-list="srcList"
 />
 
-numberFormat: 'breve',
-532
-1.2K
-12.5K
-12.2M
-2.5B
-885.3T
+ColumnType.Number
+{
+    prop: 'chest',
+    width: 100,
+    type: ColumnType.Number,
+    config: {
+        format: "###.###"
+    },
+    label: i18n.global.t('organize.employee.tableHeader.chest')
+},
+eg: 123,456,769
+    
+config: {
+    format: "KMBT"
+},
+eg: 532 / 1.2K / 12.5K / 12.2M / 2.5B / 885.3T
 
-numberFormat: 'thousand',
-000,000,000
-
+config: {
+    format: "fixed",
+    digit: 3
+},
+eg: 531.972
+    
 className: 'stop',
 Stop row click event
+
+ColumnType.Image
+ColumnType.Album
+config: {
+radius: 25,
+    fit: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down'
+},
+
+Date = "date",
+Datetime = "datetime",
+    format: 'yyyy年MM月dd日'
+    format: "yyyy年MM月dd日 hh时mm分ss秒"
 ```
 
 ## IconFont

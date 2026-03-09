@@ -54,27 +54,24 @@
                 <span v-html="renderHeader(column.label)"></span>
               </template>
               <template #default="scope">
-                <template v-if="column.switch">
+                <template v-if="column.type === ColumnType.Switch">
                   <el-switch
                       v-model="scope.row[column.prop]"
-                      :active-value="column.switchActive"
-                      :inactive-value="column.switchInactive"
-                      active-color="#ff0000"
-                      :active-text="column.activeText"
-                      :inactive-text="column.inactiveText"
-                      :inline-prompt="column.inlinePrompt"
+                      v-bind="column.config"
                       @click.native="columnEvent($event, scope.row, column.onClick)"
                   >
                   </el-switch>
                 </template>
-                <template v-else-if="column.image">
+                <template v-else-if="column.type === ColumnType.Image">
                   <el-image
                       :preview-teleported="true"
                       :hide-on-click-modal="true"
                       show-progress
+                      loading="lazy"
                       :preview-src-list="isNotEmpty(scope.row[column.prop]) ? [scope.row[column.prop]] : []"
-                      :style="getBorderRadius(column.radius)" :src="scope.row[column.prop]"
-                      fit="cover">
+                      :style="getBorderRadius(column.config.radius??0)" :src="scope.row[column.prop]"
+                      :fit="isNotEmpty(column.config.fit) ? column.config.fit : 'cover'"
+                  >
                     <template #error>
                       <img :src="placeholder"
                            class="el-image__inner"
@@ -82,14 +79,17 @@
                     </template>
                   </el-image>
                 </template>
-                <template v-else-if="column.album">
+                <template v-else-if="column.type === ColumnType.Album">
                   <el-image
                       :preview-teleported="true"
                       :hide-on-click-modal="true"
                       show-progress
+                      loading="lazy"
                       :preview-src-list="getImageList(scope.row[column.prop])"
-                      :style="getBorderRadius(column.radius)"
-                      :src="getFirstImage(scope.row[column.prop])" fit="cover">
+                      :style="getBorderRadius(column.config.radius??0)"
+                      :src="getFirstImage(scope.row[column.prop])"
+                      :fit="isNotEmpty(column.config.fit) ? column.config.fit : 'cover'"
+                  >
                     <template #error>
                       <img :src="placeholder"
                            class="el-image__inner"
@@ -97,16 +97,13 @@
                     </template>
                   </el-image>
                 </template>
-                <template v-else-if="column.dataType === 'date'">
-                  {{ timestampToDate(scope.row[column.prop]) }}
+                <template v-else-if="column.type === ColumnType.Date">
+                  {{ timestampToDate(scope.row[column.prop], column.config.format ?? '') }}
                 </template>
-                <template v-else-if="column.dataType === 'datetime'">
-                  {{ timestampToDatetime(scope.row[column.prop], column.dataFormat) }}
+                <template v-else-if="column.type === ColumnType.Datetime">
+                  {{ timestampToDatetime(scope.row[column.prop], column.config.format ?? '') }}
                 </template>
-                <template v-else-if="column.dataType === 'dateFull'">
-                  {{ timestampToDatetime(scope.row[column.prop]) }}
-                </template>
-                <template v-else-if="column.button">
+                <template v-else-if="column.type === ColumnType.Button">
                     <el-button
                         v-for="(btn, i) in column.group"
                         :key="i"
@@ -129,11 +126,19 @@
                 <template v-else-if="column.render">
                   <component :is="column.render(scope.row)"></component>
                 </template>
-                <template v-else-if="column.numberFormat ==='thousand'">
-                  {{formatNumberLocation(scope.row[column.prop])}}
-                </template>
-                <template v-else-if="column.numberFormat ==='breve'">
-                  {{formatNumber(scope.row[column.prop])}}
+                <template v-else-if="column.type === ColumnType.Number">
+                  <template v-if="column.config.format === '###.###'">
+                    {{formatNumberLocation(scope.row[column.prop])}}
+                  </template>
+                  <template v-else-if="column.config.format === 'KMBT'">
+                    {{formatNumberLocation(scope.row[column.prop])}}
+                  </template>
+                  <template v-else-if="column.config.format === 'fixed'">
+                    {{scope.row[column.prop].toFixed(column.config.digit??0)}}
+                  </template>
+                  <template v-else>
+                    {{scope.row[column.prop]}}
+                  </template>
                 </template>
                 <template v-else>
                   {{ scope.row[column.prop] }}
@@ -222,26 +227,21 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ArrowDown } from '@element-plus/icons-vue'
-import type { TableColumnCtx } from "element-plus";
-import { defineEmits, ref } from "vue";
+import {ArrowDown} from '@element-plus/icons-vue'
+import type {TableColumnCtx} from "element-plus";
+import {defineEmits, ref} from "vue";
 import i18n from "../../i18n/base";
 import {
-  isNotEmpty,
-  isFunction,
-  timestampToDate,
-  timestampToDatetime,
   formatNumber,
-  formatNumberLocation
+  formatNumberLocation,
+  isFunction,
+  isNotEmpty,
+  timestampToDate,
+  timestampToDatetime
 } from "../../plugins/utility";
 import placeholder from './img/placeholder.jpg'
 import OgaIcon from "../../iconfont/src/iconFont.vue";
-import {
-  type PaginationParameterState,
-  type ColumnState,
-    type ImageState,
-  PaginationState
-} from "./table"
+import {ColumnType, type ImageState, type PaginationParameterState, type PaginationState} from "./table"
 
 
 /**
@@ -373,16 +373,15 @@ const rowClass = ({ row }) => {
  * 图片组
  * @param data
  */
-const getImageList = (data: Array<ImageState>) => {
-  return data.map(item => item.url)
+const getImageList = (data?: Array<ImageState>) => {
+  return data ? data.map(i => i.url) : []
 }
-
 /**
  * 图片组
  * @param data
  */
-const getFirstImage = (data: Array<ImageState>) => {
-  return data.length > 0 ? data[0].url : ''
+const getFirstImage = (data?: Array<ImageState>) => {
+  return data && data.length ? data[0].url : ''
 }
 
 /**

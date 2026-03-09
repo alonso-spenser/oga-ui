@@ -90,24 +90,27 @@ export interface ColumnState {
     stop: true,
     fixed: boolean;
     render: Function;
-    image: boolean;
-    album: boolean;
-    switch: boolean;
-    button: boolean;
     svg: string;
     size: number;
-    switchActive: number;
-    switchInactive: number;
-    activeText: string;
-    inactiveText: string;
-    radius: number;
     numberFormat: string;
-    inlinePrompt: boolean;
     onClick: Function | null;
-    dataType: string;
-    dataFormat: string;
     headerAlign: string;
     labelClassName:string;
     className: string;
+    type: ColumnType;
+    config: Record<string, any>;
     group: Array<ButtonGroupState>;
+}
+
+/**
+ * Column Type
+ */
+export enum ColumnType {
+    Switch = "switch",
+    Button = "button",
+    Date = "date",
+    Datetime = "datetime",
+    Image = "image",
+    Album = "album",
+    Number = "number",
 }

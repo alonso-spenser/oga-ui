@@ -10,6 +10,19 @@ export enum ActionType {
 }
 
 /**
+ * Column Type
+ */
+export enum ColumnType {
+  Switch = "switch",
+  Button = "button",
+  Date = "date",
+  Datetime = "datetime",
+  Image = "image",
+  Album = "album",
+  Number = "number",
+}
+
+/**
  * Pagination query structure
  */
 export interface PageQueryState {
@@ -65,9 +78,7 @@ export interface ApiPageResult<T = any> {
 /**
  * Create Default Pagination State
  */
-export const createPageResult = <
-    T = any,
->(): ApiPageResult<T> => ({
+export const createPageResult = <T = any>(): ApiPageResult<T> => ({
   loading: false,
   firstLoading: false,
   records: [],
@@ -76,7 +87,7 @@ export const createPageResult = <
   current: 1,
   pages: 0,
   orders: [],
-  searchCount: false
+  searchCount: false,
 });
 
 /**
@@ -90,7 +101,6 @@ export interface PageState {
   drawer: boolean;
 }
 
-
 /**
  * Create Page State
  */
@@ -101,7 +111,6 @@ export const createPageState = (): PageState => ({
   unsaved: false,
   drawer: false,
 });
-
 
 /**
  * Empty state configuration
@@ -149,9 +158,7 @@ export interface PaginationState<T = any> {
 /**
  * Create Default Pagination Parameter
  */
-export const createPaginationState = <
-    T = any,
->(): PaginationState<T> => ({
+export const createPaginationState = <T = any>(): PaginationState<T> => ({
   multiSelect: true,
   index: false,
   initTable: true,

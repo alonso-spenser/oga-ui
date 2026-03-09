@@ -6,9 +6,7 @@
       :radius="15"
       :max="12"
     ></oga-image-upload>
-    <el-button @click="fileList = []">
-      Clear
-    </el-button>
+    <el-button @click="fileList = []"> Clear </el-button>
   </oga-page>
 </template>
 

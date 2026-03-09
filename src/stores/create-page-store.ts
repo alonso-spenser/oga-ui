@@ -33,8 +33,7 @@ export const CreatePageStore = <T extends object>(
       formModel: getRawDefault(),
     }),
 
-    getters: {
-    },
+    getters: {},
 
     actions: {
       /**
