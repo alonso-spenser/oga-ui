@@ -13,6 +13,7 @@ export enum ActionType {
  * Column Type
  */
 export enum ColumnType {
+  Default = "default",
   Switch = "switch",
   Button = "button",
   Date = "date",
@@ -28,7 +29,7 @@ export enum ColumnType {
 export interface PageQueryState {
   current: number;
   size: number;
-  params: Record<string, string | number | boolean | undefined>;
+  params: Record<string, string | number | boolean | null>;
 }
 
 /**
@@ -48,9 +49,21 @@ export const createPageQueryState = (): PageQueryState => ({
 export interface ApiResponse<T = any> {
   success: boolean;
   code: number;
-  message: string;
-  data: T;
+  message?: string;
+  data?: T;
 }
+
+/**
+ * Create Default Api Response
+ */
+export const createApiResponse = <T = any>(
+  success: boolean,
+): ApiResponse<T> => ({
+  success: success,
+  code: 0,
+  message: "",
+  data: undefined,
+});
 
 /**
  * Sorting information for paginated requests.
@@ -179,4 +192,80 @@ export const createPaginationState = <T = any>(): PaginationState<T> => ({
   },
   rowsClassName: undefined,
   paginationSection: true,
+});
+
+/**
+ * Image State
+ */
+export interface ImageState {
+  title: string;
+  url: string;
+}
+
+/**
+ * Form item
+ */
+export interface FormItem {
+  label: string;
+  field: string;
+  type?:
+    | "input"
+    | "select"
+    | "date"
+    | "number"
+    | "textarea"
+    | "switch"
+    | "editor";
+  required?: boolean;
+  options?: { label: string; value: any }[];
+  placeholder?: string;
+  colspan?: number;
+}
+
+/**
+ * Dict State
+ */
+export interface DictState {
+  label: string;
+  value: string | number | boolean;
+}
+
+/**
+ * Generic pagination result returned by backend.
+ */
+export interface ApiCustomPaginationResult<T = any> {
+  loading: boolean;
+  firstLoading: boolean;
+  records: T[];
+  total: number;
+  size: number;
+  current: number;
+  pages: number;
+  orders: PageOrder[];
+  searchCount: boolean;
+  pageSizes?: number[];
+  pageLayout?: string;
+  gutter?: number;
+  span?: number;
+}
+
+/**
+ * Create Default Pagination State
+ */
+export const createCustomPaginationResult = <
+  T = any,
+>(): ApiCustomPaginationResult<T> => ({
+  loading: false,
+  firstLoading: false,
+  records: [],
+  total: 0,
+  size: 10,
+  current: 1,
+  pages: 0,
+  orders: [],
+  searchCount: false,
+  pageSizes: [5, 10, 20, 30, 40, 50, 100],
+  pageLayout: "total, sizes, prev, pager, next, jumper",
+  gutter: 20,
+  span: 12,
 });

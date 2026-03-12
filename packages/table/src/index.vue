@@ -69,8 +69,8 @@
                       show-progress
                       loading="lazy"
                       :preview-src-list="isNotEmpty(scope.row[column.prop]) ? [scope.row[column.prop]] : []"
-                      :style="getBorderRadius(column.config.radius??0)" :src="scope.row[column.prop]"
-                      :fit="isNotEmpty(column.config.fit) ? column.config.fit : 'cover'"
+                      :style="getBorderRadius(column.config?.radius??0)" :src="scope.row[column.prop]"
+                      :fit="column.config?.fit?? 'cover'"
                   >
                     <template #error>
                       <img :src="placeholder"
@@ -86,9 +86,9 @@
                       show-progress
                       loading="lazy"
                       :preview-src-list="getImageList(scope.row[column.prop])"
-                      :style="getBorderRadius(column.config.radius??0)"
+                      :style="getBorderRadius(column.config?.radius ?? 0)"
                       :src="getFirstImage(scope.row[column.prop])"
-                      :fit="isNotEmpty(column.config.fit) ? column.config.fit : 'cover'"
+                      :fit="column.config?.fit ?? 'cover'"
                   >
                     <template #error>
                       <img :src="placeholder"
@@ -98,10 +98,10 @@
                   </el-image>
                 </template>
                 <template v-else-if="column.type === ColumnType.Date">
-                  {{ timestampToDate(scope.row[column.prop], column.config.format ?? '') }}
+                  {{ timestampToDate(scope.row[column.prop], column.config?.format ?? '') }}
                 </template>
                 <template v-else-if="column.type === ColumnType.Datetime">
-                  {{ timestampToDatetime(scope.row[column.prop], column.config.format ?? '') }}
+                  {{ timestampToDatetime(scope.row[column.prop], column.config?.format ?? '') }}
                 </template>
                 <template v-else-if="column.type === ColumnType.Button">
                     <el-button
@@ -116,7 +116,7 @@
                         @click.stop="btn.onClick(scope.row, scope.$index)"
                     >
                       <template #default>
-                        <oga-icon :name="btn.icon" v-if="btn.icon"></oga-icon>
+                        <index :name="btn.icon" v-if="btn.icon"></index>
                         <template v-if="btn.label">
                           {{ btn.label }}
                         </template>
@@ -127,18 +127,21 @@
                   <component :is="column.render(scope.row)"></component>
                 </template>
                 <template v-else-if="column.type === ColumnType.Number">
-                  <template v-if="column.config.format === '###.###'">
+                  <template v-if="column.config?.format === '###.###'">
                     {{formatNumberLocation(scope.row[column.prop])}}
                   </template>
-                  <template v-else-if="column.config.format === 'KMBT'">
-                    {{formatNumberLocation(scope.row[column.prop])}}
+                  <template v-else-if="column.config?.format === 'KMBT'">
+                    {{formatNumber(scope.row[column.prop])}}
                   </template>
-                  <template v-else-if="column.config.format === 'fixed'">
-                    {{scope.row[column.prop].toFixed(column.config.digit??0)}}
+                  <template v-else-if="column.config?.format === 'fixed'">
+                    {{scope.row[column.prop].toFixed(column.config?.digit??0)}}
                   </template>
                   <template v-else>
                     {{scope.row[column.prop]}}
                   </template>
+                </template>
+                <template v-else-if="column.type === ColumnType.Mask">
+                  {{ column.config?.format ==='1/3' ? maskOneThirdString(scope.row[column.prop]) : column.config?.format ==='email' ? maskEmail(scope.row[column.prop]) : maskString(scope.row[column.prop])  }}
                 </template>
                 <template v-else>
                   {{ scope.row[column.prop] }}
@@ -188,10 +191,10 @@
                       :key="`action-${key}`"
                       :disabled="selectedItems.length < 1"
                       :divided="o.divided">
-                    <oga-icon
+                    <index
                         :name="o.icon"
                         v-if="isNotEmpty(o.icon)">
-                    </oga-icon>
+                    </index>
                     {{ o.label }}
                   </el-dropdown-item>
                   <el-dropdown-item
@@ -235,12 +238,12 @@ import {
   formatNumber,
   formatNumberLocation,
   isFunction,
-  isNotEmpty,
+  isNotEmpty, maskOneThirdString, maskString, maskEmail,
   timestampToDate,
   timestampToDatetime
 } from "../../plugins/utility";
 import placeholder from './img/placeholder.jpg'
-import OgaIcon from "../../iconfont/src/iconFont.vue";
+import Index from "../../iconfont/src/index.vue";
 import {ColumnType, type ImageState, type PaginationParameterState, type PaginationState} from "./table"
 
 

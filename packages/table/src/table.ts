@@ -98,7 +98,7 @@ export interface ColumnState {
     labelClassName:string;
     className: string;
     type: ColumnType;
-    config: Record<string, any>;
+    config?: Record<string, any>;
     group: Array<ButtonGroupState>;
 }
 
@@ -113,4 +113,5 @@ export enum ColumnType {
     Image = "image",
     Album = "album",
     Number = "number",
+    Mask = "mask",
 }

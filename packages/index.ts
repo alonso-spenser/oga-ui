@@ -21,6 +21,7 @@ import OgaCascader from "./input/cascader";
 import OgaDatePicker from "./input/date-picker";
 import OgaIcon from "./iconfont/index";
 import OgaAvatar from "./avatar/index";
+import OgaPaging from "./paging/index";
 import OgaImageUpload from "./image-upload/index";
 import "./style/index.scss";
 
@@ -47,6 +48,7 @@ const components = [
   OgaIcon,
   OgaAvatar,
   OgaImageUpload,
+  OgaPaging,
 ];
 
 export default {

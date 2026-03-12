@@ -89,7 +89,6 @@
 import {ref} from "vue";
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { UploadProps } from 'element-plus'
-import number from "../../input/number.ts";
 import { vDraggable } from 'vue-draggable-plus'
 import {isEmpty,isNotEmpty, getSuffix, getFileType} from "../../plugins/utility";
 import i18n from "../../i18n/base";

@@ -18,8 +18,7 @@
           :class="route.style || ''"
         >
           <template #title>
-            <oga-icon :name="route.icon" v-if="isNotEmpty(route.icon)">
-            </oga-icon>
+            <index :name="route.icon" v-if="isNotEmpty(route.icon)"> </index>
             {{ route.title }}
           </template>
         </el-menu-item>
@@ -29,15 +28,13 @@
           :index="route.url || index.toString()"
         >
           <template #title>
-            <oga-icon :name="route.icon" v-if="isNotEmpty(route.icon)">
-            </oga-icon>
+            <index :name="route.icon" v-if="isNotEmpty(route.icon)"> </index>
             {{ route.title }}
           </template>
           <template v-for="sub in route.submenu" :key="sub.url">
             <el-menu-item :index="sub.url" :class="sub.style || ''">
               <template #title>
-                <oga-icon :name="sub.icon" v-if="isNotEmpty(sub.icon)">
-                </oga-icon>
+                <index :name="sub.icon" v-if="isNotEmpty(sub.icon)"> </index>
                 {{ sub.title }}
               </template>
             </el-menu-item>
@@ -51,7 +48,7 @@
 import { useRoute, useRouter } from "vue-router";
 import i18n from "@/plugins/i18n/base";
 import { isNotEmpty } from "@/plugins/utility";
-import OgaIcon from "../../../packages/iconfont/src/iconFont.vue";
+import Index from "../../../packages/iconfont/src/index.vue";
 let menuList: any[] = [];
 const route = useRoute();
 const router = useRouter();

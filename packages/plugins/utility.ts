@@ -187,3 +187,40 @@ export const formatNumberLocation = (num: number) => {
     return num
   }
 }
+
+/**
+ * Mask string
+ * @param str
+ */
+export const maskString = (str: String ) => {
+  return str.replace(/^(.)(.*)(.)$/, (match, start, middle, end) => {
+    return start + "*".repeat(middle.length > 5 ? 5 : middle.length) + end;
+  });
+}
+
+/**
+ * Mask one third string
+ * @param str
+ */
+export const maskOneThirdString = (str: String ) => {
+  if (!str || str.length < 3) return str;
+
+  const len = str.length;
+  const maskLen = Math.max(1, Math.floor(len / 3));
+  const start = Math.floor((len - maskLen) / 2);
+
+  return str.slice(0, start) + "*".repeat(maskLen) + str.slice(start + maskLen);
+}
+
+/**
+ * Mask email
+ * @param email
+ */
+export function maskEmail(email: String) {
+  if (!email) return "";
+
+  const [name, domain] = email.split("@");
+  if (!name) return email;
+
+  return maskString(name) + "@" + domain;
+}

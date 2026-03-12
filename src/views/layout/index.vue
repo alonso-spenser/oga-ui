@@ -80,7 +80,7 @@
       </router-link>
     </template>
     <template #asideFooter>
-      <oga-icon name="setting"></oga-icon>
+      <index name="setting"></index>
       Settings
     </template>
     <slot></slot>
@@ -90,7 +90,7 @@
 import { ref, reactive } from "vue";
 import menuList from "./aside.vue";
 import lib from "@/plugins/utility.ts";
-import OgaIcon from "../../../packages/iconfont/src/iconFont.vue";
+import Index from "../../../packages/iconfont/src/index.vue";
 
 const asideClick = () => {
   console.log("asideClick:");

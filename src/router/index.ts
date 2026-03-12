@@ -78,6 +78,16 @@ const router = createRouter({
           component: () => import("../views/section/table/index.vue"),
         },
         {
+          path: "paging",
+          name: "section-paging",
+          meta: {
+            // web: true,
+            // title: i18n.t('dashboard.title'),
+            requireAuth: false,
+          },
+          component: () => import("../views/section/paging/index.vue"),
+        },
+        {
           path: "icon",
           name: "section-icon",
           meta: {

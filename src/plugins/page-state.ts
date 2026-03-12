@@ -1,20 +1,24 @@
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import i18n from "@/plugins/i18n/base";
 import router from "@/router";
 import { ref } from "vue";
 import type { AxiosResponse } from "axios";
 import {
   ActionType,
-  type PageState,
-  type PaginationState,
-  type PageQueryState,
+  type ApiCustomPaginationResult,
   type ApiPageResult,
   type ApiResponse,
-  createPageState,
-  createPageResult,
-  createPaginationState,
+  createApiResponse,
   createPageQueryState,
+  createPageResult,
+  createPageState,
+  createPaginationState,
+  createCustomPaginationResult,
+  type PageQueryState,
+  type PageState,
+  type PaginationState,
 } from "@/stores/type/page-type";
+import { getUploadUrl } from "@/plugins/utility";
 
 /**
  * Manages page state, API handling, pagination,
@@ -26,9 +30,16 @@ export class PageStateManager<T = any> {
    * Holds pagination result if API returns paged data.
    */
   public pageResult = ref<ApiPageResult<T>>(createPageResult<T>());
+  public customPageResult = ref<ApiCustomPaginationResult<T>>(
+    createCustomPaginationResult<T>(),
+  );
   public paginationState: PaginationState<T> = createPaginationState<T>();
   public pageQueryState: PageQueryState = createPageQueryState();
   public normalQueryState: Record<string, any> = {};
+  /**
+   * Upload URL
+   */
+  public readonly uploadURL = getUploadUrl();
   private readonly AUTH_ERROR_CODE = 13010000;
 
   constructor() {}
@@ -61,6 +72,8 @@ export class PageStateManager<T = any> {
    */
   stopSubmitting() {
     this.state.value.submitting = false;
+    this.state.value.unsaved = false;
+    this.state.value.drawer = false;
   }
 
   /**
@@ -69,7 +82,7 @@ export class PageStateManager<T = any> {
    * @param actionType Action Type
    * @param successMessage Show success message?
    */
-  async handleResponse<K = T>(
+  async resolveResponse<K = any>(
     request: Promise<AxiosResponse<ApiResponse<K>>>,
     actionType?: ActionType,
     successMessage?: boolean,
@@ -99,36 +112,89 @@ export class PageStateManager<T = any> {
       }
 
       this.showSuccessMessage(actionType, successMessage);
-      data.records.forEach((value) => {
-        value.imageList = [
-          {
-            url: "http://127.0.0.1:9000/file/2029980403095351297.webp",
-            title: "ChatGPT Image Jan 24, 2026, 02_02_08 PM",
-          },
-          {
-            url: "http://127.0.0.1:9000/file/2029980403095351298.webp",
-            title: "ChatGPT Image Jan 24, 2026, 02_11_08 PM",
-          },
-          {
-            url: "http://127.0.0.1:9000/file/2029980941727870977.webp",
-            title: "ChatGPT Image Mar 6, 2026, 05_12_07 PM",
-          },
-          {
-            url: "http://127.0.0.1:9000/file/2029983641026736129.webp",
-            title: "IMG_4909",
-          },
-          {
-            title: "jo",
-            url: "http://127.0.0.1:9000/file/2029983671804538881.webp",
-          },
-        ];
-      });
-      return data;
+      return data ?? null;
     } catch (error) {
       this.handleNetworkError(error);
       return null;
     } finally {
       this.stopLoading();
+    }
+  }
+
+  /**
+   * Resolve custom paginated output data
+   * @param request Axios Response
+   */
+  async resolveCustomResponse<K = any>(
+    request: Promise<AxiosResponse<ApiResponse<K>>>,
+  ): Promise<void> {
+    try {
+      this.customPageResult.value.loading = true;
+
+      const { data: response } = await request;
+      const { code, success, message, data } = response;
+
+      if (code === this.AUTH_ERROR_CODE) {
+        this.showErrorMessage(i18n.global.t(`errorCode.${code}`));
+        this.redirect("/passport");
+      }
+      if (!success) {
+        const errorText = i18n.global.te(`errorCode.${code}`)
+          ? i18n.global.t(`errorCode.${code}`)
+          : message || i18n.global.t("errorCode.0");
+
+        this.showErrorMessage(errorText);
+      }
+
+      if (this.isPageResult(data)) {
+        Object.assign(this.customPageResult.value, data);
+      }
+    } catch (error) {
+      this.handleNetworkError(error);
+    } finally {
+      this.customPageResult.value.loading = false;
+    }
+  }
+
+  /**
+   * Submit to service
+   * @param request Axios Response
+   * @param actionType Action Type
+   * @param successMessage Show a success message?
+   */
+  async submitRequest<K = any>(
+    request: Promise<AxiosResponse<ApiResponse<K>>>,
+    actionType?: ActionType,
+    successMessage?: boolean,
+  ): Promise<ApiResponse<K>> {
+    try {
+      this.startSubmitting();
+
+      const { data: response } = await request;
+      const { code, success, message, data } = response;
+
+      if (code === this.AUTH_ERROR_CODE) {
+        this.showErrorMessage(i18n.global.t(`errorCode.${code}`));
+        this.redirect("/passport");
+        return response;
+      }
+      if (!success) {
+        const errorText = i18n.global.te(`errorCode.${code}`)
+          ? i18n.global.t(`errorCode.${code}`)
+          : message || i18n.global.t("errorCode.0");
+
+        this.showErrorMessage(errorText);
+        return response;
+      }
+
+      this.showSuccessMessage(actionType, successMessage);
+
+      return response;
+    } catch (error) {
+      this.handleNetworkError(error);
+      return createApiResponse<K>(false);
+    } finally {
+      this.stopSubmitting();
     }
   }
 
@@ -156,11 +222,11 @@ export class PageStateManager<T = any> {
     successMessage?: boolean,
   ): void {
     if (actionType === ActionType.Update) {
-      ElMessage.success(i18n.global.t("action.update.success"));
+      ElMessage.success(i18n.global.t("update.success"));
     } else if (actionType === ActionType.Insert) {
-      ElMessage.success(i18n.global.t("action.insert.success"));
+      ElMessage.success(i18n.global.t("create.success"));
     } else if (actionType === ActionType.Delete) {
-      ElMessage.success(i18n.global.t("action.delete.success"));
+      ElMessage.success(i18n.global.t("delete.success"));
     } else if (successMessage) {
       ElMessage.success(i18n.global.t("action.success"));
     }
@@ -197,18 +263,24 @@ export class PageStateManager<T = any> {
   }
 
   /**
-   * get parameter from router.currentRoute.params;
+   * Get route param value
    * @param key
    */
-  getRouteParamValue(key: string) {
-    return router?.currentRoute.value.params[key] ?? null;
+  getRouteParamValue(key: string): string {
+    const value = router.currentRoute.value.params[key];
+
+    if (Array.isArray(value)) {
+      return value[0] ?? "";
+    }
+
+    return value ?? "";
   }
 
   /**
    * get primary key
    * @param key
    */
-  getPrimaryId(key: string = "id") {
+  getPrimaryId(key: string = "id"): string {
     return this.getRouteParamValue(key);
   }
 
@@ -231,6 +303,34 @@ export class PageStateManager<T = any> {
       Object.assign(this.normalQueryState, nq);
     }
   };
+
+  /**
+   * Delete data (confirm first)
+   * @param fun Function
+   * @param quantity Quantity
+   */
+  async confirmDelete(fun: () => Promise<any> | void, quantity: number = 1) {
+    try {
+      await ElMessageBox.confirm(
+        quantity === 1
+          ? i18n.global.t("delete.single")
+          : i18n.global.t("delete.multiple", { count: quantity }),
+        i18n.global.t("delete.heading"),
+        {
+          closeOnClickModal: false,
+          type: "error",
+          distinguishCancelAndClose: true,
+          confirmButtonText: i18n.global.t("action.confirm"),
+          cancelButtonText: i18n.global.t("action.cancel"),
+        },
+      );
+      if (fun) {
+        await fun();
+      }
+    } catch (error) {
+      // 用户取消
+    }
+  }
 
   /**
    * reset page
@@ -256,5 +356,6 @@ export function usePageState<T = any>() {
     normalQueryState: pageState.normalQueryState,
     paginationState: pageState.paginationState,
     pageResult: pageState.pageResult,
+    customPageResult: pageState.customPageResult,
   };
 }

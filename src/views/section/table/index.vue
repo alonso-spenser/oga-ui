@@ -84,10 +84,18 @@ pageState.updatePaginationState({
       prop: "account",
       width: 150,
       fixed: true,
+      type: ColumnType.Mask,
+      config: {
+        format: "1/3",
+      },
       label: i18n.global.t("organize.employee.tableHeader.account"),
     },
     {
-      prop: "address",
+      prop: "account",
+      type: ColumnType.Mask,
+      config: {
+        format: "default",
+      },
       label: i18n.global.t("organize.employee.tableHeader.address"),
     },
     {
@@ -98,7 +106,7 @@ pageState.updatePaginationState({
       prop: "avatar",
       width: 100,
       config: {
-        radius: 9,
+        radius: 50,
         fit: "cover",
       },
       type: ColumnType.Image,
@@ -128,10 +136,11 @@ pageState.updatePaginationState({
     {
       prop: "cup",
       type: ColumnType.Number,
+      width: 100,
       config: {
         format: "KMBT",
       },
-      label: i18n.global.t("organize.employee.tableHeader.cup"),
+      label: "KMBT",
     },
     {
       prop: "cup",
@@ -163,6 +172,11 @@ pageState.updatePaginationState({
     },
     {
       prop: "email",
+      width: 150,
+      type: ColumnType.Mask,
+      config: {
+        format: "email",
+      },
       label: i18n.global.t("organize.employee.tableHeader.email"),
     },
     {
@@ -342,7 +356,7 @@ const columnEvents = (row: any, column: any) => {
  * Get data
  */
 const getData = async () => {
-  await pageState.handleResponse<OrganizeEmployeeModel>(
+  await pageState.resolveApiResponse<OrganizeEmployeeModel>(
     fetchOrganizeEmployeePaging({
       ...pageQueryState,
       current: pageResult.value.current,

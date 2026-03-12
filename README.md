@@ -50,6 +50,7 @@ PageLayout
 RichTextEditor
 IconFont
 Avatar
+Paging (custom paging)
 ImageUpload(Multiple upload)
 ```
 
@@ -109,14 +110,19 @@ Stop row click event
 ColumnType.Image
 ColumnType.Album
 config: {
-radius: 25,
+    radius: 25,
     fit: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down'
 },
 
-Date = "date",
-Datetime = "datetime",
+ColumnType.Date 
+ColumnType.Datetime 
     format: 'yyyy年MM月dd日'
     format: "yyyy年MM月dd日 hh时mm分ss秒"
+
+ColumnType.Mask
+    format: '1/3',  eg: 0813***1059
+    format: "default", 0*******9
+    format: "email", j*********e@gmail.com
 ```
 
 ## IconFont

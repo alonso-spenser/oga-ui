@@ -330,3 +330,10 @@ export const isPositiveInteger = (value: unknown): boolean => {
 
   return false;
 };
+
+/**
+ * Upload URL
+ */
+export const getUploadUrl = (): string => {
+  return import.meta.env.VITE_APP_UPLOAD;
+};
