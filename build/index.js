@@ -81,6 +81,10 @@ const createPackageJson = (name) => {
     "name": "${appConfig.author.name}",
     "email": "${appConfig.author.email}"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joebobxie/oga-ui.git"
+  },
   "license": "${appConfig.license}",
   "main": "index.umd.ts",
   "module": "index.es.ts",

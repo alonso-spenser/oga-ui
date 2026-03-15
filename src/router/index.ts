@@ -90,12 +90,29 @@ const router = createRouter({
         {
           path: "icon",
           name: "section-icon",
-          meta: {
-            // web: true,
-            // title: i18n.t('dashboard.title'),
-            requireAuth: false,
-          },
           component: () => import("../views/section/icon/index.vue"),
+          meta: {
+            aside: true,
+            header: true,
+            container: true,
+            requireAuth: true,
+            title: 'Sub-dictionary',
+            parent: {
+              title: 'Dictionary',
+              url: '/base/dict',
+              previous: '/base/dict'
+            },
+            crumbs: [
+              {
+                title: 'Base',
+                path: '/base'
+              },
+              {
+                title: 'Dictionary',
+                path: '/base/dict'
+              }
+            ]
+          }
         },
         {
           path: "avatar",

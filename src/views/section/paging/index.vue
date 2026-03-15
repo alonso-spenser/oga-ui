@@ -31,7 +31,7 @@
     </template>
 
     <oga-paging v-model="customPageResult" @paging="getData">
-      <template #default="{ item }">
+      <template #default="{item}">
         <div
           style="border: 1px solid red; padding: 20px; border-radius: 10px"
           @click="columnEvents(item)"
@@ -53,7 +53,7 @@ import {
 import { fetchOrganizeEmployeePaging } from "@/plugins/organize";
 import { ElButton } from "element-plus";
 
-const { state, pageState, pageQueryState, customPageResult } =
+const { pageState, pageQueryState, customPageResult } =
   usePageState<OrganizeEmployeeModel>();
 const organizeEmployeeStore = useOrganizeEmployeeStore();
 

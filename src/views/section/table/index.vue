@@ -356,7 +356,7 @@ const columnEvents = (row: any, column: any) => {
  * Get data
  */
 const getData = async () => {
-  await pageState.resolveApiResponse<OrganizeEmployeeModel>(
+  await pageState.resolveResponse<OrganizeEmployeeModel>(
     fetchOrganizeEmployeePaging({
       ...pageQueryState,
       current: pageResult.value.current,

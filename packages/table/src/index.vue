@@ -164,9 +164,7 @@
                 {{i18n.global.t('select.multiple')}}
                 <b>{{selectedItems.length}}</b>
                 {{ i18n.global.t('select.item') }}
-                <el-icon class="el-icon--right">
-                  <arrow-down />
-                </el-icon>
+                <el-icon name="arrow-down"></el-icon>
               </div>
             </div>
             <template #dropdown>
@@ -230,7 +228,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import {ArrowDown} from '@element-plus/icons-vue'
 import type {TableColumnCtx} from "element-plus";
 import {defineEmits, ref} from "vue";
 import i18n from "../../i18n/base";

@@ -21,6 +21,7 @@ export enum ColumnType {
   Image = "image",
   Album = "album",
   Number = "number",
+  Mask="mask"
 }
 
 /**

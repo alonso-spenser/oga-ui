@@ -52,6 +52,7 @@ IconFont
 Avatar
 Paging (custom paging)
 ImageUpload(Multiple upload)
+ElIcon
 ```
 
 ## Update
@@ -123,6 +124,14 @@ ColumnType.Mask
     format: '1/3',  eg: 0813***1059
     format: "default", 0*******9
     format: "email", j*********e@gmail.com
+```
+
+## El Icon
+#### How to use
+```html
+Simplified the usage of Element Plus Icons
+
+<el-icon name="apple"></el-icon>
 ```
 
 ## IconFont

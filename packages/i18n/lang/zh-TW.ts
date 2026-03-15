@@ -67,5 +67,6 @@ export default {
   },
   editor: {
     placeholder: '在此輸入或貼上您的內容！'
-  }
+  },
+  back: "返回"
 };

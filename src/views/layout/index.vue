@@ -8,31 +8,9 @@
     :is-router-view="true"
     copyright="OGA LTD."
   >
-    <template #header>
-      <div class="oga-header-left">
-        <div
-          aria-label="Breadcrumb"
-          role="navigation"
-          class="el-breadcrumb breadcrumb-wrap"
-        >
-          <span class="el-breadcrumb__item" aria-current="page"
-            ><span role="link" class="el-breadcrumb__inner"
-              >Logistics tracking </span
-            ><span role="presentation" class="el-breadcrumb__separator"
-              >/</span
-            ></span
-          >
-          <span class="el-breadcrumb__item" aria-current="page"
-            ><span role="link" class="el-breadcrumb__inner">20208382</span
-            ><span role="presentation" class="el-breadcrumb__separator"
-              >/</span
-            ></span
-          >
-        </div>
-      </div>
+    <template #header v-if="true">
       <div class="oga-header-right">
         <div class="fox-header-right">
-          <!---->
           <div class="el-dropdown">
             <div
               class="user-avatar el-dropdown-selfdefine"

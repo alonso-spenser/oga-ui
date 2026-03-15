@@ -68,5 +68,6 @@ export default {
   },
   editor: {
     placeholder: 'Type or paste your content here!'
-  }
+  },
+  back: "Back"
 };

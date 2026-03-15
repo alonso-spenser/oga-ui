@@ -9,14 +9,12 @@
       :before-upload="beforeUpload"
   >
     <img v-if="model" :src="model" class="oga-avatar-img" alt="" >
-    <el-icon class="oga-avatar-icon" :class="isEmpty(model) ? 'is-empty' : ''"><Plus /></el-icon>
+    <el-icon name="plus" class="oga-avatar-icon" :class="isEmpty(model) ? 'is-empty' : ''"></el-icon>
   </el-upload>
 </template>
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
-import { Plus } from '@element-plus/icons-vue'
 import type { UploadProps } from 'element-plus'
-import number from "../../input/number.ts";
 import {isEmpty} from "../../plugins/utility";
 
 /**
