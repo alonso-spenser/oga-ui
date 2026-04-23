@@ -124,6 +124,42 @@ ColumnType.Mask
     format: '1/3',  eg: 0813***1059
     format: "default", 0*******9
     format: "email", j*********e@gmail.com
+    
+ColumnType.Dictionary
+    interface DictState {
+        label: string;
+        value: string | number | boolean;
+    }
+    config: {
+        data: DictState[]
+    }
+    
+ColumnType.Button
+    ButtonGroupState[]
+    ButtonGroupState {
+        icon: string;
+        circle: boolean;
+        name: string;
+        size: string;
+        disabled: boolean;
+        round: boolean;
+        plain: boolean;
+        type: string;
+        label: string;
+        className: string;
+        onClick: Function | null;
+        popover?: PopoverState;
+    }
+    PopoverState {
+        title: string;
+        placement: string;
+        content: string;
+    }
+    
+ColumnType.State
+    row.value
+    0   <el-icon name="close"></el-icon>
+    1   <el-icon name="check"></el-icon>
 ```
 
 ## El Icon
@@ -131,14 +167,14 @@ ColumnType.Mask
 ```html
 Simplified the usage of Element Plus Icons
 
-<el-icon name="apple"></el-icon>
+<el-icon name="apple" size="40"></el-icon>
 ```
 
 ## IconFont
 #### How to use
 ```html
 name: icon name
-<oga-icon name="package"></oga-icon>
+<oga-icon name="package" size="40"></oga-icon>
 ```
 #### ICON List
 ```js

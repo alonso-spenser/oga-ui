@@ -27,7 +27,7 @@
         <el-divider direction="vertical" border-style="dashed"  v-if="breadcrumbList.length > 1"></el-divider>
       </div>
       <span class="text-large font-600" v-if="breadcrumbList.length > 0">{{breadcrumbList[breadcrumbList.length-1]?.title}}</span>
-      <div class="oga-navigation-item" :class="navigationRight ? 'is-right' : ''">
+      <div class="oga-navigation-right">
         <slot name="navigation" v-if="$slots.navigation"></slot>
       </div>
     </div>
@@ -79,10 +79,6 @@ const props = defineProps({
     default: () => {
       return false
     }
-  },
-  navigationRight: {
-    type: Boolean,
-    default: true
   },
   color: {
     type: String,
@@ -184,8 +180,8 @@ const getBreadcrumbList = (
  */
 const goBack = () => {
   const list = breadcrumbList.value
-  if (list.length >= 2) {
-    list[list.length - 2]?.path && router.push({path: list[list.length - 2].path})
+  if (list.length > 0) {
+    list[0]?.path && router.push({ path: list[0].path });
   }
 }
 
@@ -295,7 +291,7 @@ $color: var(--navColor, rgba(255, 255, 255, 0.6));
     }
   }
 
-  &-navigation{
+  &-navigation {
     display: flex;
     align-items: stretch;
     height: 60px;
@@ -313,23 +309,21 @@ $color: var(--navColor, rgba(255, 255, 255, 0.6));
       align-items: center;
       padding-right: .5rem;
 
-      &:not(:first-child){
+      &:not(:first-child) {
         padding-left: .5rem;
       }
     }
-    &-item {
-      &.is-right {
-        margin-left: auto;
-      }
-    }
+
     .el-button {
-      &.is-link{
+      &.is-link {
         color: $color;
       }
-      &:hover{
+
+      &:hover {
         color: var(--el-color-primary);
       }
     }
+
     .oga-icon {
       font-size: 1.25rem;
     }
@@ -367,9 +361,10 @@ $color: var(--navColor, rgba(255, 255, 255, 0.6));
       color: $color;
       font-weight: normal;
 
-      &.is-link{
+      &.is-link {
         cursor: pointer;
-        &:hover{
+
+        &:hover {
           color: var(--el-color-primary);
         }
       }
@@ -377,6 +372,25 @@ $color: var(--navColor, rgba(255, 255, 255, 0.6));
 
     .el-breadcrumb__separator {
       color: $color;
+    }
+
+    &-right {
+      flex: 1;
+      display: flex;
+
+      & > * {
+        display: flex;
+        align-items: center;
+        padding-right: .5rem;
+
+        &:not(:first-child) {
+          padding-left: .5rem;
+        }
+      }
+
+      .is-right {
+        margin-left: auto;
+      }
     }
 
   }

@@ -33,15 +33,23 @@ const loadSvg = async () => {
   }
 };
 
+const  css = ref<Record<string, any>>({});
+if (props.size !== 16 && props.size > 0) {
+  css.value["--icon-size"] =  props.size;
+}
+
 watch(() => props.name, loadSvg, { immediate: true });
 </script>
 
 <template>
   <i
       class="el-icon"
+      :style="css"
       v-html="svgContent"
   />
 </template>
 <style scoped lang="scss">
-
+  .el-icon {
+    font-size: calc(var(--icon-size, 16) * 1px);
+  }
 </style>

@@ -21,7 +21,10 @@ export enum ColumnType {
   Image = "image",
   Album = "album",
   Number = "number",
-  Mask="mask"
+  Mask = "mask",
+  Dictionary = "dictionary",
+  State = "state",
+  Click = "click",
 }
 
 /**
@@ -270,3 +273,97 @@ export const createCustomPaginationResult = <
   gutter: 20,
   span: 12,
 });
+
+/**
+ * Menu
+ */
+export interface MenuTypeState {
+  title: string;
+  abbr: string;
+  icon: string;
+  url: string;
+  code: string[];
+  style?: string;
+  submenu: MenuTypeState[];
+}
+
+/**
+ * Parent Menu
+ */
+export interface ParentMenuTypeState {
+  title: string;
+  url: string;
+  previous?: string;
+}
+
+
+/**
+ * popover State
+ */
+export interface PopoverState {
+  title: string;
+  placement: string;
+  content: string;
+}
+
+/**
+ * Sub State
+ */
+export interface SubActionState<T = any> {
+  label: string;
+  icon?: string;
+  divided?: boolean;
+  onClick: ((row: T) => void) | null;
+}
+
+/**
+ * Button Group State
+ */
+export interface ButtonGroupState<T = any> {
+  icon: string;
+  circle: boolean;
+  name: string;
+  size: string;
+  disabled: boolean;
+  round: boolean;
+  plain: boolean;
+  type: string;
+  label: string;
+  className: string;
+  onClick: ((row: T) => void) | null;
+  sub: 'popover' | 'dropdown' | 'button';
+  config?: PopoverState
+  actions?: SubActionState[]
+}
+
+/**
+ * Image State
+ */
+export interface ImageState {
+  title: string;
+  url: string;
+}
+
+/**
+ * Column State
+ */
+export interface ColumnState<T = any> {
+  prop: string;
+  label: string;
+  align: string;
+  width: string | number;
+  sortable: boolean;
+  stop: true,
+  fixed: boolean;
+  render: Function;
+  svg: string;
+  size: number;
+  numberFormat: string;
+  onClick: ((row: T) => void) | null;
+  headerAlign: string;
+  labelClassName:string;
+  className: string;
+  type: ColumnType;
+  config?: Record<string, any>;
+  group: Array<ButtonGroupState>;
+}

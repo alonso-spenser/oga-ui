@@ -4,7 +4,6 @@
             :padding="true"
             :breadcrumb="true"
             v-loading="false"
-            :navigation-right="true"
             :navigation-offset="450"
             color="#409EFFFF"
   >
@@ -25,7 +24,7 @@
           <oga-icon name="plus"></oga-icon>
         </el-button>
       </div>
-      <div class="oga-navigation-item">
+      <div class="is-right">
         <el-button
             class="el-material-button"
             link
@@ -35,18 +34,27 @@
         </el-button>
       </div>
     </template>
-    <oga-section heading="Element ICONS" description="&lt;el-icon :name=&quot;icon&quot;&gt;&lt;/el-icon&gt;">
+    <oga-section heading="Element ICONS" description="&lt;el-icon :name=&quot;icon&quot; :size=&quot;30&quot;&gt;&lt;/el-icon&gt;">
+      <template #header>
+        <el-switch
+            v-model="copyType"
+            @change="changeCopyType"
+            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+            active-text=" Copy Section "
+            inactive-text=" Copy Name "
+        ></el-switch>
+      </template>
       <div class="icon-package">
-        <div class="icon-list" v-for="icon in elIcons" :key="icon" @click="copyCode(icon, true)">
-          <el-icon :name="icon"></el-icon>
+        <div class="icon-list" v-for="(icon, index) in elIcons" :key="icon" @click="copyCode(icon, true)">
+          <el-icon :name="icon" class="icon-size" :size="index === 0 ? 45 : 28"></el-icon>
           <p>{{ icon }}</p>
         </div>
       </div>
     </oga-section>
-    <oga-section heading="OGA ICONS" description="&lt;oga-icon :name=&quot;icon&quot;&gt;&lt;/oga-icon&gt;">
+    <oga-section heading="OGA ICONS" description="&lt;oga-icon :name=&quot;icon&quot; :size=&quot;30&quot;&gt;&lt;/oga-icon&gt;">
       <div class="icon-package">
-        <div class="icon-list" v-for="icon in icons" :key="icon" @click="copyCode(icon, false)">
-          <oga-icon :name="icon"></oga-icon>
+        <div class="icon-list" v-for="(icon, index) in icons" :key="icon" @click="copyCode(icon, false)">
+          <oga-icon :name="icon" :size="index === 0 ? 60 : 32"></oga-icon>
           <p>{{ icon }}</p>
         </div>
       </div>
@@ -55,10 +63,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import {ref} from 'vue'
 import useClipboard from "vue-clipboard3";
 const { toClipboard } = useClipboard();
 import { ElMessage } from "element-plus";
+import {isNotEmpty} from "@/plugins/utility";
 const icons = [
   "avatar",
   "group",
@@ -181,20 +190,37 @@ const addEvent = () => {
   console.log("add-event");
 }
 
+const copyType = ref(false);
+
+const changeCopyType = () => {
+  localStorage.setItem('cpyType', JSON.stringify(copyType.value));
+}
+
+const getCopyType = () => {
+  let cp = localStorage.getItem('cpyType');
+  if (isNotEmpty(cp)) {
+    copyType.value = JSON.parse(cp)
+  }
+}
+
 /**
  * Copy code
  */
 const copyCode = async (icon: string, el: boolean) => {
   try {
-    await toClipboard(el ? `<el-icon name="${icon}"></el-icon>` : `<oga-icon name="${icon}"></oga-icon>`);
+    let html = el ? `<el-icon name="${icon}"></el-icon>` : `<oga-icon name="${icon}"></oga-icon>`;
+    await toClipboard(copyType.value ? html : icon);
     ElMessage({
-      message: `Copied [ ${icon} ] to clipboard`,
+      message: `[ ${icon} ] Copied`,
       type: "success",
     });
   } catch (e) {
     console.error(e);
   }
 };
+
+
+getCopyType()
 </script>
 <style scoped lang="scss">
 .icon-package {
@@ -208,13 +234,8 @@ const copyCode = async (icon: string, el: boolean) => {
   text-align: center;
   overflow: hidden;
   margin-bottom: 10px;
-  .oga-icon {
-    font-size: 2rem;
-  }
-  .el-icon {
-    color: #606266;
-    font-size: 1.75rem;
-  }
+
+
   p {
     font-size: 12px;
   }

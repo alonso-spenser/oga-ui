@@ -48,7 +48,6 @@
     </template>
     <template #aside>
       <menu-list></menu-list>
-      <div style="height: 3000px"></div>
     </template>
     <template #asideHeader>
       <router-link to="/">

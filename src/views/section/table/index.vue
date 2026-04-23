@@ -43,7 +43,9 @@ import {
   useOrganizeEmployeeStore,
 } from "@/stores/page/organize-employee-store";
 import { fetchOrganizeEmployeePaging } from "@/plugins/organize";
-import { ColumnType } from "@/stores/type/page-type";
+import { ColumnType} from "@/stores/type/page-type";
+import type { FormInstance, FormRules, TableColumnCtx } from "element-plus";
+
 
 const { state, pageState, pageQueryState, pageResult, paginationState } =
   usePageState<OrganizeEmployeeModel>();
@@ -61,6 +63,22 @@ pageState.loadCache(
   organizeEmployeeStore.pageQueryState,
   organizeEmployeeStore.normalQueryState,
 );
+
+interface DictState {
+  label: string;
+  value: string | number | boolean;
+}
+
+enum AccountState {
+  Available = 0, Banned = 1, Pending = 2, InUse = 3,
+}
+
+const AccountStateOptions: DictState[] = [
+  { label: "Available", value: AccountState.Available },
+  { label: "Banned", value: AccountState.Banned },
+  { label: "Pending", value: AccountState.Pending },
+  { label: "In Use", value: AccountState.InUse },
+];
 
 /**
  * Update Pagination
@@ -82,24 +100,126 @@ pageState.updatePaginationState({
   columnList: [
     {
       prop: "account",
-      width: 150,
+      label: i18n.global.t("account.tableHeader.account"),
       fixed: true,
-      type: ColumnType.Mask,
-      config: {
-        format: "1/3",
-      },
-      label: i18n.global.t("organize.employee.tableHeader.account"),
+      width: 200,
+      render: (row: OrganizeEmployeeModel) => (
+          <div>
+            <div class="oga-table-row">
+              <el-tag size="small">{row.email}</el-tag>
+            </div>
+            <div class="oga-table-row">{row.account}</div>
+            <div class={'oga-table-row'}>{row.email}</div>
+          </div>
+      ),
     },
+    // {
+    //   prop: "account",
+    //   width: 150,
+    //   type: ColumnType.Mask,
+    //   config: {
+    //     format: "1/3",
+    //   },
+    //   label: i18n.global.t("organize.employee.tableHeader.account"),
+    // },
     {
-      prop: "account",
-      type: ColumnType.Mask,
+      prop: "state",
+      width: 70,
+      label: "State",
+      align: "center",
+      type: ColumnType.State,
       config: {
-        format: "default",
-      },
-      label: i18n.global.t("organize.employee.tableHeader.address"),
+        success: true,
+        error: true,
+      }
     },
+    // {
+    //   prop: "account",
+    //   type: ColumnType.Mask,
+    //   config: {
+    //     format: "default",
+    //   },
+    //   label: i18n.global.t("organize.employee.tableHeader.address"),
+    // },
+    {
+      label: "",
+      width: 200,
+      type: ColumnType.Button,
+      group: [
+        {
+          icon: "delete",
+          circle: true,
+          round: true,
+          label: "",
+          type: "primary",
+          disabled: false,
+          sub: "popover",
+          config: {
+            title: 'Title',
+            content: 'content',
+            placement: 'bottom'
+          },
+          onClick: (row: any) => {
+            console.log(row);
+          },
+        },
+        {
+          icon: "zoom-out",
+          circle: true,
+          round: true,
+          label: "",
+          disabled: false,
+          sub: "confirm",
+          config: {
+            title: 'Title',
+            content: 'content',
+            placement: 'bottom'
+          },
+          onClick: (row: any) => {
+            console.log(row);
+          },
+        },
+        {
+          icon: "edit",
+          circle: true,
+          round: true,
+          label: "",
+          disabled: false,
+          onClick: (row) => {
+            console.log(row);
+          },
+          sub: "dropdown",
+          actions: [
+            {
+              icon: 'plus',
+              label: 'Logout',
+              onClick: (row: any) => {
+                console.log('Logout', row);
+              }
+            },
+            {
+              icon: 'plus',
+              label: 'Bind PayPal',
+              onClick: (row: any) => {
+                console.log('Bind PayPal', row);
+              }
+            },
+            {
+              icon: 'delete',
+              label: 'Delete PayPal',
+              divided: true,
+              onClick: (row: any) => {
+                console.log('Delete PayPal', row);
+              }
+            }
+          ]
+        },
+      ],
+    },
+
     {
       prop: "areaCode",
+      type: ColumnType.Click,
       label: i18n.global.t("organize.employee.tableHeader.areaCode"),
     },
     {
@@ -245,7 +365,12 @@ pageState.updatePaginationState({
     },
     {
       prop: "sex",
+      width: 100,
       label: i18n.global.t("organize.employee.tableHeader.sex"),
+      type: ColumnType.Dictionary,
+      config: {
+        data: AccountStateOptions
+      }
     },
     {
       prop: "skinColor",
@@ -296,33 +421,6 @@ pageState.updatePaginationState({
       prop: "whatsApp",
       label: i18n.global.t("organize.employee.tableHeader.whatsApp"),
     },
-    {
-      label: "",
-      width: 150,
-      type: ColumnType.Button,
-      group: [
-        {
-          icon: "delete",
-          circle: true,
-          round: true,
-          label: "",
-          disabled: false,
-          onClick: (row) => {
-            console.log(row);
-          },
-        },
-        {
-          icon: "edit",
-          circle: true,
-          round: true,
-          label: "",
-          disabled: false,
-          onClick: (row) => {
-            console.log(row);
-          },
-        },
-      ],
-    },
   ],
   /**
    * Data is empty
@@ -349,7 +447,7 @@ const addDict = () => {
 };
 
 const columnEvents = (row: any, column: any) => {
-  console.log("columnKey", column.className);
+  console.log("Column Event: ", column.property);
 };
 
 /**
@@ -374,4 +472,3 @@ const handleDelete = (row) => {
 };
 getData();
 </script>
-<style scoped lang="scss"></style>

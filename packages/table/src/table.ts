@@ -55,9 +55,28 @@ export interface PaginationState {
 }
 
 /**
+ * popover State
+ */
+export interface PopoverState {
+    title: string;
+    placement: string;
+    content: string;
+}
+
+/**
+ * Sub State
+ */
+export interface SubActionState<T = any> {
+    label: string;
+    icon?: string;
+    divided?: boolean;
+    onClick: ((row: T) => void) | null;
+}
+
+/**
  * Button Group State
  */
-export interface ButtonGroupState {
+export interface ButtonGroupState<T = any> {
     icon: string;
     circle: boolean;
     name: string;
@@ -68,7 +87,10 @@ export interface ButtonGroupState {
     type: string;
     label: string;
     className: string;
-    onClick: Function | null
+    onClick: ((row: T) => void) | null;
+    sub: 'popover' | 'dropdown' | 'button';
+    config?: PopoverState
+    actions?: SubActionState[]
 }
 
 /**
@@ -78,10 +100,11 @@ export interface ImageState {
     title: string;
     url: string;
 }
+
 /**
  * Column State
  */
-export interface ColumnState {
+export interface ColumnState<T = any> {
     prop: string;
     label: string;
     align: string;
@@ -93,7 +116,7 @@ export interface ColumnState {
     svg: string;
     size: number;
     numberFormat: string;
-    onClick: Function | null;
+    onClick: ((row: T) => void) | null;
     headerAlign: string;
     labelClassName:string;
     className: string;
@@ -106,6 +129,7 @@ export interface ColumnState {
  * Column Type
  */
 export enum ColumnType {
+    Default = "default",
     Switch = "switch",
     Button = "button",
     Date = "date",
@@ -114,4 +138,7 @@ export enum ColumnType {
     Album = "album",
     Number = "number",
     Mask = "mask",
+    Dictionary = "dictionary",
+    State = "state",
+    Click = "click",
 }

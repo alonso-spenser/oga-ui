@@ -224,3 +224,25 @@ export function maskEmail(email: String) {
 
   return maskString(name) + "@" + domain;
 }
+
+/**
+ * Dict State
+ */
+export interface DictState {
+  label: string;
+  value: string | number | boolean;
+}
+
+/**
+ * Get label from dict by value
+ * @param list
+ * @param value
+ * @param label
+ */
+export const getDictValue = (
+    list: DictState[],
+    value: string | number | boolean,
+    label: keyof DictState = "label",
+) => {
+  return list.find((i) => i.value === value)?.[label] ?? "";
+};

@@ -1,5 +1,5 @@
 <template>
-  <oga-page :offset="240" :percentage="100">
+  <oga-page :offset="240" :percentage="100" class="ui-home">
     <template #header> slot="header" </template>
     HOME INDEX
     <oga-input
@@ -31,13 +31,16 @@ const changeLocale = () => {
 };
 </script>
 <style lang="scss">
-.oga-page-header {
-  background-color: red;
+.ui-home {
+  .oga-page-header {
+    background-color: red;
+  }
+  .oga-page-footer {
+    background-color: blue;
+  }
+  .oga-page-content {
+    //background-color: #c2e7b0;
+  }
 }
-.oga-page-footer {
-  background-color: blue;
-}
-.oga-page-content {
-  //background-color: #c2e7b0;
-}
+
 </style>

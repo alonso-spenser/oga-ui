@@ -61,8 +61,6 @@ const router = createRouter({
           path: "editor",
           name: "section-editor",
           meta: {
-            // web: true,
-            // title: i18n.t('dashboard.title'),
             requireAuth: false,
           },
           component: () => import("../views/section/editor/index.vue"),
@@ -96,20 +94,23 @@ const router = createRouter({
             header: true,
             container: true,
             requireAuth: true,
-            title: 'Sub-dictionary',
-            parent: {
-              title: 'Dictionary',
-              url: '/base/dict',
-              previous: '/base/dict'
-            },
+            title: 'ICON',
+          }
+        },
+        {
+          path: "icon/:id",
+          name: "section-icon-sub",
+          component: () => import("../views/section/icon/index.vue"),
+          meta: {
+            aside: true,
+            header: true,
+            container: true,
+            requireAuth: true,
+            title: 'ICON',
             crumbs: [
               {
-                title: 'Base',
-                path: '/base'
-              },
-              {
-                title: 'Dictionary',
-                path: '/base/dict'
+                title: 'Oga UI',
+                path: '/section/avatar/:id:'
               }
             ]
           }
@@ -118,8 +119,14 @@ const router = createRouter({
           path: "avatar",
           name: "section-avatar",
           meta: {
-            // web: true,
-            // title: i18n.t('dashboard.title'),
+            requireAuth: false,
+          },
+          component: () => import("../views/section/avatar/index.vue"),
+        },
+        {
+          path: "avatar/:id",
+          name: "section-avatar-sub",
+          meta: {
             requireAuth: false,
           },
           component: () => import("../views/section/avatar/index.vue"),

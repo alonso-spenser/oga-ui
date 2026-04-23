@@ -1,40 +1,35 @@
 <template>
   <div>
     <el-menu
-      :default-active="activeMenu"
-      class="oga-layout-aside-menu"
-      text-color="#666"
-      @select="openMenu"
-      :router="false"
-      unique-opened
-      :collapse="false"
-      active-text-color="#409EFF"
+        class="oga-layout-aside-menu"
+        :default-active="activeMenu()"
+        text-color="#666"
+        :router="true"
+        unique-opened
+        :collapse="false"
+        active-text-color="#409EFF"
     >
-      <template v-for="(route, index) in menuList">
+      <template v-for="route in menuList">
         <el-menu-item
-          v-if="route.submenu.length === 0"
-          :key="route.url"
-          :index="route.url || index.toString()"
-          :class="route.style || ''"
+            v-if="route.submenu.length === 0"
+            node-key="url"
+            :index="route.url"
+            :class="route.style ?? ''"
         >
           <template #title>
-            <index :name="route.icon" v-if="isNotEmpty(route.icon)"> </index>
+            <el-icon :name="route.icon" v-if="isNotEmpty(route.icon)"></el-icon>
             {{ route.title }}
           </template>
         </el-menu-item>
-        <el-sub-menu
-          :key="route.url"
-          v-if="route.submenu.length > 0"
-          :index="route.url || index.toString()"
-        >
+        <el-sub-menu :index="route.url" v-if="route.submenu.length > 0">
           <template #title>
-            <index :name="route.icon" v-if="isNotEmpty(route.icon)"> </index>
+            <el-icon :name="route.icon" v-if="isNotEmpty(route.icon)"></el-icon>
             {{ route.title }}
           </template>
           <template v-for="sub in route.submenu" :key="sub.url">
             <el-menu-item :index="sub.url" :class="sub.style || ''">
               <template #title>
-                <index :name="sub.icon" v-if="isNotEmpty(sub.icon)"> </index>
+                <el-icon :name="sub.icon" v-if="isNotEmpty(sub.icon)"></el-icon>
                 {{ sub.title }}
               </template>
             </el-menu-item>
@@ -45,76 +40,69 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useRoute, useRouter } from "vue-router";
+import { ref } from "vue";
+import { useRoute } from "vue-router";
 import i18n from "@/plugins/i18n/base";
 import { isNotEmpty } from "@/plugins/utility";
-import Index from "../../../packages/iconfont/src/index.vue";
-let menuList: any[] = [];
+import {
+  type MenuTypeState,
+  type ParentMenuTypeState,
+} from "@/stores/type/page-type";
+let menuList = ref<MenuTypeState[]>([]);
 const route = useRoute();
-const router = useRouter();
 
-const replaceParams = (params: { [x: string]: any }, url: string) => {
-  for (const key in params) {
-    url = url.replace(`:${key}:`, params[key]);
-  }
+/**
+ * Replace url params
+ */
+const replaceParams = (
+    params: Record<string, string | number>,
+    url: string,
+): string => {
+  Object.keys(params).forEach((key) => {
+    url = url.replace(`:${key}:`, String(params[key]));
+  });
+
   return url;
 };
 
-const getMenuList = () => {
-  const list = JSON.parse(JSON.stringify(i18n.global.tm("menuList")));
-  let { params } = route;
-  params = {
-    ...params,
-  };
-  list.forEach((o) => {
-    if (o.url) {
-      o.url = replaceParams(params, o.url);
+const processMenu = (
+    list: MenuTypeState[],
+    params: Record<string, string | number>,
+) => {
+  list.forEach((menu) => {
+    if (menu.url) {
+      menu.url = replaceParams(params, menu.url);
     }
-    o.submenu.forEach((sub) => {
-      if (sub.url) {
-        sub.url = replaceParams(params, sub.url);
-      }
-    });
-  });
-  const s = [];
-  /**
-   *  处理导航栏展示，隐藏
-   * @type {*[]}
-   */
-  // list.forEach((o, i, y) => {
-  //   if (this.$checkPermission(o.code)) {
-  //     o.submenu = o.submenu.filter((sb) => {
-  //       return this.$checkPermission(sb.code)
-  //     })
-  //     s.push(o)
-  //   }
-  // })
-  menuList = list;
-};
 
-const openMenu = (url: string) => {
-  if (route.path === url) {
-    return false;
-  }
-  router.push({
-    path: url,
+    if (menu.submenu && menu.submenu.length) {
+      processMenu(menu.submenu, params);
+    }
   });
 };
 
 /**
- * 路由标记
+ * Get menu list
  */
-const activeMenu = () => {
-  const { meta, path, params } = route;
-  const url = meta.parent
-    ? typeof meta.parent === "object"
-      ? meta.parent.url
-      : meta.parent
-    : path;
-  return replaceParams(params, url);
+const getMenuList = (): MenuTypeState[] => {
+  const list: MenuTypeState[] = JSON.parse(
+      JSON.stringify(i18n.global.tm("menuList")),
+  );
+  const params = { ...route.params } as Record<string, string | number>;
+  processMenu(list, params);
+  return list;
 };
 
-getMenuList();
+/**
+ * Active menu
+ */
+const activeMenu = (): string => {
+  const { meta, path, params } = route;
+  const parent = meta.parent as ParentMenuTypeState | undefined;
+  const url = parent?.url ?? path;
+  return replaceParams(params as Record<string, string | number>, url);
+};
+
+menuList.value = getMenuList();
 </script>
 
 <style scoped lang="scss"></style>

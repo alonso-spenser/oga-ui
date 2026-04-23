@@ -570,8 +570,23 @@ $text-size-small: 12px;
   flex-direction: column;
 
   &-image {
-    border: 1px solid red;
     display: flex;
+  }
+
+  .oga-table-row {
+    line-height: 1;
+
+    &:not(:last-child) {
+      margin-top: 0;
+      margin-bottom: .35rem;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+  .oga-table-button {
+    & + .oga-table-button {
+      margin-left: 5px;
+    }
   }
 
   &-content {

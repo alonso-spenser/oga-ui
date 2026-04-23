@@ -188,7 +188,7 @@
     <oga-unsaved
       v-model="unsaved"
       :loading="loading"
-      :offset="500"
+      :offset="240"
       round
       @cancel="closeDialog"
       @confirmed="submitForm(ruleFormRef)"

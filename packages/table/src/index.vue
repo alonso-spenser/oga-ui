@@ -46,7 +46,7 @@
                 :label-class-name="column.labelClassName || ''"
                 :width="column.width"
                 :label="column.label"
-                :class-name="column.className || ''"
+                :class-name="isNotEmpty(column.className) ? column.className : ''"
                 :sortable="column.sortable"
                 :column-key="column.prop"
                 :fixed="column.fixed">
@@ -104,8 +104,73 @@
                   {{ timestampToDatetime(scope.row[column.prop], column.config?.format ?? '') }}
                 </template>
                 <template v-else-if="column.type === ColumnType.Button">
+                  <template v-for="(btn, i) in column.group">
+                    <template v-if="btn.sub === 'popover'">
+                      <el-popover
+                          :title="btn.config?.title"
+                          :content="btn.config?.content"
+                          :placement="btn.config?.placement ?? 'bottom-end'"
+                      >
+                        <template #reference>
+                          <el-button
+                              class="oga-table-button"
+                              :key="i"
+                              :type="btn.type"
+                              :disabled="btn.disabled"
+                              :plain="btn.plain"
+                              :circle="btn.circle"
+                              :round="btn.round"
+                              :class="btn.className || ''"
+                              @click.stop="btn.onClick(scope.row)"
+                          >
+                            <template #default>
+                              <el-icon :name="btn.icon" v-if="btn.icon"></el-icon>
+                              <template v-if="btn.label">
+                                {{ btn.label }}
+                              </template>
+                            </template>
+                          </el-button>
+                        </template>
+                      </el-popover>
+                    </template>
+                    <template v-else-if="btn.sub === 'dropdown'">
+                      <el-dropdown class="oga-table-button">
+                        <div class="el-dropdown-link">
+                          <el-button
+                              :key="i"
+                              :type="btn.type"
+                              :disabled="btn.disabled"
+                              :plain="btn.plain"
+                              :circle="btn.circle"
+                              :round="btn.round"
+                              :class="btn.className || ''"
+                              @click.stop="btn.onClick(scope.row)"
+                          >
+                            <template #default>
+                              <el-icon :name="btn.icon" v-if="btn.icon"></el-icon>
+                              <template v-if="btn.label">
+                                {{ btn.label }}
+                              </template>
+                            </template>
+                          </el-button>
+                        </div>
+                        <template #dropdown>
+                          <el-dropdown-menu>
+                            <template v-for="(sub) in btn.actions??[]">
+                              <el-dropdown-item
+                                  :divided="sub.divided??false"
+                                  @click="sub.onClick(scope.row)"
+                              >
+                                <el-icon :name="sub.icon" v-if="isNotEmpty(sub.icon)"></el-icon>
+                                {{sub.label}}
+                              </el-dropdown-item>
+                            </template>
+                          </el-dropdown-menu>
+                        </template>
+                      </el-dropdown>
+                    </template>
                     <el-button
-                        v-for="(btn, i) in column.group"
+                        v-else
                         :key="i"
                         :type="btn.type"
                         :disabled="btn.disabled"
@@ -113,15 +178,17 @@
                         :circle="btn.circle"
                         :round="btn.round"
                         :class="btn.className || ''"
+                        class="oga-table-button"
                         @click.stop="btn.onClick(scope.row, scope.$index)"
                     >
                       <template #default>
-                        <index :name="btn.icon" v-if="btn.icon"></index>
+                        <el-icon :name="btn.icon" v-if="btn.icon"></el-icon>
                         <template v-if="btn.label">
                           {{ btn.label }}
                         </template>
                       </template>
                     </el-button>
+                  </template>
                 </template>
                 <template v-else-if="column.render">
                   <component :is="column.render(scope.row)"></component>
@@ -142,6 +209,25 @@
                 </template>
                 <template v-else-if="column.type === ColumnType.Mask">
                   {{ column.config?.format ==='1/3' ? maskOneThirdString(scope.row[column.prop]) : column.config?.format ==='email' ? maskEmail(scope.row[column.prop]) : maskString(scope.row[column.prop])  }}
+                </template>
+                <template v-else-if="column.type === ColumnType.Dictionary">
+                  {{column.config?.data? getDictValue(column.config.data, scope.row[column.prop]) : scope.row[column.prop]}}
+                </template>
+                <template v-else-if="column.type === ColumnType.State">
+                  <template v-if="scope.row[column.prop] === 1">
+                    <el-icon
+                        v-if="column.config?.success??true"
+                        name="check"
+                        style="color:var(--el-color-success)"
+                    ></el-icon>
+                  </template>
+                  <template v-if="scope.row[column.prop] === 0">
+                    <el-icon
+                        v-if="column.config?.error??true"
+                        name="close"
+                        style="color:var(--el-color-error)"
+                    ></el-icon>
+                  </template>
                 </template>
                 <template v-else>
                   {{ scope.row[column.prop] }}
@@ -189,10 +275,10 @@
                       :key="`action-${key}`"
                       :disabled="selectedItems.length < 1"
                       :divided="o.divided">
-                    <index
+                    <el-icon
                         :name="o.icon"
                         v-if="isNotEmpty(o.icon)">
-                    </index>
+                    </el-icon>
                     {{ o.label }}
                   </el-dropdown-item>
                   <el-dropdown-item
@@ -234,15 +320,18 @@ import i18n from "../../i18n/base";
 import {
   formatNumber,
   formatNumberLocation,
+  getDictValue,
   isFunction,
-  isNotEmpty, maskOneThirdString, maskString, maskEmail,
+  isNotEmpty,
+  maskEmail,
+  maskOneThirdString,
+  maskString,
   timestampToDate,
   timestampToDatetime
 } from "../../plugins/utility";
 import placeholder from './img/placeholder.jpg'
-import Index from "../../iconfont/src/index.vue";
 import {ColumnType, type ImageState, type PaginationParameterState, type PaginationState} from "./table"
-
+import ElIcon from "../../icon/src/index.vue";
 
 /**
  * Props
@@ -336,7 +425,10 @@ const multiSelectEvent = (rows: Array<any>) => {
  */
 const rowClick = (row: any, column: TableColumnCtx, event: { cancelBubble: boolean; }) => {
   event.cancelBubble = true
-  if (props === undefined || column.className === 'stop') {
+  let el =  props.columnList.filter((o) => {
+    return !(o.type === undefined || o.type === ColumnType.Click) && o.prop === column.property
+  })
+  if (el.length > 0 || column.className === 'stop') {
     return
   }
   if (props.actionList && props.actionList["update"]) {
@@ -457,4 +549,6 @@ const pageSizeChange = (size: number) => {
 
 <style scoped lang="scss">
 @use "../../style/index.scss" as var;
+
+
 </style>
