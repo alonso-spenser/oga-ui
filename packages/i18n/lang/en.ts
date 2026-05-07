@@ -4,6 +4,7 @@ export default {
     save: 'SAVE',
     cancel: 'CANCEL'
   },
+  copied: "Copied to clipboard",
   notData: 'No data',
   select: {
     multiple: 'Selected',

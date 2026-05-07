@@ -4,6 +4,7 @@ export default {
     save: '保存',
     cancel: '取消'
   },
+  copied: "已复制到剪贴板",
   notData: '数据为空',
   select: {
     multiple: '已选中 {0} 个'

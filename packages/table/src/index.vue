@@ -315,6 +315,7 @@
 </template>
 <script setup lang="ts">
 import type {TableColumnCtx} from "element-plus";
+import { ElMessage } from "element-plus";
 import {defineEmits, ref} from "vue";
 import i18n from "../../i18n/base";
 import {
@@ -332,6 +333,8 @@ import {
 import placeholder from './img/placeholder.jpg'
 import {ColumnType, type ImageState, type PaginationParameterState, type PaginationState} from "./table"
 import ElIcon from "../../icon/src/index.vue";
+import useClipboard from "vue-clipboard3";
+const { toClipboard } = useClipboard();
 
 /**
  * Props
@@ -428,6 +431,20 @@ const rowClick = (row: any, column: TableColumnCtx, event: { cancelBubble: boole
   let el =  props.columnList.filter((o) => {
     return !(o.type === undefined || o.type === ColumnType.Click) && o.prop === column.property
   })
+  let cp =  props.columnList.filter((o) => {
+    return o.type === ColumnType.Copy && o.prop === column.property
+  })
+  if (cp.length > 0) {
+    let c = row[column.property]
+    if (c !== undefined && c !== null) {
+      toClipboard(row[column.property] ?? "");
+      ElMessage({
+        message: i18n.global.t("copied"),
+        type: "success",
+      });
+    }
+    return;
+  }
   if (el.length > 0 || column.className === 'stop') {
     return
   }

@@ -103,6 +103,7 @@ pageState.updatePaginationState({
       label: i18n.global.t("account.tableHeader.account"),
       fixed: true,
       width: 200,
+      type: ColumnType.Copy,
       render: (row: OrganizeEmployeeModel) => (
           <div>
             <div class="oga-table-row">

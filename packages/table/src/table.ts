@@ -141,4 +141,5 @@ export enum ColumnType {
     Dictionary = "dictionary",
     State = "state",
     Click = "click",
+    Copy = "copy",
 }

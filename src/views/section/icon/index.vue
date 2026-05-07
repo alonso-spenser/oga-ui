@@ -34,7 +34,7 @@
         </el-button>
       </div>
     </template>
-    <oga-section heading="Element ICONS" description="&lt;el-icon :name=&quot;icon&quot; :size=&quot;30&quot;&gt;&lt;/el-icon&gt;">
+    <oga-section :border-radius="30" :padding="30" heading="Element ICONS" description="&lt;el-icon :name=&quot;icon&quot; :size=&quot;30&quot;&gt;&lt;/el-icon&gt;">
       <template #header>
         <el-switch
             v-model="copyType"

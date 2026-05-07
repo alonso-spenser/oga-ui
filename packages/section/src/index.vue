@@ -1,7 +1,7 @@
 <template>
   <fieldset
       class="oga-section"
-      :style="borderRadius > 0 ? `border-radius: ${borderRadius}px` : ''"
+      :style="css"
       :class="description ? 'has-description' : ''"
   >
     <legend v-if="heading">
@@ -38,8 +38,20 @@ const props = defineProps({
   borderRadius: {
     type: Number,
     default: 0
+  },
+  padding: {
+    type: Number,
+    default: 20
   }
 })
+
+let css:Record<string, any> =  {}
+if (props.borderRadius > 0 && props.borderRadius != 7) {
+  css['--borderRadius'] = props.borderRadius
+}
+if (props.padding > 0 && props.padding != 20) {
+  css['--padding'] = props.padding
+}
 </script>
 
 <style lang="scss">
@@ -47,8 +59,8 @@ const props = defineProps({
 
 .oga-section {
   position: relative;
-  padding: 1.25rem;
-  border-radius: 7px;
+  padding: calc(var(--padding, 20) * 1px);
+  border-radius: calc(var(--borderRadius, 7) * 1px);
   border: 1px solid #EBEEF5;
   -webkit-transition: .3s;
   transition: .3s;

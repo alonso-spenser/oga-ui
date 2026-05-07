@@ -8,6 +8,7 @@
 ```js
 "vue": "^3.5.25"
 "element-plus": "^2.13.2"
+"vue-clipboard3": "^2.0.0"
 "@wangeditor/editor": "^5.1.23"
 "@wangeditor/editor-for-vue": "^5.1.12"
 ```
@@ -17,6 +18,7 @@
 ```bash
 npm i oga-ui
 npm i @wangeditor/editor
+npm i vue-clipboard3
 npm i @wangeditor/editor-for-vue@next
 ```
 
@@ -160,6 +162,8 @@ ColumnType.State
     row.value
     0   <el-icon name="close"></el-icon>
     1   <el-icon name="check"></el-icon>
+ColumnType.Copy
+    It will copy data to the clipboard.
 ```
 
 ## El Icon

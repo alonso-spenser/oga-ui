@@ -5,6 +5,7 @@ export default {
     cancel: '取消'
   },
   notData: '數據為空',
+  copied: "已复制到剪贴板",
   select: {
     multiple: '已选中 {0} 个'
   },
