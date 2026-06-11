@@ -1,11 +1,13 @@
 const path = require("path");
 const fsExtra = require("fs-extra");
 const fs = require("fs");
+const { execFileSync } = require("child_process");
 const { defineConfig, build } = require("vite");
 const vue = require("@vitejs/plugin-vue");
 const appConfig = require('../package.json')
 const entryDir = path.resolve(__dirname, "../packages");
 const outputDir = path.resolve(__dirname, "../dist");
+const typeOutputDir = path.resolve(outputDir, "types");
 
 /**
  * base config
@@ -17,12 +19,136 @@ const baseConfig = defineConfig({
 });
 
 const rollupOptions = {
-    external: ["vue", "vue-router"],
+    external: ["vue", "vue-router", "element-plus"],
     output: {
         globals: {
             vue: "Vue",
+            "vue-router": "VueRouter",
+            "element-plus": "ElementPlus",
         },
     },
+};
+
+const indexEntry = path.resolve(entryDir, "index.ts");
+
+const resolveComponentEntry = (importPath) => {
+    const entryPath = path.resolve(entryDir, importPath);
+    const candidates = [
+        entryPath,
+        `${entryPath}.ts`,
+        `${entryPath}.vue`,
+        path.resolve(entryPath, "index.ts"),
+    ];
+
+    return candidates.find((filePath) => fs.existsSync(filePath) && fs.lstatSync(filePath).isFile());
+};
+
+const getInstalledComponentNames = () => {
+    const indexContent = fs.readFileSync(indexEntry, "utf-8");
+    const importMap = new Map();
+    const importReg = /import\s+([A-Za-z_$][\w$]*)\s+from\s+["'](.+)["'];?/g;
+    let importMatch;
+
+    while ((importMatch = importReg.exec(indexContent))) {
+        importMap.set(importMatch[1], importMatch[2]);
+    }
+
+    const componentsMatch = indexContent.match(/const\s+components\s*=\s*\[([\s\S]*?)\];/);
+    if (!componentsMatch) {
+        return [];
+    }
+
+    const componentIdentifiers = componentsMatch[1]
+        .split(",")
+        .map((name) => name.trim())
+        .filter(Boolean);
+    const components = [];
+
+    for (const identifier of componentIdentifiers) {
+        const importPath = importMap.get(identifier);
+        const componentEntry = importPath ? resolveComponentEntry(importPath) : null;
+        const componentContent = componentEntry ? fs.readFileSync(componentEntry, "utf-8") : "";
+        const componentNameMatch = componentContent.match(/app\.component\(\s*["']([^"']+)["']/);
+        const componentName = componentNameMatch ? componentNameMatch[1] : identifier;
+        const registeredComponent = componentContent.match(/app\.component\(\s*["'][^"']+["']\s*,\s*([A-Za-z_$][\w$]*)/);
+        const registeredIdentifier = registeredComponent ? registeredComponent[1] : null;
+        const sourceImportReg = /import\s+([A-Za-z_$][\w$]*)\s+from\s+["'](.+\.vue)["'];?/g;
+        let sourceImportMatch;
+        let sourcePath = null;
+
+        while ((sourceImportMatch = sourceImportReg.exec(componentContent))) {
+            if (!registeredIdentifier || sourceImportMatch[1] === registeredIdentifier) {
+                sourcePath = path.resolve(path.dirname(componentEntry), sourceImportMatch[2]);
+                break;
+            }
+        }
+
+        if (!components.some((component) => component.name === componentName)) {
+            const relativeTypePath = sourcePath
+                ? path.relative(outputDir, path.resolve(typeOutputDir, path.relative(entryDir, sourcePath))).replace(/\\/g, "/")
+                : null;
+
+            components.push({
+                name: componentName,
+                typePath: relativeTypePath ? `./${relativeTypePath}` : null,
+            });
+        }
+    }
+
+    return components;
+};
+
+const createTypes = () => {
+    fsExtra.removeSync(typeOutputDir);
+    const vueTsc = path.resolve(__dirname, "../node_modules/.bin/vue-tsc");
+
+    execFileSync(
+        vueTsc,
+        [
+            "-p",
+            "tsconfig.lib.json",
+            "--declaration",
+            "--emitDeclarationOnly",
+            "--noEmit",
+            "false",
+            "--outDir",
+            "dist/types",
+        ],
+        {
+            cwd: path.resolve(__dirname, ".."),
+            stdio: "inherit",
+        }
+    );
+};
+
+const createTypeDeclarations = async () => {
+    const components = getInstalledComponentNames();
+    const namedExports = components
+        .map(({ name, typePath }) => {
+            if (!typePath) {
+                return `declare const ${name}: any;`;
+            }
+
+            return `declare const ${name}: typeof import("${typePath}").default;`;
+        })
+        .join("\n");
+    const globalComponents = components
+        .map(({ name }) => `    ${name}: typeof ${name};`)
+        .join("\n");
+    const content = `${namedExports}
+
+declare const plugin: any;
+
+export default plugin;
+
+declare module "vue" {
+  export interface GlobalComponents {
+${globalComponents}
+  }
+}
+`;
+
+    await fsExtra.outputFile(path.resolve(outputDir, "index.d.ts"), content, "utf-8");
 };
 
 /**
@@ -38,7 +164,7 @@ const buildAll = async () => {
                     name: "index",
                     cssFileName: "index",
                     entry: path.resolve(entryDir, "index.ts"),
-                    fileName: (format) => `index.${format}.ts`
+                    fileName: (format) => format === "es" ? "index.es.js" : "index.umd.cjs"
                 },
                 outDir: outputDir,
             },
@@ -60,7 +186,7 @@ const buildSingle = async (name) => {
                     name: "index",
                     cssFileName: "index",
                     entry: path.resolve(entryDir, name),
-                    fileName: (format) => `index.${format}.ts`
+                    fileName: (format) => format === "es" ? "index.es.js" : "index.umd.cjs"
                 },
                 outDir: path.resolve(outputDir, name),
             },
@@ -86,9 +212,22 @@ const createPackageJson = (name) => {
     "url": "git+https://github.com/joebobxie/oga-ui.git"
   },
   "license": "${appConfig.license}",
-  "main": "index.umd.ts",
-  "module": "index.es.ts",
-  "style": "index.css"
+  "main": "./index.umd.cjs",
+  "module": "./index.es.js",
+  "types": "./index.d.ts",
+  "style": "./index.css",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.es.js",
+      "require": "./index.umd.cjs"
+    },
+    "./index.css": "./index.css",
+    "./*": "./*"
+  },
+  "files": [
+    "**/*"
+  ]
 }`;
 
     const filePath = `${name === appConfig.name ? '' : name}${name === appConfig.name ? '' : '/'}package.json`
@@ -114,7 +253,9 @@ const generate = async () => {
         await buildSingle(name);
         // createPackageJson(name);
     }
+    createTypes();
     createPackageJson(appConfig.name);
+    await createTypeDeclarations();
 
     fs.copyFileSync('README.md', `${outputDir}/README.md`);
 };
