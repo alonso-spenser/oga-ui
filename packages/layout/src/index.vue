@@ -39,16 +39,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, useSlots, defineEmits } from 'vue'
+import { ref, useSlots } from 'vue'
+import type { CSSProperties } from 'vue'
 import {isEmpty} from "../../plugins/utility";
 
 const year = ref(new Date().getFullYear())
-const cssVars = ref({})
+const cssVars = ref<CSSProperties>({})
 const maskColor = ref('')
 const foldImage = ref('')
 const foldSize = ref('')
 const paddingLeft = ref('')
-const asideWidth = ref({})
+const asideWidth = ref<CSSProperties>({})
 
 const slots = useSlots()
 const foldState = ref(false)
@@ -121,20 +122,20 @@ const props = defineProps({
   }
 })
 
-const css = {}
+const css: CSSProperties = {}
 if (props.asideTop > 0) {
-  css['top'] = `${props.asideTop}px`
+  css.top = `${props.asideTop}px`
 }
 if (props.asideBottom > 0 || props.asideTop > 0) {
-  css['height'] = `calc(100% - ${(props.asideTop + props.asideBottom)}px)`
+  css.height = `calc(100% - ${(props.asideTop + props.asideBottom)}px)`
 }
 cssVars.value = {
   '--asideWidth': props.asideWidth,
   ...css
-}
+} as CSSProperties
 asideWidth.value = {
   '--asideWidth': props.asideWidth
-}
+} as CSSProperties
 maskColor.value = isEmpty(props.maskBackground) ? '' : `background-color: ${props.maskBackground}`
 foldImage.value = props.foldIconHeight !== 60 && props.foldIconHeight > 0 ? `width: ${props.foldIconHeight}px;height:${props.foldIconHeight}px` : ''
 foldSize.value = props.foldIconHeight !== 60 && props.foldIconHeight > 0 ? `font-size: ${props.foldIconHeight / 2}px` : ''

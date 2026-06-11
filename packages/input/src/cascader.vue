@@ -16,12 +16,12 @@
 </template>
 
 <script lang="ts" setup>
-import { defineModel, useAttrs, useSlots } from 'vue'
+import { useAttrs, useSlots } from 'vue'
 defineOptions({
   inheritAttrs: false
 })
 
-const props = defineProps({
+defineProps({
   placeholder: {
     type: String,
     default: ''

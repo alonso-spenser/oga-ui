@@ -1,20 +1,20 @@
 <template>
   <div>
     <el-menu
-        class="oga-layout-aside-menu"
-        :default-active="activeMenu()"
-        text-color="#666"
-        :router="true"
-        unique-opened
-        :collapse="false"
-        active-text-color="#409EFF"
+      class="oga-layout-aside-menu"
+      :default-active="activeMenu()"
+      text-color="#666"
+      :router="true"
+      unique-opened
+      :collapse="false"
+      active-text-color="#409EFF"
     >
       <template v-for="route in menuList">
         <el-menu-item
-            v-if="route.submenu.length === 0"
-            node-key="url"
-            :index="route.url"
-            :class="route.style ?? ''"
+          v-if="route.submenu.length === 0"
+          node-key="url"
+          :index="route.url"
+          :class="route.style ?? ''"
         >
           <template #title>
             <el-icon :name="route.icon" v-if="isNotEmpty(route.icon)"></el-icon>
@@ -55,8 +55,8 @@ const route = useRoute();
  * Replace url params
  */
 const replaceParams = (
-    params: Record<string, string | number>,
-    url: string,
+  params: Record<string, string | number>,
+  url: string,
 ): string => {
   Object.keys(params).forEach((key) => {
     url = url.replace(`:${key}:`, String(params[key]));
@@ -66,8 +66,8 @@ const replaceParams = (
 };
 
 const processMenu = (
-    list: MenuTypeState[],
-    params: Record<string, string | number>,
+  list: MenuTypeState[],
+  params: Record<string, string | number>,
 ) => {
   list.forEach((menu) => {
     if (menu.url) {
@@ -85,7 +85,7 @@ const processMenu = (
  */
 const getMenuList = (): MenuTypeState[] => {
   const list: MenuTypeState[] = JSON.parse(
-      JSON.stringify(i18n.global.tm("menuList")),
+    JSON.stringify(i18n.global.tm("menuList")),
   );
   const params = { ...route.params } as Record<string, string | number>;
   processMenu(list, params);

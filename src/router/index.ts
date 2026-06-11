@@ -94,8 +94,8 @@ const router = createRouter({
             header: true,
             container: true,
             requireAuth: true,
-            title: 'ICON',
-          }
+            title: "ICON",
+          },
         },
         {
           path: "icon/:id",
@@ -106,14 +106,14 @@ const router = createRouter({
             header: true,
             container: true,
             requireAuth: true,
-            title: 'ICON',
+            title: "ICON",
             crumbs: [
               {
-                title: 'Oga UI',
-                path: '/section/avatar/:id:'
-              }
-            ]
-          }
+                title: "Oga UI",
+                path: "/section/avatar/:id:",
+              },
+            ],
+          },
         },
         {
           path: "avatar",

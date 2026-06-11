@@ -6,7 +6,7 @@ import { CreatePageStore } from "../create-page-store";
 export enum OrganizeEmployeeApi {
   Detail = "/api/organize/employee/detail",
   Update = "/api/organize/employee/update",
-  Insert = "/api/organize/employee/update",
+  Insert = "/api/organize/employee/insert",
   Delete = "/api/organize/employee/delete",
   Paging = "/api/organize/employee/paging",
   List = "/api/organize/employee/list",

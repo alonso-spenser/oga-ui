@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import {useAttrs, defineModel} from 'vue'
+import {useAttrs} from 'vue'
 defineOptions({
   inheritAttrs: false
 })

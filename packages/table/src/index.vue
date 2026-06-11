@@ -25,6 +25,7 @@
             :header-cell-class-name="headerCellClassName"
             @selection-change="multiSelectEvent"
             @row-click="rowClick"
+            @cellClick="cellClick"
             :row-style="rowClass"
         >
           <el-table-column
@@ -45,6 +46,7 @@
                 :header-align="column.headerAlign || ''"
                 :label-class-name="column.labelClassName || ''"
                 :width="column.width"
+                :min-width="column.minWidth"
                 :label="column.label"
                 :class-name="isNotEmpty(column.className) ? column.className : ''"
                 :sortable="column.sortable"
@@ -109,6 +111,7 @@
                       <el-popover
                           :title="btn.config?.title"
                           :content="btn.config?.content"
+                          v-if="(btn.visible === undefined) || (btn.visible !== undefined && btn.visible(scope.row))"
                           :placement="btn.config?.placement ?? 'bottom-end'"
                       >
                         <template #reference>
@@ -158,6 +161,7 @@
                           <el-dropdown-menu>
                             <template v-for="(sub) in btn.actions??[]">
                               <el-dropdown-item
+                                  v-if="(sub.visible === undefined) || (sub.visible !== undefined && sub.visible(scope.row))"
                                   :divided="sub.divided??false"
                                   @click="sub.onClick(scope.row)"
                               >
@@ -169,25 +173,27 @@
                         </template>
                       </el-dropdown>
                     </template>
-                    <el-button
-                        v-else
-                        :key="i"
-                        :type="btn.type"
-                        :disabled="btn.disabled"
-                        :plain="btn.plain"
-                        :circle="btn.circle"
-                        :round="btn.round"
-                        :class="btn.className || ''"
-                        class="oga-table-button"
-                        @click.stop="btn.onClick(scope.row, scope.$index)"
-                    >
-                      <template #default>
-                        <el-icon :name="btn.icon" v-if="btn.icon"></el-icon>
-                        <template v-if="btn.label">
-                          {{ btn.label }}
+                    <template v-else>
+                      <el-button
+                          :key="i"
+                          :type="btn.type"
+                          :disabled="btn.disabled"
+                          :plain="btn.plain"
+                          :circle="btn.circle"
+                          :round="btn.round"
+                          :class="btn.className || ''"
+                          class="oga-table-button"
+                          v-if="(btn.visible === undefined) || (btn.visible !== undefined && btn.visible(scope.row))"
+                          @click.stop="buttonClick(btn, scope.row, scope.$index)"
+                      >
+                        <template #default>
+                          <el-icon :name="btn.icon" v-if="btn.icon"></el-icon>
+                          <template v-if="btn.label">
+                            {{ btn.label }}
+                          </template>
                         </template>
-                      </template>
-                    </el-button>
+                      </el-button>
+                    </template>
                   </template>
                 </template>
                 <template v-else-if="column.render">
@@ -314,9 +320,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import type {TableColumnCtx} from "element-plus";
-import { ElMessage } from "element-plus";
-import {defineEmits, ref} from "vue";
+import type {TableColumnCtx, TableInstance} from "element-plus";
+import { ElMessage,ElMessageBox, type MessageType } from "element-plus";
+import {ref} from "vue";
 import i18n from "../../i18n/base";
 import {
   formatNumber,
@@ -331,7 +337,15 @@ import {
   timestampToDatetime
 } from "../../plugins/utility";
 import placeholder from './img/placeholder.jpg'
-import {ColumnType, type ImageState, type PaginationParameterState, type PaginationState} from "./table"
+import {
+  ColumnType,
+  createPaginationState,
+  type ButtonGroupState,
+  type ColumnState,
+  type ImageState,
+  type PaginationParameterState,
+  type PaginationState
+} from "./table"
 import ElIcon from "../../icon/src/index.vue";
 import useClipboard from "vue-clipboard3";
 const { toClipboard } = useClipboard();
@@ -344,7 +358,7 @@ const props =  defineProps<PaginationParameterState>()
 /**
  * Model
  */
-const model = defineModel<PaginationState>()
+const model = defineModel<PaginationState>({ default: createPaginationState })
 
 /**
  * Selected items in the table.
@@ -354,12 +368,12 @@ const selectedItems = ref<Array<any>>([])
 /**
  * Table instance
  */
-const ogaTable = ref(null);
+const ogaTable = ref<TableInstance | null>(null);
 
 /**
  * Bulk operation instance
  */
-const bulkOperation = ref(null);
+const bulkOperation = ref<HTMLElement | null>(null);
 
 /**
  * Emit event
@@ -371,7 +385,7 @@ const emit = defineEmits(['paging'])
  * @param row Row data
  * @returns {string}
  */
-const tableRowClassName = ({ row: object, rowIndex: number }) => {
+const tableRowClassName = (_scope: { row: any; rowIndex: number }) => {
   // if (props.rowsClassName && typeof (props.rowsClassName) === 'function') {
   //   return props.rowsClassName.call(this, row, rowIndex)
   // }
@@ -384,7 +398,7 @@ const tableRowClassName = ({ row: object, rowIndex: number }) => {
  * @param rowIndex
  * @returns {string}
  */
-const headerCellClassName = ({ row, column }) => {
+const headerCellClassName = ({ column }: { row: any; column: TableColumnCtx<any> }) => {
   if (isNotEmpty(column.label) && column.label.indexOf('-') > -1) {
     return 'el-table__layers'
   }
@@ -414,11 +428,32 @@ const getBorderRadius = (radius: number): string => {
  */
 const multiSelectEvent = (rows: Array<any>) => {
   if (ogaTable.value !== null && bulkOperation.value !== null) {
-    const el = ogaTable.value.$refs.headerWrapper
+    const el = ogaTable.value.$refs.headerWrapper as HTMLElement
     bulkOperation.value.style.height = (el.offsetHeight - 1) + 'px'
     selectedItems.value = rows
   }
 }
+
+/**
+ * Cell Click
+ * @param row Data
+ * @param column Column params
+ * @param dom HTML Dom
+ * @param pointerEvent Pointer Event
+ */
+const cellClick = (row: any, column: TableColumnCtx<any>, dom: object, pointerEvent: object) => {
+  let click: ((d: any, pointerEvent?: object) => void) | null = null;
+  let el = props.columnList.filter((o) => {
+    return o.prop === column.property
+  })
+  if (el.length > 0) {
+    click = el[0]?.onClick ?? null;
+  }
+  if (click && isFunction(click)) {
+    click(row, pointerEvent)
+  }
+}
+
 
 /**
  * Row click event
@@ -464,7 +499,7 @@ const rowClick = (row: any, column: TableColumnCtx, event: { cancelBubble: boole
  * @param row Row data
  * @returns {{"background-color": string}}
  */
-const rowClass = ({ row }) => {
+const rowClass = ({ row }: { row: any }) => {
   let exist = false
   selectedItems.value.forEach((o) => {
     if (o === row) {
@@ -483,14 +518,14 @@ const rowClass = ({ row }) => {
  * @param data
  */
 const getImageList = (data?: Array<ImageState>) => {
-  return data ? data.map(i => i.url) : []
+    return data ? data.map(i => i.url) : []
 }
 /**
  * 图片组
  * @param data
  */
 const getFirstImage = (data?: Array<ImageState>) => {
-  return data && data.length ? data[0].url : ''
+    return data && data.length ? data[0]?.url ?? '' : ''
 }
 
 /**
@@ -498,7 +533,7 @@ const getFirstImage = (data?: Array<ImageState>) => {
  * @param column
  * @param row
  */
-const rowVisible = (row, column) => {
+const rowVisible = (row: any, column: ColumnState) => {
   if (column.visible === undefined || column.visibleValue === undefined) {
     return true
   }
@@ -511,7 +546,7 @@ const rowVisible = (row, column) => {
  * @param row
  * @param func
  */
-const columnEvent = (event, row: object, func: Function) => {
+const columnEvent = (event: MouseEvent & { cancelBubble: boolean }, row: object, func: ((row: object) => void) | null) => {
   event.cancelBubble = true
   if (func && typeof (func) === 'function') {
     func.call(this, row)
@@ -546,10 +581,8 @@ const emptyEvent = () => {
  * @param index page index
  */
 const pageChange = (index: number) => {
-  if(props !== undefined) {
-    model.value.current = index;
-    emit('paging', false)
-  }
+  model.value.current = index;
+  emit('paging', false)
 }
 
 /**
@@ -557,9 +590,36 @@ const pageChange = (index: number) => {
  * @param size Page size
  */
 const pageSizeChange = (size: number) => {
-  if(props !== undefined) {
-    model.value.size = size;
-    emit('paging', false)
+  model.value.size = size;
+  emit('paging', false)
+}
+
+/**
+ * Button Click
+ */
+const buttonClick = (btn: ButtonGroupState,row: any, index: number ) => {
+  if ((btn.sub === "button" || btn.sub === undefined) && btn.onClick !== undefined) {
+    btn.onClick(row, index);
+  } else if (btn.sub === "confirm") {
+    ElMessageBox.confirm(
+        isNotEmpty(btn.config?.content) ? btn.config?.content : i18n.global.t("confirm.content"),
+        isNotEmpty(btn.config?.title) ? btn.config?.title : i18n.global.t("confirm.title"),
+        {
+          closeOnClickModal: false,
+          type: "warning",
+          distinguishCancelAndClose: true,
+          confirmButtonText: i18n.global.t("fileUpload.confirm"),
+          cancelButtonText: i18n.global.t("fileUpload.cancel"),
+        },
+    ).then(() => {
+      if (btn.onClick !== undefined) {
+        btn.onClick(row, index);
+      }
+    }).catch(() => {
+      if (btn.onCancel !== undefined) {
+        btn.onCancel(row, index);
+      }
+    })
   }
 }
 </script>

@@ -14,7 +14,7 @@
           <div class="el-dropdown">
             <div
               class="user-avatar el-dropdown-selfdefine"
-              aria-haspopup="list"
+              aria-haspopup="menu"
               aria-controls="dropdown-menu-7985"
               role="button"
               tabindex="0"
@@ -64,9 +64,7 @@
   </oga-layout>
 </template>
 <script setup lang="ts">
-import { ref, reactive } from "vue";
 import menuList from "./aside.vue";
-import lib from "@/plugins/utility.ts";
 import Index from "../../../packages/iconfont/src/index.vue";
 
 const asideClick = () => {

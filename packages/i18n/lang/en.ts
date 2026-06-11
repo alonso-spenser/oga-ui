@@ -10,6 +10,10 @@ export default {
     multiple: 'Selected',
     item: 'items'
   },
+  confirm: {
+    title: "OOPS",
+    content: "Please confirm your operation.",
+  },
   fileUpload: {
     label: 'Attachment',
     remove: 'Remove',

@@ -17,7 +17,16 @@
         <el-icon class="el-input__icon"><calendar /></el-icon>
       </template>
     </oga-input>
-    <div style="background: #f2f2f2; height: 3000px"></div>
+    <div style="background: #f2f2f2; height: 3000px">
+      <oga-date-picker
+          type="date"
+          value-format="x"
+          v-model="occurrence"
+          :width="500"
+          label="Label"
+          placeholder="Select Date"
+      ></oga-date-picker>
+    </div>
     <template #footer> slot="footer" </template>
   </oga-page>
 </template>
@@ -26,6 +35,7 @@ import { ref } from "vue";
 const input = ref("joe@google.com");
 import { Calendar, Search } from "@element-plus/icons-vue";
 
+const occurrence = ref(new Date().getTime() );
 const changeLocale = () => {
   // console.log(input.value);
 };
@@ -42,5 +52,4 @@ const changeLocale = () => {
     //background-color: #c2e7b0;
   }
 }
-
 </style>

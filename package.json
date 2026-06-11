@@ -1,6 +1,6 @@
 {
   "name": "oga-ui",
-  "version": "0.1.60",
+  "version": "0.1.74",
   "private": false,
   "license": "MIT",
   "description": "A Component Library for Vue3",
@@ -17,10 +17,11 @@
     "start": "vite",
     "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --build",
-    "lint:oxlint": "oxlint . --fix -D correctness --ignore-path .gitignore",
+    "type-check": "vue-tsc --noEmit -p tsconfig.app.json",
+    "lint:oxlint": "oxlint . --fix -D correctness --ignore-path .gitignore --ignore-pattern packages/iconfont/iconfont.js --ignore-pattern src/assets/iconfont/iconfont.js",
     "lint:eslint": "eslint . --fix --cache",
     "lint": "run-s lint:*",
+    "build-local": "vite build",
     "format": "prettier --write --experimental-cli src/",
     "build": "node build/index.js",
     "lib": "npm run build && sh build/publish.sh"

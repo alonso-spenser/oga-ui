@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import {useAttrs, useSlots, defineModel} from 'vue'
+import {useAttrs, useSlots} from 'vue'
 defineOptions({
   inheritAttrs: false
 })

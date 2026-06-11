@@ -43,3 +43,8 @@ declare module '*.webp' {
     const src: string
     export default src
 }
+
+declare module '@wangeditor/editor-for-vue' {
+    export const Editor: import('vue').Component
+    export const Toolbar: import('vue').Component
+}

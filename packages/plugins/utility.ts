@@ -183,7 +183,7 @@ export const formatNumber = (num: number) => {
 export const formatNumberLocation = (num: number) => {
   try {
     return num.toLocaleString('en-US')
-  } catch (e){
+  } catch {
     return num
   }
 }
@@ -192,7 +192,7 @@ export const formatNumberLocation = (num: number) => {
  * Mask string
  * @param str
  */
-export const maskString = (str: String ) => {
+export const maskString = (str: string ) => {
   return str.replace(/^(.)(.*)(.)$/, (match, start, middle, end) => {
     return start + "*".repeat(middle.length > 5 ? 5 : middle.length) + end;
   });
@@ -202,7 +202,7 @@ export const maskString = (str: String ) => {
  * Mask one third string
  * @param str
  */
-export const maskOneThirdString = (str: String ) => {
+export const maskOneThirdString = (str: string ) => {
   if (!str || str.length < 3) return str;
 
   const len = str.length;
@@ -216,7 +216,7 @@ export const maskOneThirdString = (str: String ) => {
  * Mask email
  * @param email
  */
-export function maskEmail(email: String) {
+export function maskEmail(email: string) {
   if (!email) return "";
 
   const [name, domain] = email.split("@");

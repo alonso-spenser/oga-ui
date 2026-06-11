@@ -10,6 +10,16 @@
             clearable
           >
             <el-button slot="append" icon="el-icon-search"></el-button>
+
+            <template #prepend>
+              <el-select v-model="pageQueryState.params.filed" :placeholder="t('organize.salary.tableHeader.filter')" style="width:180px">
+                <el-option :label="t('organize.salary.tableHeader.hrService')" value="hrService"></el-option>
+                <el-option :label="t('organize.salary.tableHeader.salary')" value="salary"></el-option>
+                <el-option :label="t('organize.salary.tableHeader.feeding')" value="feeding"></el-option>
+                <el-option :label="t('organize.salary.tableHeader.healthInsurance')" value="healthInsurance"></el-option>
+                <el-option :label="t('organize.salary.tableHeader.saturdayOvertime').replace('|', ' ')" value="saturdayOvertime"></el-option>
+              </el-select>
+            </template>
           </oga-input>
         </div>
         <div class="oga-filter-item">
@@ -36,16 +46,19 @@
 
 <script setup lang="tsx">
 import { usePageState } from "@/plugins/page-state";
-import { ElButton } from "element-plus";
+import { ElButton, ElMessage,ElMessageBox } from "element-plus";
 import i18n from "@/plugins/i18n/base";
 import {
-  OrganizeEmployeeModel,
+  type OrganizeEmployeeModel,
   useOrganizeEmployeeStore,
 } from "@/stores/page/organize-employee-store";
 import { fetchOrganizeEmployeePaging } from "@/plugins/organize";
-import { ColumnType} from "@/stores/type/page-type";
+import { ColumnType } from "@/stores/type/page-type";
 import type { FormInstance, FormRules, TableColumnCtx } from "element-plus";
-
+/**
+ * i18n
+ */
+const t = i18n.global.t;
 
 const { state, pageState, pageQueryState, pageResult, paginationState } =
   usePageState<OrganizeEmployeeModel>();
@@ -70,7 +83,10 @@ interface DictState {
 }
 
 enum AccountState {
-  Available = 0, Banned = 1, Pending = 2, InUse = 3,
+  Available = 0,
+  Banned = 1,
+  Pending = 2,
+  InUse = 3,
 }
 
 const AccountStateOptions: DictState[] = [
@@ -105,13 +121,13 @@ pageState.updatePaginationState({
       width: 200,
       type: ColumnType.Copy,
       render: (row: OrganizeEmployeeModel) => (
-          <div>
-            <div class="oga-table-row">
-              <el-tag size="small">{row.email}</el-tag>
-            </div>
-            <div class="oga-table-row">{row.account}</div>
-            <div class={'oga-table-row'}>{row.email}</div>
+        <div>
+          <div class="oga-table-row">
+            <el-tag size="small">{row.email}</el-tag>
           </div>
+          <div class="oga-table-row">{row.account}</div>
+          <div class={"oga-table-row"}>{row.email}</div>
+        </div>
       ),
     },
     // {
@@ -132,7 +148,7 @@ pageState.updatePaginationState({
       config: {
         success: true,
         error: true,
-      }
+      },
     },
     // {
     //   prop: "account",
@@ -149,19 +165,37 @@ pageState.updatePaginationState({
       group: [
         {
           icon: "delete",
-          circle: true,
-          round: true,
+          // circle: true,
+          // round: true,
           label: "",
           type: "primary",
           disabled: false,
           sub: "popover",
+          visible: (row: OrganizeEmployeeModel) => {
+            return row.sex === 1;
+          },
           config: {
-            title: 'Title',
-            content: 'content',
-            placement: 'bottom'
+            title: "Title",
+            content: "content",
+            placement: "bottom",
           },
           onClick: (row: any) => {
             console.log(row);
+          },
+        },
+        {
+          icon: "apple",
+          circle: true,
+          round: true,
+          label: "",
+          disabled: false,
+          config: {
+            title: "Title",
+            content: "content",
+            placement: "bottom",
+          },
+          onClick: (row: any) => {
+            ElMessageBox.alert(JSON.stringify(row), "Normal button click")
           },
         },
         {
@@ -172,12 +206,15 @@ pageState.updatePaginationState({
           disabled: false,
           sub: "confirm",
           config: {
-            title: 'Title',
-            content: 'content',
-            placement: 'bottom'
+            title: "Title",
+            // content: "content",
+            // placement: "bottom",
           },
           onClick: (row: any) => {
-            console.log(row);
+            ElMessageBox.alert(JSON.stringify(row), "Confirm button click")
+          },
+          onCancel: (row: any) => {
+            ElMessageBox.alert(JSON.stringify(row), "Cancel button click")
           },
         },
         {
@@ -186,34 +223,37 @@ pageState.updatePaginationState({
           round: true,
           label: "",
           disabled: false,
-          onClick: (row) => {
+          onClick: (row: OrganizeEmployeeModel) => {
             console.log(row);
           },
           sub: "dropdown",
           actions: [
             {
-              icon: 'plus',
-              label: 'Logout',
+              icon: "plus",
+              label: "Logout",
               onClick: (row: any) => {
-                console.log('Logout', row);
-              }
+                console.log("Logout", row);
+              },
             },
             {
-              icon: 'plus',
-              label: 'Bind PayPal',
+              icon: "plus",
+              label: "Bind PayPal",
+              visible: (row: OrganizeEmployeeModel) => {
+                return row.sex === 0;
+              },
               onClick: (row: any) => {
-                console.log('Bind PayPal', row);
-              }
+                console.log("Bind PayPal", row);
+              },
             },
             {
-              icon: 'delete',
-              label: 'Delete PayPal',
+              icon: "delete",
+              label: "Delete PayPal",
               divided: true,
               onClick: (row: any) => {
-                console.log('Delete PayPal', row);
-              }
-            }
-          ]
+                console.log("Delete PayPal", row);
+              },
+            },
+          ],
         },
       ],
     },
@@ -222,6 +262,10 @@ pageState.updatePaginationState({
       prop: "areaCode",
       type: ColumnType.Click,
       label: i18n.global.t("organize.employee.tableHeader.areaCode"),
+      onClick: (row: any, pointerEvent: object) => {
+        ElMessageBox.alert(JSON.stringify(row), "ColumnType click")
+        console.log("cell click")
+      },
     },
     {
       prop: "avatar",
@@ -254,25 +298,25 @@ pageState.updatePaginationState({
       },
       label: i18n.global.t("organize.employee.tableHeader.chest"),
     },
-    {
-      prop: "cup",
-      type: ColumnType.Number,
-      width: 100,
-      config: {
-        format: "KMBT",
-      },
-      label: "KMBT",
-    },
-    {
-      prop: "cup",
-      width: 150,
-      type: ColumnType.Number,
-      config: {
-        format: "fixed",
-        digit: 3,
-      },
-      label: i18n.global.t("organize.employee.tableHeader.cup"),
-    },
+    // {
+    //   prop: "cup",
+    //   type: ColumnType.Number,
+    //   width: 100,
+    //   config: {
+    //     format: "KMBT",
+    //   },
+    //   label: "KMBT",
+    // },
+    // {
+    //   prop: "cup",
+    //   width: 150,
+    //   type: ColumnType.Number,
+    //   config: {
+    //     format: "fixed",
+    //     digit: 3,
+    //   },
+    //   label: i18n.global.t("organize.employee.tableHeader.cup"),
+    // },
     {
       prop: "dateOfBirth",
       width: 150,
@@ -370,8 +414,8 @@ pageState.updatePaginationState({
       label: i18n.global.t("organize.employee.tableHeader.sex"),
       type: ColumnType.Dictionary,
       config: {
-        data: AccountStateOptions
-      }
+        data: AccountStateOptions,
+      },
     },
     {
       prop: "skinColor",
@@ -437,7 +481,7 @@ pageState.updatePaginationState({
    * Row Highlight Class
    * @param row Row data
    */
-  rowsClassName: (row: OrganizeEmployeeModel) => {
+  rowsClassName: (row?: OrganizeEmployeeModel) => {
     // return row.state === 0? 'row-text-enable': ''
     return "";
   },
@@ -457,19 +501,25 @@ const columnEvents = (row: any, column: any) => {
 const getData = async () => {
   await pageState.resolveResponse<OrganizeEmployeeModel>(
     fetchOrganizeEmployeePaging({
-      ...pageQueryState,
-      current: pageResult.value.current,
-      size: pageResult.value.size,
+      "params": {
+        "q": "",
+        "departmentId": "",
+        "state": 1,
+        "resign": 0,
+        "userRole": null
+      },
+      "current": 1,
+      "size": 18
     }),
   );
 };
 
-const handleEdit = (row) => {
-  console.log("Editing:", row.name);
+const handleEdit = (row: OrganizeEmployeeModel) => {
+  console.log("Editing:", row.account);
 };
 
-const handleDelete = (row) => {
-  console.log("Deleting:", row.name);
+const handleDelete = (row: OrganizeEmployeeModel) => {
+  console.log("Deleting:", row.account);
 };
 getData();
 </script>

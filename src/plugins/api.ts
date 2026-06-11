@@ -19,10 +19,10 @@ api.interceptors.request.use(
     config.headers.version = "0.0.1";
     config.headers.timestamp = new Date().getTime();
     config.headers["os"] = 0;
-    config.headers["organize"] = "1ae31eef17514cdaae6b310c31a8ec1a";
+    config.headers["organize"] = "1623699508939667788";
     config.headers["app"] =
       router.currentRoute.value.fullPath.indexOf("/main") === 0 ? 1 : 0;
-    config.headers["authorization"] = "27b546d5ab914f4c8a56183c82850cab";
+    config.headers["authorization"] = "c4eeee8d5e4d4b2e81999b36a29e40b3";
     const contentType =
       config.headers["Content-Type"] || config.headers["content-type"];
 

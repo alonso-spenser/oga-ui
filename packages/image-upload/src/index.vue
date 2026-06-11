@@ -9,7 +9,7 @@
           <img :src="img.url" :alt="img.title">
           <div class="file-grid-action">
             <p>
-              <label @click="altDialog(img, index)">
+              <label @click="altDialog(img)">
                 <svg viewBox="0 0 1532 1024">
                   <path
                       d="M188.74248556 561.99248544h151.59011704l-79.47192457-219.32187142L188.74248556 561.99248544z m-174.16736806 258.02573071l210.03617041-612.81110961h165.65251927L614.48494155 820.01821615h-182.12423719l-64.51933309-181.0469794h-205.46266378L101.51688777 820.01821615H14.5751175z m670.86689983 0V207.20710654h171.58065923v530.3073816H1078.93125552V820.01821615H685.44201733z m512.37459341 0V289.71083327H1033.77675345V207.20710654h499.92485187v82.50372673h-163.57863661V820.01821615H1197.81661074z"
@@ -99,15 +99,19 @@ import i18n from "../../i18n/base";
 interface ImageState {
   title: string;
   url: string;
+  refType?: number;
+  refId?: string;
+  fileType?: number;
+  suffix?: string;
 }
 
 /**
  * default value
  */
-const model = defineModel<ImageState>()
+const model = defineModel<ImageState[]>({ default: () => [] })
 
 const displayAlt = ref(false)
-const altEntity = ref({})
+const altEntity = ref<ImageState>({ title: '', url: '' })
 
 /**
  * editor props
@@ -212,7 +216,7 @@ const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
  * @param data
  * @param index
  */
-const altDialog = (data, index) => {
+const altDialog = (data: ImageState) => {
   displayAlt.value = true
   altEntity.value = data
 }

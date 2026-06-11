@@ -171,7 +171,7 @@ export class PageStateManager<T = any> {
       this.startSubmitting();
 
       const { data: response } = await request;
-      const { code, success, message, data } = response;
+      const { code, success, message } = response;
 
       if (code === this.AUTH_ERROR_CODE) {
         this.showErrorMessage(i18n.global.t(`errorCode.${code}`));
@@ -327,7 +327,7 @@ export class PageStateManager<T = any> {
       if (fun) {
         await fun();
       }
-    } catch (error) {
+    } catch {
       // 用户取消
     }
   }

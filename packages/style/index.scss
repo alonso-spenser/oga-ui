@@ -438,16 +438,19 @@ $text-size-small: 12px;
     }
   }
 
-  .el-input-group__prepend {
-    padding: 0 15px !important;
-  }
-
-  .el-input-group__append {
-    padding: 0 15px !important;
-  }
+  //.el-input-group__prepend {
+  //  padding: 0 15px !important;
+  //}
+  //
+  //.el-input-group__append {
+  //  padding: 0 15px !important;
+  //}
 
   .el-date-editor {
-    .el-input__wrapper {
+    &.el-input__wrapper {
+      width: 100%;
+    }
+    &.el-input {
       width: 100%;
     }
   }
@@ -528,12 +531,7 @@ $text-size-small: 12px;
   }
   &.gutter-less {
     .el-form-item {
-      &:not(:last-child) {
-        margin-bottom: 10 * $px
-      }
-      &:last-child {
-        margin-bottom: 0;
-      }
+      margin-bottom: 10 * $px
     }
   }
 

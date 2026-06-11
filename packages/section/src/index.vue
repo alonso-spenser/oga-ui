@@ -4,9 +4,13 @@
       :style="css"
       :class="description ? 'has-description' : ''"
   >
-    <legend v-if="heading">
+    <legend v-if="isNotEmpty(heading)">
       {{ heading }}
     </legend>
+    <legend v-else-if="$slots.heading">
+      <slot name="heading"></slot>
+    </legend>
+
     <div
         v-if="$slots.header"
         class="oga-section-action">
@@ -26,6 +30,9 @@
 </template>
 
 <script lang="ts" setup>
+import {
+  isNotEmpty,
+} from "../../plugins/utility";
 const props = defineProps({
   heading: {
     type: String,

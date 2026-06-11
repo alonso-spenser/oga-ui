@@ -48,18 +48,18 @@ import { ref, watch } from 'vue'
 import {type RouteParamsGeneric, type RouteLocationNormalizedLoaded, useRoute, useRouter} from "vue-router";
 import i18n from "../../i18n/base";
 import {isNotEmpty} from "../../plugins/utility";
-const cssVars = ref({})
+const cssVars = ref<Record<string, string | number>>({})
 const props = defineProps({
   offset: {
     type: Number,
     default: () => {
-      return 240
+      return 180
     }
   },
   navigationOffset: {
     type: Number,
     default: () => {
-      return 450
+      return 300
     }
   },
   padding: {
@@ -180,8 +180,9 @@ const getBreadcrumbList = (
  */
 const goBack = () => {
   const list = breadcrumbList.value
-  if (list.length > 0) {
-    list[0]?.path && router.push({ path: list[0].path });
+  const path = list[0]?.path
+  if (path) {
+    router.push({ path });
   }
 }
 
@@ -217,7 +218,7 @@ $color: var(--navColor, rgba(255, 255, 255, 0.6));
 
     &-header {
       padding-top: 1.5rem;
-      padding-bottom: .875rem;
+      //padding-bottom: .875rem;
 
       &.has-padding {
         padding-left: 1.875rem;
@@ -252,7 +253,7 @@ $color: var(--navColor, rgba(255, 255, 255, 0.6));
       overflow-x: hidden;
       overflow-y: auto;
       &.has-padding {
-        padding: 1.875rem;
+        padding: 1.875rem 1.875rem 0 1.875rem;
       }
     }
   }

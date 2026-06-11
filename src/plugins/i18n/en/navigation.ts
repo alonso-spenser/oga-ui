@@ -13,7 +13,7 @@ export default {
       title: "Table",
       icon: "coin",
       url: "/section/table",
-      submenu: []
+      submenu: [],
     },
     {
       title: "Form",

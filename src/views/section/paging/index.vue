@@ -31,12 +31,12 @@
     </template>
 
     <oga-paging v-model="customPageResult" @paging="getData">
-      <template #default="{item}">
+      <template #default="{ row }">
         <div
           style="border: 1px solid red; padding: 20px; border-radius: 10px"
-          @click="columnEvents(item)"
+          @click="columnEvents(row)"
         >
-          {{ item.account }}
+          {{ row.account }}
         </div>
       </template>
     </oga-paging>
@@ -47,7 +47,7 @@
 import { usePageState } from "@/plugins/page-state";
 import i18n from "@/plugins/i18n/base";
 import {
-  OrganizeEmployeeModel,
+  type OrganizeEmployeeModel,
   useOrganizeEmployeeStore,
 } from "@/stores/page/organize-employee-store";
 import { fetchOrganizeEmployeePaging } from "@/plugins/organize";
@@ -59,6 +59,13 @@ const organizeEmployeeStore = useOrganizeEmployeeStore();
 
 customPageResult.value.span = 8;
 customPageResult.value.gutter = 16;
+customPageResult.value.empty = {
+  content: '没得数据',
+  buttonLabel: '点我',
+  onClick: () => {
+    console.log('empty event');
+  },
+}
 
 /**
  * Load data from cache

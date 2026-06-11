@@ -252,6 +252,10 @@ export interface ApiCustomPaginationResult<T = any> {
   pageLayout?: string;
   gutter?: number;
   span?: number;
+  /**
+   * Data is empty
+   */
+  empty?: EmptyState;
 }
 
 /**
@@ -297,7 +301,6 @@ export interface ParentMenuTypeState {
   previous?: string;
 }
 
-
 /**
  * popover State
  */
@@ -314,6 +317,7 @@ export interface SubActionState<T = any> {
   label: string;
   icon?: string;
   divided?: boolean;
+  visible: ((row: T) => boolean) | false;
   onClick: ((row: T) => void) | null;
 }
 
@@ -332,9 +336,11 @@ export interface ButtonGroupState<T = any> {
   label: string;
   className: string;
   onClick: ((row: T) => void) | null;
-  sub: 'popover' | 'dropdown' | 'button';
-  config?: PopoverState
-  actions?: SubActionState[]
+  onCancel: ((row: T) => void) | null;
+  sub: "popover" | "dropdown" | "button" | "confirm";
+  config?: PopoverState;
+  actions?: SubActionState[];
+  visible: ((row: T) => boolean) | false;
 }
 
 /**
@@ -354,7 +360,7 @@ export interface ColumnState<T = any> {
   align: string;
   width: string | number;
   sortable: boolean;
-  stop: true,
+  stop: true;
   fixed: boolean;
   render: Function;
   svg: string;
@@ -362,7 +368,7 @@ export interface ColumnState<T = any> {
   numberFormat: string;
   onClick: ((row: T) => void) | null;
   headerAlign: string;
-  labelClassName:string;
+  labelClassName: string;
   className: string;
   type: ColumnType;
   config?: Record<string, any>;

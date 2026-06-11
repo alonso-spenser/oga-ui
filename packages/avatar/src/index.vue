@@ -20,7 +20,7 @@ import {isEmpty} from "../../plugins/utility";
 /**
  * default value
  */
-const model = defineModel()
+const model = defineModel<string>({ default: '' })
 
 /**
  * editor props

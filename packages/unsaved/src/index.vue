@@ -24,13 +24,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import {useAttrs, defineEmits, onMounted, ref} from "vue";
+import {ref} from "vue";
 import i18n from "../../i18n/base";
 
 /**
  * default value
  */
-const model = defineModel()
+const model = defineModel<boolean>({ default: false })
 
 /**
  * Emits
@@ -82,7 +82,7 @@ const props = defineProps({
 /**
  * CSS
  */
-const cssText= ref({})
+const cssText= ref<Record<string, string>>({})
 
 /**
  * Set CSS
