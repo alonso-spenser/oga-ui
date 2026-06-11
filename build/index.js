@@ -21,6 +21,11 @@ const baseConfig = defineConfig({
 const rollupOptions = {
     external: ["vue", "vue-router", "element-plus"],
     output: {
+        chunkFileNames: "assets/[name]-[hash].mjs",
+        assetFileNames: (assetInfo) =>
+            assetInfo.name && assetInfo.name.endsWith(".css")
+                ? "[name][extname]"
+                : "assets/[name]-[hash][extname]",
         globals: {
             vue: "Vue",
             "vue-router": "VueRouter",
@@ -30,6 +35,12 @@ const rollupOptions = {
 };
 
 const indexEntry = path.resolve(entryDir, "index.ts");
+
+const toKebabCase = (name) =>
+    name
+        .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+        .replace(/([A-Z])([A-Z][a-z])/g, "$1-$2")
+        .toLowerCase();
 
 const resolveComponentEntry = (importPath) => {
     const entryPath = path.resolve(entryDir, importPath);
@@ -90,6 +101,7 @@ const getInstalledComponentNames = () => {
 
             components.push({
                 name: componentName,
+                typeName: toKebabCase(componentName),
                 typePath: relativeTypePath ? `./${relativeTypePath}` : null,
             });
         }
@@ -123,13 +135,38 @@ const createTypes = () => {
 
 const createTypeDeclarations = async () => {
     const components = getInstalledComponentNames();
+    await fsExtra.ensureDir(typeOutputDir);
+
+    await Promise.all(
+        components.map(({ name, typeName, typePath }) => {
+            if (!typePath) {
+                return Promise.resolve();
+            }
+
+            const aliasTypePath = path.relative(
+                typeOutputDir,
+                path.resolve(outputDir, typePath)
+            ).replace(/\\/g, "/");
+            const aliasContent = `declare const ${name}: typeof import("./${aliasTypePath}").default;
+
+export default ${name};
+`;
+
+            return fsExtra.outputFile(
+                path.resolve(typeOutputDir, `${typeName}.d.ts`),
+                aliasContent,
+                "utf-8"
+            );
+        })
+    );
+
     const namedExports = components
-        .map(({ name, typePath }) => {
+        .map(({ name, typeName, typePath }) => {
             if (!typePath) {
                 return `declare const ${name}: any;`;
             }
 
-            return `declare const ${name}: typeof import("${typePath}").default;`;
+            return `declare const ${name}: typeof import("./types/${typeName}").default;`;
         })
         .join("\n");
     const globalComponents = components
