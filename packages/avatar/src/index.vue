@@ -1,16 +1,25 @@
 <template>
   <el-upload
-      class="oga-avatar"
       :action="action"
-      :style="{'--size': size, '--radius': radius}"
       :show-file-list="false"
       :accept="'image/*'"
+      :style="{'--size': size, '--radius': radius}"
+      v-if="isEmpty(model)"
+      class="oga-avatar"
       :on-success="uploadSuccess"
       :before-upload="beforeUpload"
   >
-    <img v-if="model" :src="model" class="oga-avatar-img" alt="" >
     <el-icon name="plus" class="oga-avatar-icon" :class="isEmpty(model) ? 'is-empty' : ''"></el-icon>
   </el-upload>
+  <div class="oga-avatar"
+       :style="{'--size': size, '--radius': radius}"
+       v-else
+  >
+    <div class="oga-avatar-img oga-avatar-delete" @click="model=''">
+      <el-icon name="delete" class="oga-avatar-icon is-empty"></el-icon>
+    </div>
+    <img :src="model" class="oga-avatar-img" alt="" >
+  </div>
 </template>
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
@@ -78,29 +87,34 @@ const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
 @use "../../style/index.scss" as var;
 
 .oga-avatar {
+  width: calc(var(--size) * 1px);
+  height: calc(var(--size) * 1px);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border: 1px dashed var(--el-border-color);
+  border-radius: calc(var(--radius) * 1px);
+  transition: var(--el-transition-duration-fast);
+
   .el-upload {
-    border: 1px dashed var(--el-border-color);
-    border-radius: calc(var(--radius) * 1px);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    width: calc(var(--size) * 1px);
-    height: calc(var(--size) * 1px);
-    transition: var(--el-transition-duration-fast);
+    width: 100%;
+    height: 100%;
+  }
+  &:hover {
+    border-color: var(--el-color-primary);
 
-    &:hover {
-      border-color: var(--el-color-primary);
+    img {
+      opacity: .06;
+    }
+    .el-icon {
+      opacity: 1;
 
-      img {
-        opacity: .06;
+      &.oga-avatar-icon {
+        color: var(--el-color-primary);
       }
-      .el-icon {
-        opacity: 1;
-
-        &.oga-avatar-icon {
-          color: var(--el-color-primary);
-        }
-      }
+    }
+    .oga-avatar-delete {
+      opacity: 1;
     }
   }
   &-img {
@@ -110,6 +124,13 @@ const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
     object-fit: contain;
     object-position: center;
     transition: all 0.3s ease 0s;
+  }
+  .oga-avatar-delete {
+    z-index: 2;
+    opacity: 0;
+    align-items: center;
+    justify-content: center;
+    display: flex;
   }
 
   .el-icon{
