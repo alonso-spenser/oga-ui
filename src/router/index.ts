@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { isNotEmpty } from "../plugins/utility";
+import { isNotEmpty } from "../../packages";
 import layout from "../views/layout/index.vue";
 
 const router = createRouter({

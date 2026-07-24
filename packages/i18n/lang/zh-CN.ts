@@ -69,5 +69,8 @@ export default {
   editor: {
     placeholder: '在此处输入或粘贴您的内容！'
   },
+  formValidation: {
+    error: '请检查表单信息'
+  },
   back: "返回"
 };

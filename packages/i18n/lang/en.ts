@@ -74,5 +74,8 @@ export default {
   editor: {
     placeholder: 'Type or paste your content here!'
   },
+  formValidation: {
+    error: 'Please check the form information'
+  },
   back: "Back"
 };

@@ -78,7 +78,7 @@ import { ref } from "vue";
 import useClipboard from "vue-clipboard3";
 const { toClipboard } = useClipboard();
 import { ElMessage } from "element-plus";
-import { isNotEmpty } from "@/plugins/utility";
+import { isNotEmpty } from "../../../../packages";
 const icons = [
   "avatar",
   "group",

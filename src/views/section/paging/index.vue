@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="tsx">
-import { usePageState } from "@/plugins/page-state";
+import { usePageState } from "../../../../packages";
 import i18n from "@/plugins/i18n/base";
 import {
   type OrganizeEmployeeModel,

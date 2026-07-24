@@ -33,6 +33,52 @@ import ogaUI from 'oga-ui'
 app.use(ogaUI)
 ```
 
+## PageStateManager
+
+If you use `usePageState`, configure the host app's `router` and `i18n` once in `main.ts`.
+
+The library does not include business i18n messages such as `errorCode`, `action`, `delete`, `update`, and `create`.
+Those messages should stay in your actual application.
+
+```ts
+import "oga-ui/index.css";
+import ogaUI, { configurePageState } from "oga-ui";
+import router from "@/router";
+import i18n from "@/plugins/i18n/base";
+
+configurePageState({
+  router,
+  i18n,
+});
+
+app.use(router);
+app.use(i18n);
+app.use(ogaUI);
+```
+
+Then use it in pages or components:
+
+```ts
+import { ActionType, usePageState } from "oga-ui";
+
+const { state, pageState, pageQueryState, pageResult, paginationState } =
+  usePageState<AccountResult>();
+
+const data = await pageState.resolveResponse(fetchAccountPage(), ActionType.Paging);
+```
+
+`configurePageState` makes these methods use your application dependencies:
+
+```ts
+pageState.redirect("/");
+pageState.getQueryValue("tab");
+pageState.getRouteParamValue("id");
+pageState.getPrimaryId();
+pageState.confirmDelete(async () => {
+  // delete data
+});
+```
+
 ## What's new
 ```html
 Input

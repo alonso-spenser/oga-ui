@@ -43,11 +43,11 @@
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 import i18n from "@/plugins/i18n/base";
-import { isNotEmpty } from "@/plugins/utility";
 import {
+  isNotEmpty,
   type MenuTypeState,
   type ParentMenuTypeState,
-} from "@/stores/type/page-type";
+} from "../../../packages";
 let menuList = ref<MenuTypeState[]>([]);
 const route = useRoute();
 

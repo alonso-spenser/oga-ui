@@ -2,11 +2,11 @@
  * Action types used for success message control.
  */
 export enum ActionType {
-  Update = "update",
-  Insert = "insert",
-  Delete = "delete",
-  Paging = "paging",
-  List = "list",
+  Update = "UPDATE",
+  Insert = "INSERT",
+  Delete = "DELETE",
+  Paging = "PAGING",
+  List = "LIST",
 }
 
 /**
@@ -26,6 +26,8 @@ export enum ColumnType {
   State = "state",
   Click = "click",
   Copy = "copy",
+  WhatsApp = "whatsApp",
+  Phone = "phone",
 }
 
 /**
@@ -143,34 +145,34 @@ export interface EmptyState {
  * Table Parameters
  */
 export interface PaginationState<T = any> {
-  multiSelect?: boolean;
-  index?: boolean;
-  initTable?: boolean;
-  stripe?: boolean;
-  pageIndex?: number;
-  pageSize?: number;
-  pageSizes?: number[];
-  pageLayout?: string;
-  recordCount?: number;
-  visible?: boolean;
-  columnList?: any[];
-  border?: boolean;
-  card?: boolean;
+  multiSelect: boolean;
+  index: boolean;
+  initTable: boolean;
+  stripe: boolean;
+  pageIndex: number;
+  pageSize: number;
+  pageSizes: number[];
+  pageLayout: string;
+  recordCount: number;
+  visible: boolean;
+  columnList: any[];
+  border: boolean;
+  card: boolean;
   /**
    * Action List
    */
-  actionList?: Record<string, any>;
+  actionList: Record<string, any>;
   /**
    * Data is empty
    */
-  empty?: EmptyState;
+  empty: EmptyState;
   /**
    * Row Highlight Class
    * @param row Data
    * @param index Index
    */
   rowsClassName?: (row?: T, index?: number) => string;
-  paginationSection?: boolean;
+  paginationSection: boolean;
 }
 
 /**
@@ -197,6 +199,47 @@ export const createPaginationState = <T = any>(): PaginationState<T> => ({
   },
   rowsClassName: undefined,
   paginationSection: true,
+});
+
+/**
+ * Generic pagination result returned by backend.
+ */
+export interface CustomPaginationResult<T = any> {
+  loading: boolean;
+  firstLoading: boolean;
+  records: T[];
+  total: number;
+  size: number;
+  current: number;
+  pages: number;
+  orders: PageOrder[];
+  searchCount: boolean;
+  pageSizes?: number[];
+  pageLayout?: string;
+  gutter?: number;
+  span?: number;
+  empty?: EmptyState;
+}
+
+/**
+ * Create Default Pagination State
+ */
+export const createCustomPaginationResult = <
+  T = any,
+>(): CustomPaginationResult<T> => ({
+  loading: false,
+  firstLoading: false,
+  records: [],
+  total: 0,
+  size: 10,
+  current: 1,
+  pages: 0,
+  orders: [],
+  searchCount: false,
+  pageSizes: [5, 10, 20, 30, 40, 50, 100],
+  pageLayout: "total, sizes, prev, pager, next, jumper",
+  gutter: 20,
+  span: 12,
 });
 
 /**
@@ -236,50 +279,6 @@ export interface DictState {
 }
 
 /**
- * Generic pagination result returned by backend.
- */
-export interface ApiCustomPaginationResult<T = any> {
-  loading: boolean;
-  firstLoading: boolean;
-  records: T[];
-  total: number;
-  size: number;
-  current: number;
-  pages: number;
-  orders: PageOrder[];
-  searchCount: boolean;
-  pageSizes?: number[];
-  pageLayout?: string;
-  gutter?: number;
-  span?: number;
-  /**
-   * Data is empty
-   */
-  empty?: EmptyState;
-}
-
-/**
- * Create Default Pagination State
- */
-export const createCustomPaginationResult = <
-  T = any,
->(): ApiCustomPaginationResult<T> => ({
-  loading: false,
-  firstLoading: false,
-  records: [],
-  total: 0,
-  size: 10,
-  current: 1,
-  pages: 0,
-  orders: [],
-  searchCount: false,
-  pageSizes: [5, 10, 20, 30, 40, 50, 100],
-  pageLayout: "total, sizes, prev, pager, next, jumper",
-  gutter: 20,
-  span: 12,
-});
-
-/**
  * Menu
  */
 export interface MenuTypeState {
@@ -317,8 +316,8 @@ export interface SubActionState<T = any> {
   label: string;
   icon?: string;
   divided?: boolean;
-  visible: ((row: T) => boolean) | false;
-  onClick: ((row: T) => void) | null;
+  visible?: (row: T, index?: number) => boolean;
+  onClick: (row: T, index?: number) => void;
 }
 
 /**
@@ -335,12 +334,12 @@ export interface ButtonGroupState<T = any> {
   type: string;
   label: string;
   className: string;
-  onClick: ((row: T) => void) | null;
-  onCancel: ((row: T) => void) | null;
+  onClick: (row: T, index?: number) => void;
+  onCancel?: (row: T, index?: number) => void;
   sub: "popover" | "dropdown" | "button" | "confirm";
   config?: PopoverState;
   actions?: SubActionState[];
-  visible: ((row: T) => boolean) | false;
+  visible?: (row: T, index?: number) => boolean;
 }
 
 /**
@@ -359,18 +358,21 @@ export interface ColumnState<T = any> {
   label: string;
   align: string;
   width: string | number;
+  minWidth: string | number;
   sortable: boolean;
-  stop: true;
+  stop: true,
   fixed: boolean;
   render: Function;
   svg: string;
   size: number;
   numberFormat: string;
-  onClick: ((row: T) => void) | null;
+  onClick: ((row: T, pointerEvent?: object) => void) | null;
   headerAlign: string;
-  labelClassName: string;
+  labelClassName:string;
   className: string;
   type: ColumnType;
   config?: Record<string, any>;
   group: Array<ButtonGroupState>;
+  visible?: string;
+  visibleValue?: any;
 }

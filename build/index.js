@@ -19,7 +19,7 @@ const baseConfig = defineConfig({
 });
 
 const rollupOptions = {
-    external: ["vue", "vue-router", "element-plus"],
+    external: ["vue", "vue-router", "element-plus", "pinia"],
     output: {
         chunkFileNames: "assets/[name]-[hash].mjs",
         assetFileNames: (assetInfo) =>
@@ -30,6 +30,7 @@ const rollupOptions = {
             vue: "Vue",
             "vue-router": "VueRouter",
             "element-plus": "ElementPlus",
+            pinia: "Pinia",
         },
     },
 };
@@ -170,12 +171,61 @@ export default ${name};
         })
         .join("\n");
     const globalComponents = components
-        .map(({ name }) => `    ${name}: typeof ${name};`)
+        .flatMap(({ name, typeName }) => [
+            `    ${name}: typeof ${name};`,
+            `    "${typeName}": typeof ${name};`,
+        ])
         .join("\n");
     const content = `${namedExports}
 
 declare const plugin: any;
 
+export * from "./types/plugins/utility";
+export {
+  formReset,
+  formValidation,
+  getFirstValidationError,
+  type FormSubmitHandler,
+} from "./types/plugins/form";
+export {
+  ActionType,
+  ColumnType,
+  createApiResponse,
+  createCustomPaginationResult,
+  createPageQueryState,
+  createPageResult,
+  createPageState,
+  createPaginationState,
+} from "./types/plugins/page-type";
+export { CreatePageStore } from "./types/plugins/create-page-store";
+export {
+  PageStateManager,
+  configurePageState,
+  usePageState,
+  type ApiRequest,
+  type PageStateI18n,
+  type PageStateOptions,
+  type PageStateRouter,
+} from "./types/plugins/page-state";
+export type {
+  ApiPageResult,
+  ApiResponse,
+  ButtonGroupState,
+  ColumnState,
+  CustomPaginationResult,
+  EmptyState,
+  FormItem,
+  ImageState,
+  MenuTypeState,
+  PageOrder,
+  PageQueryState,
+  PageState,
+  PaginationState,
+  ParentMenuTypeState,
+  PopoverState,
+  SubActionState,
+} from "./types/plugins/page-type";
+export type { GenericPageState } from "./types/plugins/create-page-store";
 export default plugin;
 
 declare module "vue" {
@@ -264,7 +314,10 @@ const createPackageJson = (name) => {
   },
   "files": [
     "**/*"
-  ]
+  ],
+  "peerDependencies": {
+    "pinia": "${appConfig.peerDependencies.pinia}"
+  }
 }`;
 
     const filePath = `${name === appConfig.name ? '' : name}${name === appConfig.name ? '' : '/'}package.json`

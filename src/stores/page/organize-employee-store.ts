@@ -1,4 +1,4 @@
-import { CreatePageStore } from "../create-page-store";
+import { CreatePageStore } from "../../../packages";
 
 /**
  * API URL

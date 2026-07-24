@@ -1,11 +1,3 @@
-<script setup lang="ts">
-import { ref } from "vue";
-import Index from "../../../../packages/iconfont/src/index.vue";
-const content = ref(
-  "An AI-assisted light show was one of the goodbye celebrations for Paris' Centre Pompidou as it closed ahead of a five-year renovation.",
-);
-const heading = ref("The places you can’t visit in 2026");
-</script>
 
 <template>
   <oga-page :offset="240" :percentage="100" :padding="true">
@@ -47,3 +39,12 @@ const heading = ref("The places you can’t visit in 2026");
 </template>
 
 <style scoped lang="scss"></style>
+
+<script setup lang="ts">
+import { ref } from "vue";
+import Index from "../../../../packages/iconfont/src/index.vue";
+const content = ref(
+    "An AI-assisted light show was one of the goodbye celebrations for Paris' Centre Pompidou as it closed ahead of a five-year renovation.",
+);
+const heading = ref("The places you can’t visit in 2026");
+</script>

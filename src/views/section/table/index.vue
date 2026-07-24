@@ -45,7 +45,6 @@
 </template>
 
 <script setup lang="tsx">
-import { usePageState } from "@/plugins/page-state";
 import { ElButton, ElMessage,ElMessageBox } from "element-plus";
 import i18n from "@/plugins/i18n/base";
 import {
@@ -53,14 +52,14 @@ import {
   useOrganizeEmployeeStore,
 } from "@/stores/page/organize-employee-store";
 import { fetchOrganizeEmployeePaging } from "@/plugins/organize";
-import { ColumnType } from "@/stores/type/page-type";
+import { ColumnType, usePageState } from "../../../../packages";
 import type { FormInstance, FormRules, TableColumnCtx } from "element-plus";
 /**
  * i18n
  */
 const t = i18n.global.t;
 
-const { state, pageState, pageQueryState, pageResult, paginationState } =
+const { pageState, pageQueryState, pageResult, paginationState } =
   usePageState<OrganizeEmployeeModel>();
 const organizeEmployeeStore = useOrganizeEmployeeStore();
 
@@ -129,6 +128,12 @@ pageState.updatePaginationState({
           <div class={"oga-table-row"}>{row.email}</div>
         </div>
       ),
+    },
+    {
+      prop: "whatsApp",
+      type: ColumnType.WhatsApp,
+      width: 150,
+      label: i18n.global.t("organize.employee.tableHeader.whatsApp"),
     },
     // {
     //   prop: "account",
@@ -461,10 +466,6 @@ pageState.updatePaginationState({
     {
       prop: "weight",
       label: i18n.global.t("organize.employee.tableHeader.weight"),
-    },
-    {
-      prop: "whatsApp",
-      label: i18n.global.t("organize.employee.tableHeader.whatsApp"),
     },
   ],
   /**

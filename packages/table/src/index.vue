@@ -219,6 +219,15 @@
                 <template v-else-if="column.type === ColumnType.Dictionary">
                   {{column.config?.data? getDictValue(column.config.data, scope.row[column.prop]) : scope.row[column.prop]}}
                 </template>
+                <template v-else-if="column.type === ColumnType.WhatsApp">
+                  <el-link
+                      target="_blank"
+                      :href="`https://wa.me/${scope.row[column.prop]}`"
+                      v-if="isNotEmpty(scope.row[column.prop])"
+                  >
+                    {{scope.row[column.prop]}}
+                  </el-link>
+                </template>
                 <template v-else-if="column.type === ColumnType.State">
                   <template v-if="scope.row[column.prop] === 1">
                     <el-icon
@@ -339,13 +348,13 @@ import {
 import placeholder from './img/placeholder.jpg'
 import {
   ColumnType,
-  createPaginationState,
   type ButtonGroupState,
   type ColumnState,
   type ImageState,
-  type PaginationParameterState,
-  type PaginationState
-} from "./table"
+  type ApiPageResult,
+  type PaginationState,
+  createPageResult
+} from "../../plugins/page-type";
 import ElIcon from "../../icon/src/index.vue";
 import useClipboard from "vue-clipboard3";
 const { toClipboard } = useClipboard();
@@ -353,12 +362,12 @@ const { toClipboard } = useClipboard();
 /**
  * Props
  */
-const props =  defineProps<PaginationParameterState>()
+const props =  defineProps<PaginationState>()
 
 /**
  * Model
  */
-const model = defineModel<PaginationState>({ default: createPaginationState })
+const model = defineModel<ApiPageResult>({ default: createPageResult })
 
 /**
  * Selected items in the table.

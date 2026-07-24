@@ -10,11 +10,19 @@
       :before-upload="beforeUpload"
   >
     <el-icon name="plus" class="oga-avatar-icon" :class="isEmpty(model) ? 'is-empty' : ''"></el-icon>
+    <label
+        class="oga-avatar-label"
+        v-if="isNotEmpty(label)"
+    >{{ label }}</label>
   </el-upload>
   <div class="oga-avatar"
        :style="{'--size': size, '--radius': radius}"
        v-else
   >
+    <label
+        class="oga-avatar-label"
+        v-if="isNotEmpty(label)"
+    >{{ label }}</label>
     <div class="oga-avatar-img oga-avatar-delete" @click="model=''">
       <el-icon name="delete" class="oga-avatar-icon is-empty"></el-icon>
     </div>
@@ -24,7 +32,7 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
 import type { UploadProps } from 'element-plus'
-import {isEmpty} from "../../plugins/utility";
+import {isEmpty, isNotEmpty} from "../../plugins/utility";
 
 /**
  * default value
@@ -57,6 +65,10 @@ const props = defineProps({
   headers: {
     type: String,
     token: ''
+  },
+  label: {
+    type: String,
+    default: 'Avatar',
   },
 })
 
@@ -91,10 +103,32 @@ const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
   height: calc(var(--size) * 1px);
   cursor: pointer;
   position: relative;
-  overflow: hidden;
-  border: 1px dashed var(--el-border-color);
+  //overflow: hidden;
+  margin: 0.375rem 0;
+  border: 1px solid var(--el-border-color);
   border-radius: calc(var(--radius) * 1px);
   transition: var(--el-transition-duration-fast);
+
+  &-label {
+    border-radius: 5px;
+    //text-shadow: 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff;
+    background-color: #fff;
+    padding-left: 2px;
+    padding-right: 2px;
+    position: absolute;
+    top: -0.375rem;
+    color: #C0C4CC;
+    left: 1rem;
+    z-index: 2;
+    opacity: 1 !important;
+    font-size: 12 * var.$px;
+    line-height: 12 * var.$px;
+    transition: all 0.2s;
+
+    &:not(.active) {
+      opacity: 0;
+    }
+  }
 
   .el-upload {
     width: 100%;
